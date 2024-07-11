@@ -29,26 +29,20 @@ for i, value in enumerate(mx):
 for i in tam:
     mxy[i] = mx[i]*my[i]
 
-for i in tam:
     mxz[i] = mx[i]*mz[i]
 
-for i in tam:
     myz[i] = my[i]*mz[i]
+
+    vet[i] = 1
 
 for i, value in enumerate(mz):
     mzs[i] = value**2
 
-for i in tam:
-    vet[i] = 1
-
 mat_H_t = np.array([mxs, mxy, mxz, myz, mzs, mx, my, mz, vet])
 mat_H = mat_H_t.transpose()
 
-H_H_t = mat_H_t @ mat_H
-
 # Pseudo-inversa
-H_H_t_inv = np.linalg.inv(H_H_t)
-vet_X = H_H_t_inv @ mat_H_t
+vet_X = np.linalg.pinv(mat_H)
 vet_X = vet_X @ mys
 
 # Cálculo dos offsets
