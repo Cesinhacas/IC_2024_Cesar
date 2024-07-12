@@ -74,17 +74,17 @@ phi = -np.arctan((abs(vet_X[4])*(n1*n5)**0.5*(2*vet_X[2] - vet_X[1]*vet_X[3])*((
 
 p = np.array([sx, sy, sz, bx, by, bz, rho, phi, lambida])
 
-print("Os fatores de escala são:")
+print("Os fatores de escala são:\n")
 print("%.4f" % p[0], "Para sx")
 print("%.4f" % p[1], "Para sy")
-print("%.4f" % p[2], "Para sz")
+print("%.4f" % p[2], "Para sz\n")
 
-print("Os offsets são:")
+print("Os offsets são:\n")
 print("%.4f" % p[3], "Para x")
 print("%.4f" % p[4], "Para y")
-print("%.4f" % p[5], "Para z")
+print("%.4f" % p[5], "Para z\n")
 
-print("Os ângulos são:")
+print("Os ângulos são:\n")
 print("%.4f" % p[6], "Para rho")
 print("%.4f" % p[7], "Para phi")
 print("%.4f" % p[8], "Para lambda")

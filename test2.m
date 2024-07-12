@@ -12,7 +12,7 @@ loop = 1;
 mx = Dados_Corrompido(1,:)';
 my = Dados_Corrompido(2,:)';
 mz = Dados_Corrompido(3,:)';
-Be = ones(1,length(mx))';
+Be = ones(length(mx),1);
 while loop == 1
     sx = p0(1);
     sy = p0(2);
