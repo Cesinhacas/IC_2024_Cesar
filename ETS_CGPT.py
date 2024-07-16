@@ -104,6 +104,8 @@ ax1.set_xlabel('Eixo X')
 ax1.set_ylabel('Eixo Y')
 ax1.set_zlabel('Eixo Z')
 ax1.set_title('Plot corrompido')
+ax1.set_box_aspect([1.0, 1.0, 1.0])
+
 
 ax = fig.add_subplot(122, projection='3d')
 ax.scatter(mx_rest, my_rest, mz_rest, c='r', marker='o')
@@ -112,6 +114,7 @@ ax.set_xlabel('Eixo X')
 ax.set_ylabel('Eixo Y')
 ax.set_zlabel('Eixo Z')
 ax.set_title('Plot reconstrução')
+ax.set_box_aspect([1.0, 1.0, 1.0])
 
 #plt.tight_layout()
 plt.show()
