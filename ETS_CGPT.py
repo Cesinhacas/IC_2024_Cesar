@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 # Carregar dados
 dados = pd.read_excel('C:/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_Corrompidos.xlsx')
@@ -68,3 +70,48 @@ print("Os ângulos são:\n")
 print("%.4f" % p[6], "Para rho")
 print("%.4f" % p[7], "Para phi")
 print("%.4f" % p[8], "Para lambda")
+
+scale_i = np.linalg.inv([[p[0], 0, 0], [0, p[1], 0], [0, 0, p[2]]])
+T_inv = np.linalg.inv([[1, 0, 0], [np.sin(p[6]), np.cos(p[6]), 0], [np.sin(p[7])*np.cos(p[8]), np.sin(p[8]), np.cos(p[7])*np.cos(p[8])]])
+offset = [p[3], p[4], p[5]]
+
+dados_corrompidos = np.array([mx, my, mz]).transpose()
+
+dados_rest = dados_corrompidos.copy()
+
+for i in range(len(mx)):
+    dados_rest[i] = scale_i @ T_inv @ dados_corrompidos[i] - offset
+
+dados_rest = dados_rest.transpose()
+mx_rest = dados_rest[:][0]
+my_rest = dados_rest[:][1]
+mz_rest = dados_rest[:][2]
+
+phi, theta = np.mgrid[0.0:2.0*np.pi:100j, 0.0:np.pi:50j]
+x_sphere = np.sin(theta) * np.cos(phi)
+y_sphere = np.sin(theta) * np.sin(phi)
+z_sphere = np.cos(theta)
+
+
+# Criar uma figura
+fig = plt.figure(figsize=(12,6))
+
+
+ax1 = fig.add_subplot(121, projection='3d')
+ax1.scatter(mx, my, mz, c='r', marker='o')
+ax1.plot_wireframe(x_sphere, y_sphere, z_sphere, color='grey', alpha=0.5)
+ax1.set_xlabel('Eixo X')
+ax1.set_ylabel('Eixo Y')
+ax1.set_zlabel('Eixo Z')
+ax1.set_title('Plot corrompido')
+
+ax = fig.add_subplot(122, projection='3d')
+ax.scatter(mx_rest, my_rest, mz_rest, c='r', marker='o')
+ax.plot_wireframe(x_sphere, y_sphere, z_sphere, color='grey', alpha=0.5)
+ax.set_xlabel('Eixo X')
+ax.set_ylabel('Eixo Y')
+ax.set_zlabel('Eixo Z')
+ax.set_title('Plot reconstrução')
+
+#plt.tight_layout()
+plt.show()
