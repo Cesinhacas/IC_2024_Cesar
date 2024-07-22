@@ -1,8 +1,7 @@
 import numpy as np
 import random
 import pandas as pd
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+import time
 
 def ETS_func(mx, my , mz):
     # Cálculo dos termos
@@ -55,8 +54,6 @@ def ETS_func(mx, my , mz):
     return p
 
 def NLLS_func(mx, my, mz):
-    import numpy as np
-
     passo = 0
     loop = 1
     p0 = [1, 1, 1, 0, 0, 0, 0, 0, 0]
@@ -123,7 +120,7 @@ def NLLS_func(mx, my, mz):
 
         passo += 1
 
-
+    
     #P = e_std*np.linalg.inv(H.transpose()@H)
     return p0
 
@@ -143,8 +140,12 @@ y_sphere = np.sin(theta_sphere) * np.sin(phi_sphere)
 z_sphere = np.cos(theta_sphere)
 error_vet_ETS = []
 error_vet_NLLS = []
+num_exe = 1000
+execution_time_ETS = 0
+execution_time_NLLS = 0
 
-for i in range(0,1000):
+
+for i in range(0,num_exe):
     e = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     e[0] = (random.random()*0.4) + 0.8
     e[1] = (random.random()*0.4) + 0.8
@@ -174,63 +175,23 @@ for i in range(0,1000):
     my = dados_corrompidos[1]
     mz = dados_corrompidos[2]
 
+    time_start_ETS = time.perf_counter_ns()
     p = ETS_func(mx, my, mz)
+    time_end_ETS = time.perf_counter_ns()
+    execution_time_ETS = execution_time_ETS + (time_end_ETS - time_start_ETS)
+    
+    time_start_NLLS = time.perf_counter_ns()
     p0 = NLLS_func(mx, my, mz)
-
-    error_vet_ETS.append(e-p)
-    error_vet_NLLS.append(e-p0)
-
-error_vet_NLLS = np.array(error_vet_NLLS).transpose()
-error_vet_ETS = np.array(error_vet_ETS).transpose()
+    time_end_NLLS = time.perf_counter_ns()
+    execution_time_NLLS = execution_time_NLLS + (time_end_NLLS - time_start_NLLS)
 
 
-plt.plot(error_vet_NLLS[0])
-plt.plot(error_vet_NLLS[1])
-plt.plot(error_vet_NLLS[2])
-plt.legend(['Fator de escala x', 'Fator de escala y', 'Fator de escala z'])
-plt.xlabel('Número da execução')
-plt.title('Erro no fator de escala')
-plt.ylabel('Erro fator de escala NLLS')
-plt.show() 
+execution_time_ETS = execution_time_ETS/num_exe
 
-plt.plot(error_vet_NLLS[3])
-plt.plot(error_vet_NLLS[4]) 
-plt.plot(error_vet_NLLS[5])
-plt.legend(['Offset de x', 'Offset de y', 'Offset de z'])
-plt.xlabel('Número da execução')
-plt.title('Erro de estimação do offset')
-plt.ylabel('Erro offset NLLS')
-plt.show()
+execution_time_NLLS = execution_time_NLLS/num_exe
 
-plt.plot(error_vet_NLLS[6])
-plt.plot(error_vet_NLLS[7])
-plt.plot(error_vet_NLLS[8])
-plt.legend(['Rho','Phi','Lambda'])
-plt.xlabel('Número da execução')
-plt.title('Erro na estimação dos ângulos')
-plt.ylabel('Erro dos ângulos NLLS')
-plt.show()
+ratio = execution_time_NLLS/execution_time_ETS
 
-plt.plot(error_vet_ETS[0])
-plt.plot(error_vet_ETS[1])
-plt.plot(error_vet_ETS[2])
-plt.xlabel('Número da execução')
-plt.title('Erro no fator de escala')
-plt.ylabel('Erro fator de escala ETS')
-plt.show() 
-
-plt.plot(error_vet_ETS[3])
-plt.plot(error_vet_ETS[4]) 
-plt.plot(error_vet_ETS[5])
-plt.xlabel('Número da execução')
-plt.title('Erro de estimação do offset')
-plt.ylabel('Erro offset ETS')
-plt.show()
-
-plt.plot(error_vet_ETS[6])
-plt.plot(error_vet_ETS[7])
-plt.plot(error_vet_ETS[8])
-plt.xlabel('Número da execução')
-plt.title('Erro na estimação dos ângulos')
-plt.ylabel('Erro dos ângulos ETS')
-plt.show()
+print("O tempo médio de execução do ETS foi:", execution_time_ETS, "ns\n")
+print("O tempo médio de execução do NLLS foi:", execution_time_NLLS, "ns\n")
+print("A relação entre a execução foi de:","%.2f" % ratio, "(tempo de execução do NLLS/tempo de execução do ETS)")
