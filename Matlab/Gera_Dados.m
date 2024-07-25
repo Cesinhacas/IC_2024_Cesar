@@ -81,10 +81,12 @@ Dados = [x; y; z];
 
 if save_data==1
     Dados_Teoricos = Dados;
-    clearvars -except Dados_Teoricos 
+    clearvars -except Dados_Teoricos
+    cd ../
     cd 'Dados'
     save Dados_Teoricos.mat
     cd ../
+    cd 'Matlab'
 end
 
 
@@ -95,9 +97,11 @@ clc
 
 save_data = 0;
 
+cd ../
 cd 'Dados'
 load Dados_Teoricos.mat
 cd ../
+cd 'Matlab'
 
 
 sf = 1;

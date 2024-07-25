@@ -37,9 +37,11 @@ Dados = [x; y; z];
 if save_data==1
     Dados_Teoricos = Dados;
     clearvars -except Dados_Teoricos 
+    cd ../
     cd 'Dados'
     save Dados_Teoricos.mat
     cd ../
+    cd 'Matlab'
 end
 
 %% Gera dados corrompidos
