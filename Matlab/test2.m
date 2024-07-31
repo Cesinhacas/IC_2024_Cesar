@@ -60,7 +60,7 @@ while loop == 1
     passo = passo +1;
 end
 
-P = e_std*inv(H'*H);
+%P = e_std*inv(H'*H);
 %disp(P)
 
 p = p0;

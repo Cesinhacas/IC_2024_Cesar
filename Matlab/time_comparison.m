@@ -91,5 +91,5 @@ disp(t_ETS)
 disp("O tempo de execução do NLLS foi:")
 disp(t_NLLS)
 
-disp("A relação entre os tempos de execução foi (tempo NLLS/tempo ETS:")
+disp("A relação entre os tempos de execução foi (tempo NLLS/tempo ETS):")
 disp(ratio)
