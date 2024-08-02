@@ -13,7 +13,7 @@ for i=1:1:length(mx)
 end
 
 Z_ =0;
-L_ = [0 0 0 0 0 0 0 0 0];
+L_ =0;
 MU_ =0;
 SIGMA = 1/sum(sigma);
 
@@ -53,7 +53,7 @@ passo = 0;
  while loop ==1
      v = (eye(3) + E)\c;
      phi = [2*v' -v(1)^2 -v(2)^2 -v(3)^2 -2*v(1)*v(2) -2*v(1)*v(3) -2*v(2)*v(3)];
-     g = covariance*(theta - estim) - (1/SIGMA)*(Z_-L_*theta + c'*v - MU_)*(L_'-phi');
+     g = covariance*(theta - estim) - (1/SIGMA)*(Z_-L_*theta + c'*v - MU_)*(L_'-phi)';
      theta = theta - (inv(covariance)+ 1/SIGMA*(L_ - phi)'*(L_ - phi))\g;
      n_i = (theta - estim)'*(covariance + (1/SIGMA) * (L_ - phi)'*(L_-phi)) * (theta - estim);
      estim = theta;
