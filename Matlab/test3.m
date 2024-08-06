@@ -1,7 +1,10 @@
-function [D, h] = test3(Dados_Corrompido)
-mx = Dados_Corrompido(1,:);
-my = Dados_Corrompido(2,:);
-mz = Dados_Corrompido(3,:);
+function [D, h] = test3(B)
+mx = B(1,:);
+my = B(2,:);
+mz = B(3,:);
+
+L = [2*B; -(B.^2); -2*B(1,:).*B(2,:); -2*B(1,:).*B(3,:); -2*B(2,:).*B(3,:)];
+
 
 for i=1:1:length(mx)
     i_vec = [mx(i) my(i) mz(i)]';
@@ -55,22 +58,25 @@ passo = 0;
 
 
  while loop ==1
-     v = (eye(3) + E)\c;
-     phi = [2*v' -v(1)^2 -v(2)^2 -v(3)^2 -2*v(1)*v(2) -2*v(1)*v(3) -2*v(2)*v(3)];
-     g = covariance*(theta - estim) - (1/SIGMA)*(Z_-L_*theta + c'*v - MU_)*(L_'-phi');
-     theta = theta - (inv(covariance)+ 1/SIGMA*(L_ - phi)'*(L_ - phi))\g;
-     n_i = (theta - estim)'*(covariance + (1/SIGMA) * (L_ - phi)'*(L_-phi)) * (theta - estim);
-     estim = theta;
-     
-     c = [estim(1); estim(2); estim(3)];
-     E = [estim(4) estim(7) estim(8);
-        estim(7) estim(5) estim(9);
-        estim(8) estim(9) estim(6)];
+    v = (eye(3) + E)\c;
+    phi = [2*v' -v(1)^2 -v(2)^2 -v(3)^2 -2*v(1)*v(2) -2*v(1)*v(3) -2*v(2)*v(3)];
+    g = covariance*(theta - estim) - (1/SIGMA)*(Z_-L_*theta + c'*v - MU_)*(L_'-phi');
+    theta = theta - (inv(covariance)+ 1/SIGMA*(L_ - phi)'*(L_ - phi))\g;
+    n_i = (theta - estim)'*(covariance + (1/SIGMA) * (L_ - phi)'*(L_-phi)) * (theta - estim);
+    estim = theta;
 
-     if n_i < n
-         loop = 0;
-     end
-     passo = passo + 1;
+    c = [estim(1); estim(2); estim(3)];
+    E = [estim(4) estim(7) estim(8);
+    estim(7) estim(5) estim(9);
+    estim(8) estim(9) estim(6)];
+    
+    if passo > 200
+        loop = 0;
+    end
+    if n_i < n
+     loop = 0;
+    end
+    passo = passo + 1;
  end
  
 c = [estim(1); estim(2); estim(3)];
@@ -82,10 +88,4 @@ E = [estim(4) estim(7) estim(8);
 W = diag([-1+sqrt(1+S(1,1)) -1+sqrt(1+S(2,2)) -1+sqrt(1+S(3,3))]);
 D = U*W*V';
 h = (eye(3)+D)\c;
-
-teste = 0;
-for i=1:1:length(mx)
-    teste = teste + Z(i)*sigma(i);
-end
-
 end

@@ -119,9 +119,10 @@ lambda = Ang(3);
 scale = diag(Escala);
 
 T = [1 0 0; sin(rho) cos(rho) 0; sin(phi)*cos(lambda) sin(lambda) cos(phi)*cos(lambda)];
-
+mean = [0 0 0];
+sigma = [0.006^2 0 0;0 0.006^2 0;0 0 0.006^2];
 for i=1:length(Data_Simul(1,:))
-    Ruido(:,i) = 0.006*(randn(3,1));
+    Ruido(:,i) = mvnrnd(mean,sigma,1)';
     Dados_Corrompido(:,i) = scale*T*Data_Simul(:,i) + offset + Ruido(:,i); 
 end
 
