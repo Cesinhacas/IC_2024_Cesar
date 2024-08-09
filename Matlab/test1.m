@@ -13,7 +13,7 @@ vet = ones(1,length(mx))';
 Y = - my.^2;
 
 H = [mx.^2 mx.*my mx.*mz my.*mz mz.^2 mx my mz vet];
-X = inv(H'*H)*H'*Y;
+X = (H'*H)\H'*Y;
 
 psi7 = 2*(X(5)*X(2)^2 - X(2)*X(3)*X(4) + X(3)^2 + X(1)*X(4)^2 - 4*X(1)*X(5));
 
