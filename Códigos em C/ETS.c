@@ -51,67 +51,48 @@ void main()
     int tam1 = (sizeof(mx)/sizeof(float));
     #define tam tam1
 
-    //Cria a matriz H e H transposta
-    float vet[tam], mx_2[tam], mx_my[tam], mx_mz[tam], my_mz[tam], mz_2[tam], my_2[tam];
+    //Cria a matriz H
+    float mat_H[N][tam], my_2[tam];
     for(int i=0; i < tam; i++)
     {
-        mx_2[i] = mx[i]*mx[i];
-        mx_my[i] = mx[i]*my[i];
-        mx_mz[i] = mx[i]*mz[i];
-        my_mz[i] = my[i]*mz[i];
-        mz_2[i] = mz[i]*mz[i];
+        mat_H[0][i] = mx[i]*mx[i];
+        mat_H[1][i] = mx[i]*my[i];
+        mat_H[2][i] = mx[i]*mz[i];
+        mat_H[3][i] = my[i]*mz[i];
+        mat_H[4][i] = mz[i]*mz[i];
+        mat_H[5][i] = mx[i];
+        mat_H[6][i] = my[i];
+        mat_H[7][i] = mz[i];
+        mat_H[8][i] = 1;
         my_2[i] = -(my[i]*my[i]);
-    }
-
-    float mat_H[9][tam];
-    for(int i=0; i < tam; i++)
-    {
-        mat_H[i][0] = mx_2[i];
-        mat_H[i][1] = mx_my[i];
-        mat_H[i][2] = mx_mz[i];
-        mat_H[i][3] = my_mz[i];
-        mat_H[i][4] = mz_2[i];
-        mat_H[i][5] = mx[i];
-        mat_H[i][6] = my[i];
-        mat_H[i][7] = mz[i];
-        mat_H[i][8] = 1;
     }
 
     //Multiplicação da matriz H por sua transposta
     float H_Ht[N][N], inv[N][N];
     for(int i=0; i < N; i++)
     {
-        for(int j=0; j < tam; j++)
+        for(int j=0; j < N; j++)
         {
             H_Ht[i][j] = 0;
-            for(int k=0; k < N; k++)
+            for(int k=0; k < tam; k++)
             {
                 H_Ht[i][j] += mat_H[i][k]*mat_H[j][k];
             }
         }
     }
 
-    //Cria uma cópia da multiplicação
-    float H_Ht_copy[N][N];
-    for(int i=0;i<N;i++)
-    {
-        for(int j=0; j<N; j++)
-        {
-            H_Ht_copy[i][j] = H_Ht[i][j];
-        }
-    }
-    inverter_matriz(H_Ht_copy, inv);
+    inverter_matriz(H_Ht, inv);
 
-    //Multiplica a inversa por H
-    float mul_mat[N][N];    
+    //Multiplica a inversa por H transposta
+    float mul_mat[N][tam];    
     for(int i=0; i < N; i++)
     {
-        for(int j=0; j < N; j++)
+        for(int j=0; j < tam; j++)
         {
             mul_mat[i][j] = 0;
-            for(int k=0; k < tam; k++)
+            for(int k=0; k < N; k++)
             {
-                mul_mat[i][j] += inv[i][k]*mat_H[j][k];
+                mul_mat[i][j] += inv[i][k]*mat_H[k][j];
             }
         }
     }
@@ -120,15 +101,21 @@ void main()
     float X[N];
     for(int i=0; i < N; i++)
     {
-        X[N] = 0;
+        X[i] = 0;
         for(int j=0; j < tam; j++)
         {
             X[i] += mul_mat[i][j]*my_2[j];
         }
     }
-    for(int i=0; i < N; i++)
-    {
-        printf("%.4f\n",X[i]);
-    }
+    //FUNCIONANDO ATÉ AQUI *****NÃO MEXER NEM A PAU*****
+
+    // Segundo passo, encontrando os parâmetros
+    float psi7, psi8, bx, by, bz, sx, sy, sz, rho, phi, lambida;
+
+    psi7 = 2*(X[4]*X[1]*X[1] - X[1]*X[2]*X[3] + X[2]*X[2] + X[0]*X[3]*X[3] - 4*X[0]*X[4]);
+    /*bx = -(X[3]**2 * vet_X[5] + 2 * vet_X[2] * vet_X[7] - 4 * vet_X[4] * vet_X[5] - vet_X[1] * vet_X[3] * vet_X[7] + 2 * vet_X[1] * vet_X[4] * vet_X[6] - vet_X[2] * vet_X[3] * vet_X[6]) / psi7;
+    by = -(vet_X[2]**2 * vet_X[6] + 2 * vet_X[0] * vet_X[3] * vet_X[7] - 4 * vet_X[0] * vet_X[4] * vet_X[6] - vet_X[1] * vet_X[2] * vet_X[7] + 2 * vet_X[1] * vet_X[4] * vet_X[5] - vet_X[2] * vet_X[3] * vet_X[5]) / psi7;
+    bz = -(vet_X[1]**2 * vet_X[7] - 4 * vet_X[0] * vet_X[7] + 2 * vet_X[2] * vet_X[5] + 2 * vet_X[0] * vet_X[3] * vet_X[6] - vet_X[1] * vet_X[2] * vet_X[6] - vet_X[1] * vet_X[3] * vet_X[5]) / psi7;*/
+
 
 }
