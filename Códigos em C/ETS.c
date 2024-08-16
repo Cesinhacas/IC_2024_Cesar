@@ -145,7 +145,7 @@ void main()
     printf("%.4f\n", sx);
     printf("%.4f\n", sy);
     printf("%.4f\n", sz);
-    printf("\nThe offsets;\n");
+    printf("\nThe offsets:\n");
     printf("%.4f\n", bx);
     printf("%.4f\n", by);
     printf("%.4f\n", bz);

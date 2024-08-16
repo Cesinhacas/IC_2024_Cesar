@@ -24,7 +24,7 @@ while loop == 1
     phi = p0(8);
     lambida = p0(9);
     
-    f =(mx-bx).^2/(sx)^2 + (sx*(my-by) - sy*sin(rho)*(mx-bx)).^2/(sx*sy*cos(rho))^2 + (sx*sy*cos(rho)*(mz-bz) - sx*sz*sin(lambida)*(my-by) + sy*sz*(sin(lambida)*sin(rho) - cos(rho)*sin(phi)*cos(lambida))*(mx-bx)).^2/(sx*sy*sz*cos(rho)*cos(phi)*cos(lambida))^2;
+    f = (mx-bx).^2/(sx)^2 + (sx*(my-by) - sy*sin(rho)*(mx-bx)).^2/(sx*sy*cos(rho))^2 + (sx*sy*cos(rho)*(mz-bz) - sx*sz*sin(lambida)*(my-by) + sy*sz*(sin(lambida)*sin(rho) - cos(rho)*sin(phi)*cos(lambida))*(mx-bx)).^2/(sx*sy*sz*cos(rho)*cos(phi)*cos(lambida))^2;
 
     e = Be.^2 - f;
     
@@ -60,8 +60,8 @@ while loop == 1
     passo = passo +1;
 end
 
-%P = e_std*inv(H'*H);
-%disp(P)
+P = e_std*inv(H'*H);
+disp(P)
 
 p = p0;
 end
