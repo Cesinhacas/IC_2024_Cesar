@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 
-dados = pd.read_excel('/mnt/c/users/labt5/desktop/cesar/IC_2024_Cesar/dados/Dados_Corrompidos.xlsx') #C:/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_Corrompidos.xlsx
+dados = pd.read_excel('C:/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_Corrompidos.xlsx') #/mnt/c/users/labt5/desktop/cesar/IC_2024_Cesar/dados/Dados_Corrompidos.xlsx
 mx = dados.iloc[0].values
 my = dados.iloc[1].values
 mz = dados.iloc[2].values
@@ -92,13 +92,13 @@ print(p0[0], "Para sx")
 print(p0[1], "Para sy")
 print(p0[2], "Para sz\n")
 print("Os fatores de escala são:\n")
-print(p0[0], "Para sx")
-print(p0[1], "Para sy")
-print(p0[2], "Para sz\n")
+print(p0[3], "Para bx")
+print(p0[4], "Para by")
+print(p0[5], "Para bz\n")
 print("Os fatores de escala são:\n")
-print(p0[0], "Para sx")
-print(p0[1], "Para sy")
-print(p0[2], "Para sz")
+print(p0[6], "Para rho")
+print(p0[7], "Para phi")
+print(p0[8], "Para lambida")
 
 scale_i = np.linalg.inv([[p0[0], 0, 0], [0, p0[1], 0], [0, 0, p0[2]]])
 T_inv = np.linalg.inv([[1, 0, 0], [np.sin(p0[6]), np.cos(p0[6]), 0], [np.sin(p0[7])*np.cos(p0[8]), np.sin(p0[8]), np.cos(p0[7])*np.cos(p0[8])]])
