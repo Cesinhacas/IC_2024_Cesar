@@ -15,9 +15,9 @@ void inverter_matriz(float matriz[N][N], float inversa[N][N]) {
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             if (i == j) {
-                inversa[i][j] = 1.0;
+                inversa[i][j] = 1;
             } else {
-                inversa[i][j] = 0.0;
+                inversa[i][j] = 0;
             }
         }
     }
@@ -75,7 +75,7 @@ void main()
         for(int j=0; j < N; j++)
         {
             H_Ht[i][j] = 0;
-            for(int k=0; k < tam; k++)
+            for(int k = 0; k < tam; k++)
             {
                 H_Ht[i][j] += mat_H[i][k]*mat_H[j][k];
             }
