@@ -108,7 +108,7 @@ void main()
             X[i] += mul_mat[i][j]*my_2[j];
         }
     }
-    //FUNCIONANDO ATÉ AQUI *****NÃO MEXER NEM A PAU*****
+
 
     // Segundo passo, encontrando os parâmetros
     float psi7, psi8, divs, n1, n2, n3, n4, n5, n6, bx, by, bz, sx, sy, sz, rho, phi, lambida;
