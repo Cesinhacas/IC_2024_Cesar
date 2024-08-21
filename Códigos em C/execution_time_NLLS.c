@@ -3,6 +3,8 @@
 #include <time.h>
 #include <stdlib.h>
 #define N 9
+#define tam 1045
+#define Y 3
 
 void inverter_matriz(float matriz[N][N], float inversa[N][N])
 {
@@ -42,31 +44,30 @@ void inverter_matriz(float matriz[N][N], float inversa[N][N])
     }
 }
 
-void NLLS(float *mx, float *my, float *mz, float *p0)
+void NLLS(float dados[Y][tam], float p0[1][N])
 {
-    int tam1 = sizeof(mx)/sizeof(int);
-    #define tam tam1
-
-
     int passo = 0, loop = 1;
-    float Be[tam], e[tam], f[tam], sx, sy, sz, bx, by, bz, rho, phi, lambida, error_ant, J, delta_J, mat_H[N][tam];
+    float mx[tam], my[tam], mz[tam], Be[tam], e[tam], f[tam], sx, sy, sz, bx, by, bz, rho, phi, lambida, error_ant, J, delta_J, mat_H[N][tam];
 
     for (int i=0; i < tam; i++)
     {
         Be[i] = 1;
+        mx[i] = dados[0][i];
+        my[i] = dados[1][i];
+        mz[i] = dados[2][i];
     }
 
     while(loop == 1)
     {
-        sx = p0[0];
-        sy = p0[1];
-        sz = p0[2];
-        bx = p0[3];
-        by = p0[4];
-        bz = p0[5];
-        rho = p0[6];
-        phi = p0[7];
-        lambida = p0[8];
+        sx = p0[0][0];
+        sy = p0[0][1];
+        sz = p0[0][2];
+        bx = p0[0][3];
+        by = p0[0][4];
+        bz = p0[0][5];
+        rho = p0[0][6];
+        phi = p0[0][7];
+        lambida = p0[0][8];
         
         for(int i=0; i < tam; i++)
         {
@@ -153,7 +154,7 @@ void NLLS(float *mx, float *my, float *mz, float *p0)
 
         for(int i = 0; i < N; i++)
         {
-            p0[i] += Ht_e[i];
+            p0[0][i] += Ht_e[i];
         }
         
         passo++;
@@ -163,7 +164,7 @@ void NLLS(float *mx, float *my, float *mz, float *p0)
 void main()
 {
     srand(time(NULL));
-    float mx[N], my[N], mz[N], p0[N], phi_sphere[1045], theta_sphere[1045], num_exe = 1000;
+    float d_[3][tam], d_p0[1][N], phi_sphere[tam], theta_sphere[tam], num_exe = 1000;
     float t = 0, t_exe = 0;
     
     for(int i=0; i < 180; i += 5)
@@ -175,9 +176,9 @@ void main()
         }
     }
 
-    float x_sphere[1045], y_sphere[1045], z_sphere[1045], e[N], noise[3];
+    float x_sphere[tam], y_sphere[tam], z_sphere[tam], e[N], noise[3];
 
-    for(int i=0; i < 1045; i++)
+    for(int i=0; i < tam; i++)
     {
         x_sphere[i] = sin(phi_sphere[i])*cos(theta_sphere[i]);
         y_sphere[i] = sin(phi_sphere[i])*sin(theta_sphere[i]);
@@ -186,9 +187,9 @@ void main()
     
     for(int i=0; i < num_exe; i++)
     {
-        for(int ii=0; i < N; ii++)
+        for(int ii=0; ii < N; ii++)
         {
-            e[i] = 0;
+            e[ii] = 0;
         }
 
         noise[0] = 0.006*((float)rand()/RAND_MAX);
@@ -207,36 +208,36 @@ void main()
         e[7] = (6*((float)rand()/RAND_MAX) - 3) * 3.14159265358979323846/180;
         e[8] = (6*((float)rand()/RAND_MAX) - 3) * 3.14159265358979323846/180;
 
-        float dados[3][1045];
+        float dados[3][tam];
 
-        for(int ii=0; ii < 1045; ii++)
+        for(int ii=0; ii < tam; ii++)
         {
-            dados[0][ii] = x_sphere[i] + e[4] + noise[0];
-            dados[1][ii] = y_sphere[i] + e[5] + noise[1];
-            dados[2][ii] = z_sphere[i] + e[6] + noise[2];
+            dados[0][ii] = x_sphere[ii] + e[4] + noise[0];
+            dados[1][ii] = y_sphere[ii] + e[5] + noise[1];
+            dados[2][ii] = z_sphere[ii] + e[6] + noise[2];
         }
 
         float T[3][3] = {{1, 0, 0}, {sin(e[6]), cos(e[6]), 0}, {sin(e[7])*cos(e[8]), sin(e[8]), cos(e[7])*cos(e[8])}};
 
-        for(int ii=0; ii < 1045; i++)
+        for(int ii=0; ii < tam; ii++)
         {
-            mx[ii] = e[0]*dados[0][ii];
-            my[ii] = e[1]*(T[0][1]*dados[1][ii] + T[1][1]*dados[1][ii]);
-            mz[ii] = e[2]*(T[0][2]*dados[2][ii] + T[1][2]*dados[2][ii] + T[2][2]*dados[2][ii]);
+            d_[0][ii] = e[0]*dados[0][ii];
+            d_[1][ii] = e[1]*(T[0][1]*dados[1][ii] + T[1][1]*dados[1][ii]);
+            d_[2][ii] = e[2]*(T[0][2]*dados[2][ii] + T[1][2]*dados[2][ii] + T[2][2]*dados[2][ii]);
         }
 
-        p0[0] = 1;
-        p0[1] = 1;
-        p0[2] = 1;
-        p0[3] = 0;
-        p0[4] = 0;
-        p0[5] = 0;
-        p0[6] = 0;
-        p0[7] = 0;
-        p0[8] = 0;
+        d_p0[0][0] = 1;
+        d_p0[0][1] = 1;
+        d_p0[0][2] = 1;
+        d_p0[0][3] = 0;
+        d_p0[0][4] = 0;
+        d_p0[0][5] = 0;
+        d_p0[0][6] = 0;
+        d_p0[0][7] = 0;
+        d_p0[0][8] = 0;
 
         t = clock();
-        NLLS(mx, my, mz, p0);
+        NLLS(d_, d_p0);
         t = clock() - t;
 
         t_exe += t/CLOCKS_PER_SEC;
