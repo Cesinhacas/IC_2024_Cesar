@@ -73,7 +73,7 @@ num_exe = 1000
 execution_time = 0
 
 
-for i in range(0,num_exe):
+for i in range(0, num_exe):
     e = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     e[0] = (random.random()*0.4) + 0.8
     e[1] = (random.random()*0.4) + 0.8
