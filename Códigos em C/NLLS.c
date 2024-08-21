@@ -166,7 +166,7 @@ void main()
     }
 
     printf("The estimated parameters:\n\n");
-    printf("The sacle factors:\n");
+    printf("The scale factors:\n");
     printf("%.4f\n", p0[0]);
     printf("%.4f\n", p0[1]);
     printf("%.4f\n", p0[2]);
