@@ -89,7 +89,7 @@ for i in range(0, num_exe):
 
     dados_corrompidos = np.array([x_sphere, y_sphere, z_sphere]).transpose()
     offset = (np.array([e[3], e[4], e[5]])).transpose()
-    scale =np.array([[e[0], 0, 0], [0, e[1], 0], [0, 0, e[2]]])
+    scale = np.array([[e[0], 0, 0], [0, e[1], 0], [0, 0, e[2]]])
     T = np.array([[1, 0, 0], [np.sin(e[6]), np.cos(e[6]), 0], [np.sin(e[7])*np.cos(e[8]), np.sin(e[8]), np.cos(e[7])*np.cos(e[8])]])
 
     
