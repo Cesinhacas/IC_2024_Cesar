@@ -147,15 +147,20 @@ void ETS(float dados[Y][tam])
 void main()
 {
     srand(time(NULL));
+    int cont = 1;
+    float dados[3][tam];
     float d_[3][tam], phi_sphere[tam], theta_sphere[tam], num_exe = 1000;
     float t = 0, t_exe = 0;
     
+    phi_sphere[0] = 0;
+    theta_sphere[0] = 0;
     for(int i=0; i < 180; i += 5)
     {
-        for(int j=0; j < 360; j += 12)
+        for(int j=6; j < 354; j += 12)
         {
-            phi_sphere[i] = i;
-            theta_sphere[j] = j;
+            phi_sphere[cont] = j;
+            theta_sphere[cont] = i;
+            cont++;
         }
     }
 
@@ -163,9 +168,9 @@ void main()
 
     for(int i=0; i < tam; i++)
     {
-        x_sphere[i] = sin(phi_sphere[i])*cos(theta_sphere[i]);
-        y_sphere[i] = sin(phi_sphere[i])*sin(theta_sphere[i]);
-        z_sphere[i] = cos(phi_sphere[i]);
+        x_sphere[i] = sin(theta_sphere[i])*cos(phi_sphere[i]);
+        y_sphere[i] = sin(theta_sphere[i])*sin(phi_sphere[i]);
+        z_sphere[i] = cos(theta_sphere[i]);
     }
     
     for(int i=0; i < num_exe; i++)
@@ -191,22 +196,18 @@ void main()
         e[7] = (6*((float)rand()/RAND_MAX) - 3) * 3.14159265358979323846/180;
         e[8] = (6*((float)rand()/RAND_MAX) - 3) * 3.14159265358979323846/180;
 
-        float dados[3][tam];
-
         for(int ii=0; ii < tam; ii++)
         {
-            dados[0][ii] = x_sphere[ii] + e[4] + noise[0];
-            dados[1][ii] = y_sphere[ii] + e[5] + noise[1];
-            dados[2][ii] = z_sphere[ii] + e[6] + noise[2];
+            dados[0][ii] = x_sphere[ii];
+            dados[1][ii] = y_sphere[ii];
+            dados[2][ii] = z_sphere[ii];
         }
 
-        float T[3][3] = {{1, 0, 0}, {sin(e[6]), cos(e[6]), 0}, {sin(e[7])*cos(e[8]), sin(e[8]), cos(e[7])*cos(e[8])}};
-
         for(int ii=0; ii < tam; ii++)
         {
-            d_[0][ii] = e[0]*dados[0][ii];
-            d_[1][ii] = e[1]*(T[0][1]*dados[1][ii] + T[1][1]*dados[1][ii]);
-            d_[2][ii] = e[2]*(T[0][2]*dados[2][ii] + T[1][2]*dados[2][ii] + T[2][2]*dados[2][ii]);
+            d_[0][ii] = e[0]*dados[0][ii] + e[3] + noise[0];
+            d_[1][ii] = e[1]*(dados[0][ii]*sin(e[6]) + dados[1][ii]*cos(e[6])) + e[4] + noise[1];
+            d_[2][ii] = e[2]*(dados[0][ii]*sin(e[7])*cos(e[8]) + dados[1][ii]*sin(e[8]) + dados[2][ii]*cos(e[7])*cos(e[8])) + e[5] + noise[2];
         }
 
         t = clock();
@@ -216,7 +217,7 @@ void main()
         t_exe += t/CLOCKS_PER_SEC;
     }
 
-    t_exe = t_exe/num_exe;
+    t_exe = (t_exe/num_exe)*1000;
 
-    printf("Tempo de execução: %.4f\n", t_exe);
+    printf("Tempo de execução: %.4f ms\n", t_exe);
 }

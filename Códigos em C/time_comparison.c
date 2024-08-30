@@ -113,7 +113,7 @@ void NLLS(float dados[Y][tam])
         else
         {
             delta_J = 100*fabs(J-error_ant)/J;
-            if(delta_J < 0.05)
+            if(delta_J < 0.2)
             {
                 loop = 0;
             }
@@ -166,13 +166,113 @@ void NLLS(float dados[Y][tam])
     }
 }
 
+void ETS(float dados[Y][tam])
+{
+    //Inicializa e define o quantidade de medidas
+    float mx[tam], my[tam], mz[tam];
+    for(int i=0; i < tam; i++)
+    {
+        mx[i] = dados[0][i];
+        my[i] = dados[1][i];
+        mz[i] = dados[2][i];
+    }
+
+    //Cria a matriz H
+    float mat_H[N][tam], my_2[tam];
+    for(int i=0; i < tam; i++)
+    {
+        mat_H[0][i] = mx[i]*mx[i];
+        mat_H[1][i] = mx[i]*my[i];
+        mat_H[2][i] = mx[i]*mz[i];
+        mat_H[3][i] = my[i]*mz[i];
+        mat_H[4][i] = mz[i]*mz[i];
+        mat_H[5][i] = mx[i];
+        mat_H[6][i] = my[i];
+        mat_H[7][i] = mz[i];
+        mat_H[8][i] = 1;
+        my_2[i] = -(my[i]*my[i]);
+    }
+
+    //Multiplicação da matriz H por sua transposta
+    float H_Ht[N][N], inv[N][N];
+    for(int i=0; i < N; i++)
+    {
+        for(int j=0; j < N; j++)
+        {
+            H_Ht[i][j] = 0;
+            for(int k = 0; k < tam; k++)
+            {
+                H_Ht[i][j] += mat_H[i][k]*mat_H[j][k];
+            }
+        }
+    }
+
+    inverter_matriz(H_Ht, inv);
+
+    //Multiplica a inversa por H transposta
+    float mul_mat[N][tam];    
+    for(int i=0; i < N; i++)
+    {
+        for(int j=0; j < tam; j++)
+        {
+            mul_mat[i][j] = 0;
+            for(int k=0; k < N; k++)
+            {
+                mul_mat[i][j] += inv[i][k]*mat_H[k][j];
+            }
+        }
+    }
+
+    //Resultado da psedo-inversa
+    float X[N];
+    for(int i=0; i < N; i++)
+    {
+        X[i] = 0;
+        for(int j=0; j < tam; j++)
+        {
+            X[i] += mul_mat[i][j]*my_2[j];
+        }
+    }
+
+
+    // Segundo passo, encontrando os parâmetros
+    float psi7, psi8, divs, n1, n2, n3, n4, n5, n6, bx, by, bz, sx, sy, sz, rho, phi, lambida;
+
+    psi7 = 2*(X[4]*pow(X[1], 2) - X[1]*X[2]*X[3] + pow(X[2], 2) + X[0]*pow(X[3], 2) - 4*X[0]*X[4]);
+    bx = -(pow(X[3], 2) * X[5] + 2*X[2]*X[7] - 4*X[4]*X[5] - X[1]*X[3]*X[7] + 2*X[1]*X[4]*X[6] - X[2]*X[3]*X[6]) / psi7;
+    by = -(pow(X[2], 2) * X[6] + 2*X[0]*X[3]*X[7] - 4*X[0]*X[4]*X[6] - X[1]*X[2]*X[7] + 2*X[1]*X[4]*X[5] - X[2]*X[3]*X[5]) / psi7;
+    bz = -(pow(X[1], 2)*X[7] - 4*X[0]*X[7] + 2*X[2]*X[5] + 2*X[0]*X[3]*X[6] - X[1]*X[2]*X[6] - X[1]*X[3]*X[5]) / psi7;
+    
+    psi8 = -pow(X[1],2)*pow(X[7],2) + 4*X[4]*X[8]*pow(X[1],2) - 4*X[8]*X[1]*X[2]*X[3] + 2*X[1]*X[2]*X[6]*X[7] + 2*X[1]*X[3]*X[5]*X[7] - 4*X[4]*X[1]*X[5]*X[6] - pow(X[2], 2)*pow(X[6], 2) + 4*X[8]*pow(X[2], 2) + 2*X[2]*X[3]*X[5]*X[6] - 4*X[2]*X[5]*X[7] - pow(X[3], 2)*pow(X[5], 2) + 4*X[0]*X[8]*pow(X[3], 2) + 4*X[4]*pow(X[5], 2) + 4*X[0]*X[4]*pow(X[6], 2) + 4*X[0]*pow(X[7], 2) - 16*X[0]*X[4]*X[8] - 4*X[0]*X[3]*X[6]*X[7];
+    
+    divs =  2 * pow(fabs(X[4]), 3) * (X[4] * pow(X[1], 2) - X[1] * X[2] * X[3] + pow(X[2], 2) + X[0] * pow(X[3], 2) - 4 * X[0] * X[4]);
+
+    sx = -pow(X[4], 3) * sqrt(psi8 * (-pow(X[3], 2) + 4*X[4])) / (divs);
+    sy = -pow(X[4], 3) * sqrt(psi8 * (-pow(X[2], 2) + 4*X[0]*X[4])) / (divs);
+    sz = -pow(X[4], 3) * sqrt(psi8 * (-pow(X[1], 2) + 4*X[0])) / (divs);
+
+    rho = (2 * X[1]*X[4] - X[2]*X[3]) / (2*pow(X[4], 2) * sqrt(-(X[4]*pow(X[1], 2) - X[1]*X[2]*X[3] + pow(X[2], 2) + X[0]*pow(X[3], 2) - 4*X[0]*X[4]) / (pow(X[4], 3))));
+    rho = -atan(rho);
+    lambida = -atan((X[3] / X[4]) * sqrt(-(pow(X[4], 2)*(X[4]*pow(X[1], 2) - X[1]*X[2]*X[3] + pow(X[2], 2) - 4*X[0]*X[4]) / (2*pow(X[1], 2)*pow(X[3], 2)*X[4] - 4*pow(X[1], 2)*pow(X[4], 2) - 4*pow(X[1], 2)*pow(X[4], 2) - X[1]*X[2]*pow(X[3], 3) + X[0]*pow(X[3], 4) - 8*X[0]*pow(X[3], 2)*X[4] + 16*X[0]*pow(X[4], 2)))));
+
+    n1 = -pow(X[1], 2)*pow(X[7], 2) + 4*pow(X[1], 2)*X[4]*X[8] - 4*X[1]*X[2]*X[3]*X[8] + 2*X[1]*X[2]*X[6]*X[7] + 2*X[1]*X[3]*X[5]*X[7] - 4*X[1]*X[4]*X[5]*X[6] - pow(X[2], 2)*pow(X[6], 2) + 2*X[2]*X[3]*X[5]*X[6] + 4*pow(X[2], 2)*X[8] - 4*X[2]*X[5]*X[7] - pow(X[3], 2)*pow(X[5], 2) + 4*X[1]*pow(X[3], 2)*X[8] - 4*X[0]*X[3]*X[6]*X[7] + 4*X[4]*pow(X[5], 2) + 4*X[0]*X[4]*pow(X[6],2) + 4*X[0]*pow(X[7], 2) - 16*X[0]*X[4]*X[8];
+    n2 = pow(X[1], 2)*X[4] - X[1]*X[2]*X[3] + pow(X[2], 2) + X[0]*pow(X[3], 2) - 4*X[0]*X[4];
+    n3 = 2*pow(X[1], 2)*pow(X[3], 2)*X[4] - 4*pow(X[1], 2)*pow(X[4], 2) - X[1]*X[2]*pow(X[3], 3) + pow(X[2], 2)*pow(X[3], 2) + X[0]*pow(X[3], 2) - 8*X[0]*pow(X[3], 2)*X[4] + 16*X[0]*pow(X[4], 2);
+    n4 = 4*X[4] - pow(X[3], 2);
+    n5 = 4*X[0]*X[4] - pow(X[2], 2);
+    n6 = 4*X[0] - pow(X[1], 2);
+
+    phi = -atan((fabs(X[4])*sqrt(n1*n5) * (2*X[2] - X[1]*X[3]) * sqrt((X[4]*n4*n6) / n3)) / (pow(X[4], 2) * sqrt(-n2 / X[4]) * sqrt(n1*n6) * sqrt(-(n2 * n4) / n3) * sqrt(-(n4*n5) / (X[4]*n2))));
+
+}
+
 void main()
 {
     srand(time(NULL));
     int cont = 1;
     float dados[3][tam];
     float d_[3][tam], phi_sphere[tam], theta_sphere[tam], num_exe = 1000;
-    float t = 0, t_exe = 0;
+    float t = 0, t_exe_ETS = 0, t_exe_NLLS = 0;
     
     phi_sphere[0] = 0;
     theta_sphere[0] = 0;
@@ -233,13 +333,22 @@ void main()
         }
 
         t = clock();
+        ETS(d_);
+        t = clock() - t;
+        t_exe_ETS += t/CLOCKS_PER_SEC;
+
+        t = clock();
         NLLS(d_);
         t = clock() - t;
-
-        t_exe += t/CLOCKS_PER_SEC;
+        t_exe_NLLS += t/CLOCKS_PER_SEC;
     }
 
-    t_exe = (t_exe/num_exe)*1000;
+    t_exe_ETS = (t_exe_ETS/num_exe)*1000;
+    t_exe_NLLS = (t_exe_NLLS/num_exe)*1000;
 
-    printf("Tempo de execução: %.4f ms\n", t_exe);
+    float ratio = t_exe_NLLS/t_exe_ETS;
+
+    printf("Tempo de execução ETS: %.4f ms\n", t_exe_ETS);
+    printf("Tempo de execução NLLS: %.4f ms\n", t_exe_NLLS);
+    printf("Razão entre os tempos: %.4f\n", ratio);
 }
