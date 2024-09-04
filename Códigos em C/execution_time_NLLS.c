@@ -173,69 +173,12 @@ void NLLS(float dados[Y][tam])
 
 void main()
 {
-    srand(time(NULL));
-    int cont = 1;
-    float dados[3][tam];
-    float d_[3][tam], phi_sphere[tam], theta_sphere[tam], num_exe = 1000;
     float t = 0, t_exe = 0;
-    
-    phi_sphere[0] = 0;
-    theta_sphere[0] = 0;
-    for(int i=0; i < 180; i += 5)
-    {
-        for(int j=6; j < 354; j += 12)
-        {
-            phi_sphere[cont] = j;
-            theta_sphere[cont] = i;
-            cont++;
-        }
-    }
+    int num_exe = 1000;
+    float d_[tam][Y] ;
 
-    float x_sphere[tam], y_sphere[tam], z_sphere[tam], e[N], noise[3];
-
-    for(int i=0; i < tam; i++)
-    {
-        x_sphere[i] = sin(theta_sphere[i])*cos(phi_sphere[i]);
-        y_sphere[i] = sin(theta_sphere[i])*sin(phi_sphere[i]);
-        z_sphere[i] = cos(theta_sphere[i]);
-    }
-    
     for(int i=0; i < num_exe; i++)
     {
-        for(int ii=0; ii < N; ii++)
-        {
-            e[ii] = 0;
-        }
-
-        noise[0] = 0.006*((float)rand()/RAND_MAX);
-        noise[1] = 0.006*((float)rand()/RAND_MAX);
-        noise[2] = 0.006*((float)rand()/RAND_MAX);
-
-        e[0] = 0.4*((float)rand()/RAND_MAX) + 0.8;
-        e[1] = 0.4*((float)rand()/RAND_MAX) + 0.8;
-        e[2] = 0.4*((float)rand()/RAND_MAX) + 0.8;
-
-        e[3] = 0.4*((float)rand()/RAND_MAX) - 0.2;
-        e[4] = 0.4*((float)rand()/RAND_MAX) - 0.2;
-        e[5] = 0.4*((float)rand()/RAND_MAX) - 0.2;
-
-        e[6] = (6*((float)rand()/RAND_MAX) - 3) * 3.14159265358979323846/180;
-        e[7] = (6*((float)rand()/RAND_MAX) - 3) * 3.14159265358979323846/180;
-        e[8] = (6*((float)rand()/RAND_MAX) - 3) * 3.14159265358979323846/180;
-
-        for(int ii=0; ii < tam; ii++)
-        {
-            dados[0][ii] = x_sphere[ii];
-            dados[1][ii] = y_sphere[ii];
-            dados[2][ii] = z_sphere[ii];
-        }
-
-        for(int ii=0; ii < tam; ii++)
-        {
-            d_[0][ii] = e[0]*dados[0][ii] + e[3] + noise[0];
-            d_[1][ii] = e[1]*(dados[0][ii]*sin(e[6]) + dados[1][ii]*cos(e[6])) + e[4] + noise[1];
-            d_[2][ii] = e[2]*(dados[0][ii]*sin(e[7])*cos(e[8]) + dados[1][ii]*sin(e[8]) + dados[2][ii]*cos(e[7])*cos(e[8])) + e[5] + noise[2];
-        }
 
         t = clock();
         NLLS(d_);
