@@ -161,6 +161,10 @@ void NLLS(float dados[Y][tam])
         {
             p0[i] += Ht_e[i];
         }
+        if(passo > 15)
+        {
+            loop = 0;
+        }
         
         passo++;
     }
