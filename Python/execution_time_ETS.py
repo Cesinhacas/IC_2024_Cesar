@@ -109,6 +109,6 @@ for i in range(0, num_exe):
     execution_time = execution_time + (time_end - time_start)
 
 
-execution_time = execution_time/num_exe
+execution_time = (execution_time/num_exe)/1e6
 
 print("O tempo de execução foi:", execution_time, "ns\n")

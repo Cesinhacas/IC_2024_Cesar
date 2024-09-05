@@ -186,12 +186,12 @@ for i in range(0,num_exe):
     execution_time_NLLS = execution_time_NLLS + (time_end_NLLS - time_start_NLLS)
 
 
-execution_time_ETS = execution_time_ETS/num_exe
+execution_time_ETS = (execution_time_ETS/num_exe)/1e6
 
-execution_time_NLLS = execution_time_NLLS/num_exe
+execution_time_NLLS = (execution_time_NLLS/num_exe)/1e6
 
 ratio = execution_time_NLLS/execution_time_ETS
 
-print("O tempo médio de execução do ETS foi:", execution_time_ETS, "ns\n")
-print("O tempo médio de execução do NLLS foi:", execution_time_NLLS, "ns\n")
+print("O tempo médio de execução do ETS foi:", execution_time_ETS, "ms\n")
+print("O tempo médio de execução do NLLS foi:", execution_time_NLLS, "ms\n")
 print("A relação entre a execução foi de:","%.2f" % ratio, "(tempo de execução do NLLS/tempo de execução do ETS)")
