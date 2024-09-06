@@ -60,7 +60,7 @@ def gera_dados():
 
     return dados
 
-num_exe = 1000
+num_exe = 5000
 execution_time_ETS = 0
 execution_time_NLLS = 0
 
