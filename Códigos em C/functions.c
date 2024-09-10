@@ -42,7 +42,7 @@ void inverter_matriz(float matriz[N][N], float inversa[N][N]) {
     }
 }
 
-void NLLS(float *mx, float *my, float *mz)
+void NLLS(float *mx, float *my, float *mz, float *p)
 {
     int passo = 0, loop = 1;
     float p0[9] = {1, 1, 1, 0, 0, 0, 0, 0, 0}, Be[tam], e[tam], f[tam], sx, sy, sz, bx, by, bz, rho, phi, lambida, error_ant, J, delta_J, mat_H[N][tam];
@@ -154,9 +154,18 @@ void NLLS(float *mx, float *my, float *mz)
         
         passo++;
     }
+    p[0] = sx;
+    p[1] = sy;
+    p[2] = sz;
+    p[3] = bx;
+    p[4] = by;
+    p[5] = bz;
+    p[6] = rho;
+    p[7] = phi;
+    p[8] = lambida;
 }
 
-void ETS(float *mx, float *my, float *mz)
+void ETS(float *mx, float *my, float *mz, float *p)
 {
     //Cria a matriz H
     float mat_H[N][tam], my_2[tam];
@@ -244,6 +253,16 @@ void ETS(float *mx, float *my, float *mz)
     n6 = 4*X[0] - pow(X[1], 2);
 
     phi = -atan((fabs(X[4])*sqrt(n1*n5) * (2*X[2] - X[1]*X[3]) * sqrt((X[4]*n4*n6) / n3)) / (pow(X[4], 2) * sqrt(-n2 / X[4]) * sqrt(n1*n6) * sqrt(-(n2 * n4) / n3) * sqrt(-(n4*n5) / (X[4]*n2))));
+
+    p[0] = sx;
+    p[1] = sy;
+    p[2] = sz;
+    p[3] = bx;
+    p[4] = by;
+    p[5] = bz;
+    p[6] = rho;
+    p[7] = phi;
+    p[8] = lambida;
 }
 
 int main()

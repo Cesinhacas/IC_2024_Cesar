@@ -12,7 +12,7 @@ my_functions.ETS.restype = ctypes.c_void_p
 my_functions.NLLS.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float)]
 my_functions.NLLS.restype = ctypes.c_void_p
 
-def gera_dados():
+def gera_dados(erros):
 
     random.seed()
     phi_sphere = [0]
@@ -52,6 +52,8 @@ def gera_dados():
 
     dados_corrompidos = dados_corrompidos.transpose()
 
+    erros = np.array([e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8]])
+
     mx = dados_corrompidos[0]
     my = dados_corrompidos[1]
     mz = dados_corrompidos[2]
@@ -65,7 +67,8 @@ execution_time_ETS = 0
 execution_time_NLLS = 0
 
 for i in range(0, num_exe):
-    dados = gera_dados()
+    erros = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0])
+    dados = gera_dados(erros)
     mx = dados[0].astype(np.float32)
     my = dados[1].astype(np.float32)
     mz = dados[2].astype(np.float32)
@@ -74,8 +77,11 @@ for i in range(0, num_exe):
     my_ptr = my.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
     mz_ptr = mz.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
 
+    p0_ptr = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0]).astype(np.float32).ctypes.data_as(ctypes.POINTER(ctypes.c_float))
+    p1_ptr = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0]).astype(np.float32).ctypes.data_as(ctypes.POINTER(ctypes.c_float))
+
     time_start_ETS = time.perf_counter_ns()
-    my_functions.ETS(mx_ptr, my_ptr, mz_ptr)
+    my_functions.ETS(mx_ptr, my_ptr, mz_ptr, p0_ptr)
     time_end_ETS = time.perf_counter_ns()
     execution_time_ETS += (time_end_ETS - time_start_ETS)
 
