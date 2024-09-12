@@ -5,7 +5,7 @@ import time
 import ctypes
 import matplotlib.pyplot as plt
 
-my_functions = ctypes.CDLL('./functions.so')
+my_functions = ctypes.CDLL('C:/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/Códigos em C/functions.dll')
 
 my_functions.ETS.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float)]
 my_functions.ETS.restype = ctypes.c_void_p
