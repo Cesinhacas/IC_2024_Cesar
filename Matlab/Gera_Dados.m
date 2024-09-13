@@ -240,13 +240,24 @@ p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0;];
 scale_i1 = [p1(1) 0 0;0 p1(2) 0; 0 0 p1(3)];
 scale_i1 = inv(scale_i1);
 
-T_inv1 = [1 0 0;sin(p1(7)) cos(p1(7)) 0;sin(p1(8))*cos(p1(9)) sin(p1(9)) cos(p1(8))*cos(p1(9))];
-T_inv1 = inv(T_inv1);
+% T_inv1 = [1 0 0;sin(p1(7)) cos(p1(7)) 0;sin(p1(8))*cos(p1(9)) sin(p1(9)) cos(p1(8))*cos(p1(9))];
+% T_inv1 = inv(T_inv1);
+% 
+% OFFSET1 = [p1(4); p1(5); p1(6)];
+% 
+% for i=1:length(Dados_Corrompido(1,:))
+%     Dados_rest1(:,i) = scale_i1*T_inv1*Dados_Corrompido(:,i) - OFFSET1; 
+% end
 
-OFFSET1 = [p1(4); p1(5); p1(6)];
+% cd 'TWO STEP'
+% 
+noise = .006^2*ones(3,1112); H = ones(1112,1)';
+[D,b]=test3(Dados_Corrompido,H,noise);
+
+%cd ..
 
 for i=1:length(Dados_Corrompido(1,:))
-    Dados_rest1(:,i) = scale_i1*T_inv1*Dados_Corrompido(:,i) - OFFSET1; 
+    Dados_rest1(:,i) = (eye(3)+D)*Dados_Corrompido(:,i) - b;
 end
 
 
