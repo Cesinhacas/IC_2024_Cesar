@@ -251,7 +251,8 @@ scale_i1 = inv(scale_i1);
 
 % cd 'TWO STEP'
 % 
-noise = .006^2*ones(3,1112); H = ones(1112,1)';
+noise = .006^2*ones(3,1112); 
+H = ones(1112,1)';
 [D,b]=test3(Dados_Corrompido,H,noise);
 
 %cd ..
