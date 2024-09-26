@@ -27,9 +27,11 @@ MU_tilde = MU - MU_*ones(1,size(length(mx),2));
 L = L - L_.*ones(1,size(L,2));
 Z = Z - Z_*ones(1,size(Z,2));
 
-P_tt = ((L.*(ones(size(L,1),1)*(1./sigma)))*L');
-
-P_tt_inv = P_tt\eye(9);
+F_tt = zeros(9);
+for i=1:1:length(mx)
+    F_tt = F_tt + L(:,i)*(L(:,i)')./sigma(i);
+end
+P_tt_inv = F_tt\eye(9);
 
 estim = P_tt_inv*(L*((Z-MU_tilde)'./sigma'));
     
@@ -49,16 +51,16 @@ ABC = -(((Z-MU)./sigma)*L')';
     dbsqdtheta_p = [2*((eye(3) + E)\c); -diag(tmp);...
         -2*tmp(1,2); -2*tmp(1,3); -2*tmp(2,3)]';
     
-    djdTheta_tilde = ABC + P_tt*estim;
+    djdTheta_tilde = ABC + F_tt*estim;
     dJdTheta_bar = (-(1/SIGMA)*(L_' - dbsqdtheta_p)*...
         (Z_ - L_'*estim + c'*((eye(3) + E)\c) - MU_))';
     djdtheta = djdTheta_tilde + dJdTheta_bar;
     
     P_tt_ = ((L_'-dbsqdtheta_p)'*(L_'-dbsqdtheta_p))/MU_;
     
-    theta_estim = estim - (P_tt+P_tt_)\djdtheta;
+    theta_estim = estim - (F_tt+P_tt_)\djdtheta;
     
-    n_i = (theta_estim-estim)'*(P_tt+P_tt_)*(theta_estim-estim);
+    n_i = (theta_estim-estim)'*(F_tt+P_tt_)*(theta_estim-estim);
     
     estim = theta_estim;
     if passo > 200

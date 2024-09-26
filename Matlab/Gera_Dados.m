@@ -108,7 +108,8 @@ sf = 1;
 
 Data_Simul = sf*Dados_Teoricos;
 
-offset = [-0.1723; -0.0741; 0.1342];
+% offset = [-0.1723; -0.0741; 0.1342];
+offset = [-0.4723; -0.3741; 0.6342];
 Escala = [0.9213 0.7634 1.1834];
 Ang = [-2.4532*pi/180; 2.567*pi/180; -1.9674*pi/180];
 
@@ -234,32 +235,44 @@ xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
 
-p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0;];
-[p1] = test2(Dados_Corrompido, p0); %NLLS
+% p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0;];
+% [p1] = test2(Dados_Corrompido, p0); %NLLS
 
-scale_i1 = [p1(1) 0 0;0 p1(2) 0; 0 0 p1(3)];
-scale_i1 = inv(scale_i1);
-
-T_inv1 = [1 0 0;sin(p1(7)) cos(p1(7)) 0;sin(p1(8))*cos(p1(9)) sin(p1(9)) cos(p1(8))*cos(p1(9))];
-T_inv1 = inv(T_inv1);
-
-OFFSET1 = [p1(4); p1(5); p1(6)];
-
-for i=1:length(Dados_Corrompido(1,:))
-    Dados_rest1(:,i) = scale_i1*T_inv1*Dados_Corrompido(:,i) - OFFSET1; 
-end
-
-% cd 'TWO STEP'
+% scale_i1 = [p1(1) 0 0;0 p1(2) 0; 0 0 p1(3)];
+% scale_i1 = inv(scale_i1);
 % 
+% T_inv1 = [1 0 0;sin(p1(7)) cos(p1(7)) 0;sin(p1(8))*cos(p1(9)) sin(p1(9)) cos(p1(8))*cos(p1(9))];
+% T_inv1 = inv(T_inv1);
+% 
+% OFFSET1 = [p1(4); p1(5); p1(6)];
+% 
+% for i=1:length(Dados_Corrompido(1,:))
+%     Dados_rest1(:,i) = scale_i1*T_inv1*Dados_Corrompido(:,i) - OFFSET1; 
+% end
+
+
 % noise = .006^2*ones(3,1112); 
 % H = ones(1112,1)';
-% [D,b,n,cov_est] = TWOSTEP_estimate(Dados_Corrompido, H ,noise);
-% 
-% cd ..
+% [n,D,b] = TWOSTEP(Dados_Corrompido, H ,noise);
 % 
 % for i=1:length(Dados_Corrompido(1,:))
 %     Dados_rest1(:,i) = (eye(3)+D)*Dados_Corrompido(:,i) - b;
 % end
+
+ParT.a = 1;
+ParT.b = 1;
+ParT.c = 1;
+ParT.x0 = 0;
+ParT.y0 = 0;
+ParT.z0 = 0;
+ParT.rho = 0;
+ParT.phi = 0;
+ParT.lambda = 0;
+ParP = ParT;
+opt = 0;
+simul = 0;
+[ParC, DataCalFos] = FosterAnalytical_Rev00(ParT, ParP, Dados_Corrompido, sf, simul, opt);
+Dados_rest1 = DataCalFos;
 
 
 subplot(2,2,4)

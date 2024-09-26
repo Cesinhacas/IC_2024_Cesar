@@ -42,7 +42,7 @@
 % 5 - Erros -> Vetor com os erros encontrados ao longo das iterações 
 % (Esta opção só vale para o caso de simulação);
 
-function [ParC] = FosterAnalytical_Rev00(ParT, ParP, DataObs, sf, simul, opt)
+function [ParC, DataCalFos] = FosterAnalytical_Rev00(ParT, ParP, DataObs, sf, simul, opt)
 
 % Vetorização dos dados de entrada:
 ux = DataObs(1,:);
@@ -130,10 +130,10 @@ ParC.lambda = lambda;
 
 % A patir dos dados com erros e dos parâmetros de calibração
 % montamos uma matriz com os dados corrigidos:
-% DataCalFos(1,:) =  (DataObs(1,:) - ParC.x0)/ParC.a;
-% DataCalFos(2,:) = ((DataObs(2,:) - ParC.y0)/ParC.b - DataCalFos(1,:)*sin(ParC.rho))/cos(ParC.rho);
-% % DataCalFos(3,:) = ((DataObs(3,:) - ParC.z0)/ParC.c - DataCalFos(1,:)*sin(ParC.phi)*cos(ParC.lambda) - DataCalFos(2,:)*sin(ParC.lambda)*cos(ParC.phi))/(cos(ParC.phi)*cos(ParC.lambda));
-% DataCalFos(3,:) = ((DataObs(3,:) - ParC.z0)/ParC.c - DataCalFos(1,:)*sin(ParC.phi)*cos(ParC.lambda) - DataCalFos(2,:)*sin(ParC.lambda))/(cos(ParC.phi)*cos(ParC.lambda));
+DataCalFos(1,:) =  (DataObs(1,:) - ParC.x0)/ParC.a;
+DataCalFos(2,:) = ((DataObs(2,:) - ParC.y0)/ParC.b - DataCalFos(1,:)*sin(ParC.rho))/cos(ParC.rho);
+% DataCalFos(3,:) = ((DataObs(3,:) - ParC.z0)/ParC.c - DataCalFos(1,:)*sin(ParC.phi)*cos(ParC.lambda) - DataCalFos(2,:)*sin(ParC.lambda)*cos(ParC.phi))/(cos(ParC.phi)*cos(ParC.lambda));
+DataCalFos(3,:) = ((DataObs(3,:) - ParC.z0)/ParC.c - DataCalFos(1,:)*sin(ParC.phi)*cos(ParC.lambda) - DataCalFos(2,:)*sin(ParC.lambda))/(cos(ParC.phi)*cos(ParC.lambda));
 
 % Final do timer:
 Time = toc;
