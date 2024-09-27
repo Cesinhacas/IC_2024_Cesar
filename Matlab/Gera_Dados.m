@@ -192,17 +192,22 @@ zlabel('z axis (G)');
 % Reconstrução da esfera
 [p] = test1(Dados_Corrompido); % ETS
 
-scale_i = [p(1) 0 0;0 p(2) 0; 0 0 p(3)];
-scale_i = inv(scale_i);
+Dados_rest(1,:) =  (Dados_Corrompido(1,:) - p(4))/p(1);
+Dados_rest(2,:) = ((Dados_Corrompido(2,:) - p(5))/p(2) - Dados_rest(1,:)*sin(p(7)))/cos(p(7));
+Dados_rest(3,:) = ((Dados_Corrompido(3,:) - p(6))/p(3) - Dados_rest(1,:)*sin(p(8))*cos(p(9)) - Dados_rest(2,:)*sin(p(9)))/(cos(p(8))*cos(p(9)));
 
-T_inv = [1 0 0;sin(p(7)) cos(p(7)) 0;sin(p(8))*cos(p(9)) sin(p(9)) cos(p(8))*cos(p(9))];
-T_inv = inv(T_inv);
 
-OFFSET = [p(4); p(5); p(6)];
-
-for i=1:length(Dados_Corrompido(1,:))
-    Dados_rest(:,i) = scale_i*T_inv*Dados_Corrompido(:,i) - OFFSET; 
-end
+% scale_i = [p(1) 0 0;0 p(2) 0; 0 0 p(3)];
+% scale_i = inv(scale_i);
+% 
+% T_inv = [1 0 0;sin(p(7)) cos(p(7)) 0;sin(p(8))*cos(p(9)) sin(p(9)) cos(p(8))*cos(p(9))];
+% T_inv = inv(T_inv);
+% 
+% OFFSET = [p(4); p(5); p(6)];
+% 
+% for i=1:length(Dados_Corrompido(1,:))
+%     Dados_rest(:,i) = scale_i*T_inv*Dados_Corrompido(:,i) - OFFSET;
+% end
 
 
 subplot(2,2,3)
@@ -271,8 +276,20 @@ ParT.lambda = 0;
 ParP = ParT;
 opt = 0;
 simul = 0;
-[ParC, DataCalFos] = FosterAnalytical_Rev00(ParT, ParP, Dados_Corrompido, sf, simul, opt);
-Dados_rest1 = DataCalFos;
+[ParC, Dados_rest] = FosterAnalytical_Rev00(ParT, ParP, Dados_Corrompido, sf, simul, opt);
+Dados_rest1 = Dados_rest;
+
+p1 = [0 0 0 0 0 0 0 0 0]';
+p1(1) = ParC.a;
+p1(2) = ParC.b;
+p1(3) = ParC.c;
+p1(4) = ParC.x0;
+p1(5) = ParC.y0;
+p1(6) = ParC.z0;
+p1(7) = ParC.rho;
+p1(8) = ParC.phi;
+p1(9) = ParC.lambda;
+
 
 
 subplot(2,2,4)

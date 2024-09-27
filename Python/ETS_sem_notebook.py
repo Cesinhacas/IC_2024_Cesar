@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-dados = pd.read_excel('/mnt/c/users/labt5/desktop/cesar/IC_2024_Cesar/dados/Dados_Corrompidos.xlsx') #C:/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_Corrompidos.xlsx
+dados = pd.read_excel('C:/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_Corrompidos.xlsx') #/mnt/c/users/labt5/desktop/cesar/IC_2024_Cesar/dados/Dados_Corrompidos.xlsx
 mx = dados.iloc[0].values
 my = dados.iloc[1].values
 mz = dados.iloc[2].values
@@ -61,7 +61,7 @@ sz = -(vet_X[4]**3) * (psi8*(-vet_X[1]**2 + 4*vet_X[0]))**0.5/(divs)
 
 rho = (2*vet_X[1]*vet_X[4] - vet_X[2]*vet_X[3])/(2*vet_X[4]**2*(-(vet_X[4]*vet_X[1]**2 - vet_X[1]*vet_X[2]*vet_X[3] + vet_X[2]**2 + vet_X[0]*vet_X[3]**2 - 4*vet_X[0]*vet_X[4])/(vet_X[4]**3))**0.5)
 rho = -np.arctan(rho)
-lambida = -np.arctan((vet_X[3]/vet_X[4]) * (-(vet_X[4]**2*(vet_X[4]*vet_X[1]**2 - vet_X[1]*vet_X[2]*vet_X[3] + vet_X[2]**2 - 4*vet_X[0]*vet_X[4])/(2*vet_X[1]**2*vet_X[3]**2*vet_X[4] - 4*vet_X[1]**2*vet_X[4]**2 - 4*vet_X[1]**2*vet_X[4]**2 - vet_X[1]*vet_X[2]*vet_X[3]**3 + vet_X[0]*vet_X[3]**4 - 8*vet_X[0]*vet_X[3]**2*vet_X[4] + 16*vet_X[0]*vet_X[4]**2)))**0.5)
+lambida = -np.arctan((vet_X[3]/vet_X[4]) * (-(vet_X[4]**2*(vet_X[4]*vet_X[1]**2 - vet_X[1]*vet_X[2]*vet_X[3] + vet_X[2]**2 + vet_X[0]*vet_X[3]**2 - 4*vet_X[0]*vet_X[4])/(2 * vet_X[1]**2 * vet_X[3]**2 * vet_X[4] - 4 * vet_X[1]**2 * vet_X[4]**2 - vet_X[1] * vet_X[2] * vet_X[3]**3 + vet_X[2]**2 * vet_X[3]**2 + vet_X[0] * vet_X[3]**4 - 8*vet_X[0]*vet_X[3]**2 * vet_X[4] + 16*vet_X[0] * vet_X[5]**2)))**0.5)
 
 n1 = -vet_X[1]**2*vet_X[7]**2 + 4*vet_X[1]**2*vet_X[4]*vet_X[8] - 4*vet_X[1]*vet_X[2]*vet_X[3]*vet_X[8] + 2*vet_X[1]*vet_X[2]*vet_X[6]*vet_X[7] + 2*vet_X[1]*vet_X[3]*vet_X[5]*vet_X[7] - 4*vet_X[1]*vet_X[4]*vet_X[5]*vet_X[6] - vet_X[2]**2*vet_X[6]**2 + 2*vet_X[2]*vet_X[3]*vet_X[5]*vet_X[6] + 4*vet_X[2]**2*vet_X[8] - 4*vet_X[2]*vet_X[5]*vet_X[7] - vet_X[3]**2*vet_X[5]**2 + 4*vet_X[1]*vet_X[3]**2*vet_X[8] - 4*vet_X[0]*vet_X[3]*vet_X[6]*vet_X[7] + 4*vet_X[4]*vet_X[5]**2 + 4*vet_X[0]*vet_X[4]*vet_X[6]**2 + 4*vet_X[0]*vet_X[7]**2 - 16*vet_X[0]*vet_X[4]*vet_X[8]
 n2 = vet_X[1]**2*vet_X[4] - vet_X[1]*vet_X[2]*vet_X[3] + vet_X[2]**2 + vet_X[0]*vet_X[3]**2 - 4*vet_X[0]*vet_X[4]
