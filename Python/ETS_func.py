@@ -1,6 +1,7 @@
+import numpy as np
+import pandas as pd
+
 def ETS_func(mx, my , mz):
-    import numpy as np
-    import pandas as pd
 
     # Cálculo dos termos
     mxs = mx**2

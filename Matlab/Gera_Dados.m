@@ -108,8 +108,8 @@ sf = 1;
 
 Data_Simul = sf*Dados_Teoricos;
 
-% offset = [-0.1723; -0.0741; 0.1342];
-offset = [-0.4723; -0.3741; 0.6342];
+offset = [-0.1723; -0.0741; 0.1342];
+%offset = [-0.4723; -0.3741; 0.6342];
 Escala = [0.9213 0.7634 1.1834];
 Ang = [-2.4532*pi/180; 2.567*pi/180; -1.9674*pi/180];
 
@@ -129,7 +129,7 @@ end
 
 hFig = figure;
 set(hFig, 'Position', [100 100 700*3/2 300])
-subplot(2,2,1)
+subplot(2,3,1)
 set(gcf,'Units','inches');
 screenposition = get(gcf,'Position');
 set(gcf,...
@@ -159,7 +159,7 @@ xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
 
-subplot(2,2,2)
+subplot(2,3,2)
 set(gcf,'Units','inches');
 screenposition = get(gcf,'Position');
 set(gcf,...
@@ -197,20 +197,7 @@ Dados_rest(2,:) = ((Dados_Corrompido(2,:) - p(5))/p(2) - Dados_rest(1,:)*sin(p(7
 Dados_rest(3,:) = ((Dados_Corrompido(3,:) - p(6))/p(3) - Dados_rest(1,:)*sin(p(8))*cos(p(9)) - Dados_rest(2,:)*sin(p(9)))/(cos(p(8))*cos(p(9)));
 
 
-% scale_i = [p(1) 0 0;0 p(2) 0; 0 0 p(3)];
-% scale_i = inv(scale_i);
-% 
-% T_inv = [1 0 0;sin(p(7)) cos(p(7)) 0;sin(p(8))*cos(p(9)) sin(p(9)) cos(p(8))*cos(p(9))];
-% T_inv = inv(T_inv);
-% 
-% OFFSET = [p(4); p(5); p(6)];
-% 
-% for i=1:length(Dados_Corrompido(1,:))
-%     Dados_rest(:,i) = scale_i*T_inv*Dados_Corrompido(:,i) - OFFSET;
-% end
-
-
-subplot(2,2,3)
+subplot(2,3,3)
 set(gcf,'Units','inches');
 screenposition = get(gcf,'Position');
 set(gcf,...
@@ -240,59 +227,15 @@ xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
 
-% p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0;];
-% [p1] = test2(Dados_Corrompido, p0); %NLLS
+p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0;];
+[p1] = test2(Dados_Corrompido, p0); %NLLS
 
-% scale_i1 = [p1(1) 0 0;0 p1(2) 0; 0 0 p1(3)];
-% scale_i1 = inv(scale_i1);
-% 
-% T_inv1 = [1 0 0;sin(p1(7)) cos(p1(7)) 0;sin(p1(8))*cos(p1(9)) sin(p1(9)) cos(p1(8))*cos(p1(9))];
-% T_inv1 = inv(T_inv1);
-% 
-% OFFSET1 = [p1(4); p1(5); p1(6)];
-% 
-% for i=1:length(Dados_Corrompido(1,:))
-%     Dados_rest1(:,i) = scale_i1*T_inv1*Dados_Corrompido(:,i) - OFFSET1; 
-% end
+Dados_rest1(1,:) =  (Dados_Corrompido(1,:) - p1(4))/p1(1);
+Dados_rest1(2,:) = ((Dados_Corrompido(2,:) - p1(5))/p1(2) - Dados_rest1(1,:)*sin(p1(7)))/cos(p1(7));
+Dados_rest1(3,:) = ((Dados_Corrompido(3,:) - p1(6))/p1(3) - Dados_rest1(1,:)*sin(p1(8))*cos(p1(9)) - Dados_rest1(2,:)*sin(p1(9)))/(cos(p1(8))*cos(p1(9)));
 
 
-% noise = .006^2*ones(3,1112); 
-% H = ones(1112,1)';
-% [n,D,b] = TWOSTEP(Dados_Corrompido, H ,noise);
-% 
-% for i=1:length(Dados_Corrompido(1,:))
-%     Dados_rest1(:,i) = (eye(3)+D)*Dados_Corrompido(:,i) - b;
-% end
-
-ParT.a = 1;
-ParT.b = 1;
-ParT.c = 1;
-ParT.x0 = 0;
-ParT.y0 = 0;
-ParT.z0 = 0;
-ParT.rho = 0;
-ParT.phi = 0;
-ParT.lambda = 0;
-ParP = ParT;
-opt = 0;
-simul = 0;
-[ParC, Dados_rest] = FosterAnalytical_Rev00(ParT, ParP, Dados_Corrompido, sf, simul, opt);
-Dados_rest1 = Dados_rest;
-
-p1 = [0 0 0 0 0 0 0 0 0]';
-p1(1) = ParC.a;
-p1(2) = ParC.b;
-p1(3) = ParC.c;
-p1(4) = ParC.x0;
-p1(5) = ParC.y0;
-p1(6) = ParC.z0;
-p1(7) = ParC.rho;
-p1(8) = ParC.phi;
-p1(9) = ParC.lambda;
-
-
-
-subplot(2,2,4)
+subplot(2,3,4)
 set(gcf,'Units','inches');
 screenposition = get(gcf,'Position');
 set(gcf,...
@@ -318,6 +261,47 @@ my = Dados_rest1(2,:);
 mz = Dados_rest1(3,:);
 plot3(mx,my,mz,'r.','linewidth',1.5)
 title('(d)'); 
+xlabel('x axis (G)');
+ylabel('y axis (G)');
+zlabel('z axis (G)');
+
+
+noise = .006^2*ones(3,1112); 
+H = ones(1112,1)';
+[n,D,b] = TWOSTEP(Dados_Corrompido, H ,noise);
+
+for i=1:length(Dados_Corrompido(1,:))
+    Dados_rest2(:,i) = (eye(3)+D)*Dados_Corrompido(:,i) - b;
+end
+
+
+
+subplot(2,3,5)
+set(gcf,'Units','inches');
+screenposition = get(gcf,'Position');
+set(gcf,...
+'PaperPosition',[0 0 screenposition(3:4)],...
+'PaperSize',[screenposition(3:4)]);
+ e = 1;
+ a = 1.1*e;
+[x,y,z] = sphere;
+x = e*x;
+y = e*y;
+z = e*z;
+s2 = surf(x,y,z);
+set(s2,'FaceColor','none')
+set(s2,'EdgeColor',[0.7 0.7 0.7])
+hold on
+axis([-a a -a a -a a])
+axis equal
+set(gca,'PlotBoxAspectRatioMode','manual')
+set(gca,'FontSize',12)
+hold on
+mx = Dados_rest2(1,:);
+my = Dados_rest2(2,:);
+mz = Dados_rest2(3,:);
+plot3(mx,my,mz,'r.','linewidth',1.5)
+title('(e)'); 
 xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
