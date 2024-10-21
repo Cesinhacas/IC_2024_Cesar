@@ -4,11 +4,13 @@
 
 
 
-function [p1] = test1(Dados_Corrompido)
+function [Time,p1] = test1(Dados_Corrompido)
 
 mx = Dados_Corrompido(1,:)';
 my = Dados_Corrompido(2,:)';
 mz = Dados_Corrompido(3,:)';
+
+tic;
 vet = ones(1,length(mx))';
 Y = - (my.^2);
 
@@ -43,4 +45,5 @@ n6 = 4*X(1) - X(2)^2;
 
 phi = -atan((abs(X(5))*sqrt(n1*n5)*(2*X(3) - X(2)*X(4))*sqrt((X(5)*n4*n6)/n3))/(X(5)^2 * sqrt(-n2/X(5)) * sqrt(n1*n6) * sqrt(-(n2*n4)/n3)*sqrt(-(n4*n5)/(X(5)*n2))));
 p1 = [sx; sy; sz; bx; by; bz; rho; phi; lambida];
+Time = toc;
 end

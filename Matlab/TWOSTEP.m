@@ -4,13 +4,14 @@
 %Sigma_noise deve ser uma matriz 3xN, sendo cada linha a diagonal da matriz
 %de covariância de cada medida
 
-function [passo,D,h] = TWOSTEP(B,H,Sigma_noise)
+function [Time,passo,D,h] = TWOSTEP(B,H,Sigma_noise)
 % Determinando parâmetros
 stop = 1e-24;
 tam = length(B(1,:));
 passo_max = 200;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+tic
 % Iniciando variáveis (não necessário em matlab, mas uma boa prática)
 z_k = zeros(1,tam);
 mu_k = zeros(1,tam);
@@ -74,10 +75,11 @@ while(loop ==1)
     E = [theta(4) theta(7) theta(8);
             theta(7) theta(5) theta(9);
             theta(8) theta(9) theta(6)];
-    tmp = ((eye(3)+E)\c)*((eye(3)+E)\c)';
+    E_inv = (eye(3)+E)\eye(3);
+    tmp = (E_inv*c)*(E_inv*c)';
     dJdThetap_tilde = ABC + F_tt*theta;
-    dbsqdtheta_p=[2*((eye(3)+E)\c); -diag(tmp);-2*tmp(1,2); -2*tmp(1,3); -2*tmp(2,3)]';
-    dJdThetap_bar = (-(1/sigma_bar)*(L_bar' - dbsqdtheta_p)*(z_bar - L_bar'*theta + c'*((eye(3)+E)\c) - mu_bar))';
+    dbsqdtheta_p=[2*(E_inv*c); -diag(tmp);-2*tmp(1,2); -2*tmp(1,3); -2*tmp(2,3)]';
+    dJdThetap_bar = (-(1/sigma_bar)*(L_bar' - dbsqdtheta_p)*(z_bar - L_bar'*theta + c'*(E_inv*c) - mu_bar))';
     dJdTheta = dJdThetap_tilde + dJdThetap_bar;
     
     F_tt_bar = ((L_bar'-dbsqdtheta_p)'*(L_bar'-dbsqdtheta_p))/sigma_bar;
@@ -95,8 +97,9 @@ while(loop ==1)
     passo = passo + 1;
 end
 [U,S] = eig(E);
-W = -eye(3)+(eye(3)+S).^.5;
+W = -eye(3)+(eye(3)+S).^0.5;
 
 D = U*W*U';
 h = (eye(3)+D)\c;
+Time = toc;
 end

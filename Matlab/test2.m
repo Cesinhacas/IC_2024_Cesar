@@ -6,13 +6,15 @@
 % Retona-se o parâmetro p, um vetor semelhante a p0.
 
 
-function [p] = test2(Dados_Corrompido, p0)
+function [Time, passo, p] = test2(Dados_Corrompido, p0)
 passo = 1;
 loop = 1;
 mx = Dados_Corrompido(1,:)';
 my = Dados_Corrompido(2,:)';
 mz = Dados_Corrompido(3,:)';
 Be = ones(length(mx),1);
+
+tic;
 while loop == 1
     sx = p0(1);
     sy = p0(2);
@@ -37,7 +39,7 @@ while loop == 1
     else
         error_vet(passo) = J;
         delta_J = 100*abs(error_vet(passo)-error_vet(passo-1))/error_vet(passo);
-        if delta_J < 0.05
+        if delta_J < 0.1
             loop = 0;
         end
     end
@@ -59,11 +61,12 @@ while loop == 1
 
     passo = passo +1;
 end
+p = p0;
+Time = toc;
+passo = passo -1;
 
 % P = e_std*inv(H'*H);
 % disp(P)
-
-p = p0;
 end
 
 

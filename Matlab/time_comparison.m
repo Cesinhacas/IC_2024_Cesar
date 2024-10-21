@@ -49,10 +49,22 @@ end
 % Fs => 0.8 ~ 1.2
 % Ang => -3 ~ 3 ** transformar de grau para radiano.
 
+% cd ..
+% cd Dados\
+% load Dados_Corrompidos.mat
+
 Data_Simul = Dados_Teoricos;
 t_NLLS = 0;
+t_NLLSD = 0;
 t_ETS = 0;
-for i=1:1000
+t_TWOSTEP = 0;
+t_TWOSTEP2 = 0;
+passos = 0;
+steps = 0;
+passitos = 0;
+exe = 2000;
+
+for i=1:exe
     offset = (rand(3,1)*0.4)-0.2;
     Escala = (rand(3,1)*0.4)+0.8;
     Ang = (rand(3,1)*6 - 3) * (pi/180);
@@ -71,25 +83,96 @@ for i=1:1000
         Ruido(:,j) = 0.006*(rand(3,1));
         Dados_Corrompido(:,j) = scale*T*Data_Simul(:,j) + offset + Ruido(:,j); 
     end
-    t_NLLS_start = tic;
-    p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0];
-    [p] = test2(Dados_Corrompido, p0);
-    t_NLLS = t_NLLS + toc(t_NLLS_start);
 
-    t_ETS_start = tic;
-    [p1] = test1(Dados_Corrompido);
-    t_ETS = t_ETS + toc(t_ETS_start);
+    p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0];
+   
+    [tempo,step,p] = test2(Dados_Corrompido, p0);
+    t_NLLS = t_NLLS + tempo;
+    steps = steps + step;
+    
+    ParT.x0 = 0;
+    ParT.y0 = 0;
+    ParT.z0 = 0;
+    ParT.a = 0;
+    ParT.b = 0;
+    ParT.c = 0;
+    ParT.rho = 0;
+    ParT.phi = 0;
+    ParT.lambda = 0;
+    
+    ParP.x0 = 0;
+    ParP.y0 = 0;
+    ParP.z0 = 0;
+    ParP.a = 1;
+    ParP.b = 1;
+    ParP.c = 1;
+    ParP.rho = 0;
+    ParP.phi = 0;
+    ParP.lambda = 0;
+
+
+    [DataNLLS, ParC, Time, Est, Erros] = NLLS_9Dcalib(ParT, ParP, Dados_Corrompido, 1, 0, 0);
+    t_NLLSD = t_NLLSD + Time;
+    passitos = passitos + Est.Num_It;
+    num_it_log(i) = Est.Num_It;
+
+    [tempo1,p1] = test1(Dados_Corrompido);
+    t_ETS = t_ETS + tempo1;
+    
+    noise = 0.006^2*ones(3,1112);
+    H = ones(1,1112);
+
+    [tempo,passo,D,h] = TWOSTEP(Dados_Corrompido,H,noise);
+    t_TWOSTEP = t_TWOSTEP + tempo;
+    passos = passos + passo;
+
+    cd 'TWO STEP'\
+    
+     t_TWOSTEP2_start = tic;
+    [D_est,b_est,n,Cov_est]=TWOSTEP_estimate(Dados_Corrompido,H,noise);
+    t_TWOSTEP2 = t_TWOSTEP2 + toc(t_TWOSTEP2_start);
+    cd ..
+
 end
-t_ETS = (t_ETS/1000)*10^3;
-t_NLLS = t_NLLS/1000*10^3;
+
+t_ETS = (t_ETS/exe)*10^3;
+t_NLLS = (t_NLLS/exe)*10^3;
+t_TWOSTEP = (t_TWOSTEP/exe)*10^3;
+t_NLLSD = (t_NLLSD/exe)*10^3;
+t_TWOSTEP2 = (t_TWOSTEP2/exe)*10^3;
+passos = passos/exe;
+steps = steps/exe;
+passitos = passitos/exe;
 
 ratio = t_NLLS/t_ETS;
+ratio1 = t_TWOSTEP/t_ETS;
 
-disp("O tempo de execução do ETS foi:")
+disp("O número de passos do TWOSTEP foi:")
+disp(passos)
+
+disp("O número de passos do NLLS foi:")
+disp(steps)
+
+disp("O número de passos do NLLSD foi:")
+disp(passitos)
+
+disp("O tempo de execução do TWOSTEP em milissegundos foi:")
+disp(t_TWOSTEP)
+
+disp("O tempo de execução do TWOSTEP2 em milissegundos foi:")
+disp(t_TWOSTEP2)
+
+disp("O tempo de execução do ETS em milissegundos foi:")
 disp(t_ETS)
 
-disp("O tempo de execução do NLLS foi:")
+disp("O tempo de execução do NLLS em milissegundos foi:")
 disp(t_NLLS)
+
+disp("O tempo de execução do NLLSD em milissegundos foi:")
+disp(t_NLLSD)
 
 disp("A relação entre os tempos de execução foi (tempo NLLS/tempo ETS):")
 disp(ratio)
+
+disp("A relação entre os tempos de execução foi (tempo TWOSTEP/tempo ETS):")
+disp(ratio1)

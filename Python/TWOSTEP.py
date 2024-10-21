@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-dados = pd.read_excel('C:/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_Corrompidos.xlsx') #/mnt/c/users/labt5/desktop/cesar/IC_2024_Cesar/dados/Dados_Corrompidos.xlsx
+dados = pd.read_excel('C:/Users/LabT5/Onedrive/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_Corrompidos.xlsx') #/mnt/c/users/labt5/desktop/cesar/IC_2024_Cesar/dados/Dados_Corrompidos.xlsx
 mx = dados.iloc[0].values
 my = dados.iloc[1].values
 mz = dados.iloc[2].values
@@ -50,7 +50,7 @@ for i in range(tam):
 F_tt = np.zeros((9, 9))
 
 for i in range(tam):
-    F_tt = F_tt + (L_tilde[i]@L_tilde[i].transpose())/sigma_k[i]
+    F_tt = F_tt + (1/sigma_k[i]) * (L_tilde[i] @ L_tilde[i].transpose())
 
 P_tt = np.linalg.inv(F_tt)
 

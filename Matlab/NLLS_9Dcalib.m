@@ -41,8 +41,8 @@
 % 5 - Erros -> if opt = 'simul', the algorithm calculates the estimated
 % parameters error compared to ParT.
 
-function [ParC] = NLLS_9Dcalib(ParT, ParP, DataObs, sf, simul, opt, stop_perc)
-
+function [DataNLLS, ParC, Time, Est, Erros] =...
+    NLLS_9Dcalib(ParT, ParP, DataObs, sf, simul, opt, stop_perc)
 
 % Vectorization of ParT to pT:
 pT(1) = ParT.x0;
@@ -187,6 +187,7 @@ ParC.c      = p(6);
 ParC.rho    = p(7);
 ParC.phi    = p(8);
 ParC.lambda = p(9);
+Time = toc;
 
 % A patir dos dados com erros e dos parâmetros de calibração
 % montamos uma matriz com os dados corrigidos:
@@ -196,7 +197,7 @@ DataNLLS(2,:) = ((DataObs(2,:) - ParC.y0)/ParC.b - DataNLLS(1,:)*sin(ParC.rho))/
 DataNLLS(3,:) = ((DataObs(3,:) - ParC.z0)/ParC.c - DataNLLS(1,:)*sin(ParC.phi)*cos(ParC.lambda) - DataNLLS(2,:)*sin(ParC.lambda))/(cos(ParC.phi)*cos(ParC.lambda));
 
 %Final do Timer, após correção dos parâmetros:
-Time = toc;
+%Time = toc;
 
 %Calcula o Desvio Padrão de DataNLLS em relação ao valor espesrado:
 for i=1:length(DataNLLS(1,:))
