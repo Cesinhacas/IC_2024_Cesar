@@ -54,6 +54,7 @@ for i in range(tam):
 P_tt = np.linalg.inv(F_tt)
 
 theta = np.zeros(9)
+######## PROBLEMA COM O mu_tilde ########
 for i in range(tam):
     theta += ((z_tilde[i] - mu_tilde[i])/sigma_k[i])*L_tilde[i]
 
@@ -67,15 +68,17 @@ while loop == 1:
     if passo != 0:
         theta = theta_np1
     
-    c = np.array([theta[0], theta[1], theta[2]])
+    c = np.array([theta[0], theta[1], theta[2]]).reshape(-1,1)
     E = np.array([[theta[3], theta[6], theta[7]], [theta[6], theta[4], theta[8]], [theta[7], theta[8], theta[5]]])
 
     E_inv = np.eye(3) + E
     E_inv = np.linalg.inv(E_inv)
-    tmp = (E_inv@c)@((E_inv@c).transpose())
+    tmp = (E_inv@c) @ ((E_inv@c).transpose())
     dJdthetap_tilde = ABC + F_tt@theta
-    dbsqdtheta_p = np.array([E_inv.transpose(), -tmp[0][0], -tmp[1][1], -tmp[2][2], -2*tmp[0][1], -2*tmp[0][2], -2*tmp[1][2]]).transpose()
-    dJdThetap_bar = (-(1/sigma_bar)*(L_bar.transpose() - dbsqdtheta_p)@(z_bar - L_bar.transpose()@theta + c.transpose()@(E_inv@c) - mu_bar)).transpose()
+    vet = (E_inv@c).transpose()
+    vet = np.array([vet[0][0], vet[0][1], vet[0][2]])
+    dbsqdtheta_p = np.array([vet[0], vet[1], vet[2], -tmp[0][0], -tmp[1][1], -tmp[2][2], -2*tmp[0][1], -2*tmp[0][2], -2*tmp[1][2]]).transpose()
+    dJdThetap_bar = (-(1/sigma_bar) * (L_bar - dbsqdtheta_p)*(z_bar - L_bar.transpose()@theta + c.transpose()@vet - mu_bar)).transpose()
     dJdTheta = dJdthetap_tilde + dJdThetap_bar
 
     F_tt_bar = ((L_bar.transpose()-dbsqdtheta_p).transpose()@(L_bar.transpose()-dbsqdtheta_p))/sigma_bar
@@ -89,14 +92,17 @@ while loop == 1:
         loop = 0
     passo = passo + 1
 
-U, S = np.linalg.svd(E)
+U, S, Vh = np.linalg.svd(E)
 S = np.eye(3) + S
 W = -np.eye(3) + S**0.5
 
-D = U@W@(U.transpose())
+D = U@W@Vh
 h = np.linalg.inv(D + np.eye(3))@c
 
 print("Os offsets são:\n")
 print("%.4f" % h[0], "Para x")
 print("%.4f" % h[1], "Para y")
 print("%.4f" % h[2], "Para z\n")
+
+print("A matriz interia populada é:\n")
+print(D)

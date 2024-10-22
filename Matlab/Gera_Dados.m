@@ -4,7 +4,7 @@ clear all
 close all
 clc
 
-save_data = 0;
+save_data = 1;
 
 phi(1) = 0;
 theta(1) = 0;
@@ -190,7 +190,7 @@ ylabel('y axis (G)');
 zlabel('z axis (G)');
 
 % Reconstrução da esfera
-[p] = test1(Dados_Corrompido); % ETS
+[Time,p] = test1(Dados_Corrompido); % ETS
 
 Dados_rest(1,:) =  (Dados_Corrompido(1,:) - p(4))/p(1);
 Dados_rest(2,:) = ((Dados_Corrompido(2,:) - p(5))/p(2) - Dados_rest(1,:)*sin(p(7)))/cos(p(7));
@@ -228,7 +228,7 @@ ylabel('y axis (G)');
 zlabel('z axis (G)');
 
 p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0;];
-[p1] = test2(Dados_Corrompido, p0); %NLLS
+[Tempo,passo,p1] = test2(Dados_Corrompido, p0); %NLLS
 
 Dados_rest1(1,:) =  (Dados_Corrompido(1,:) - p1(4))/p1(1);
 Dados_rest1(2,:) = ((Dados_Corrompido(2,:) - p1(5))/p1(2) - Dados_rest1(1,:)*sin(p1(7)))/cos(p1(7));
