@@ -14,7 +14,7 @@ passo = 5;
 for i=0:passo:180
     for j=6:12:354
         phi(k) = j;
-        theta(k) = i; 
+        theta(k) = i;
         it(k) = k;
         k = k + 1;
     end

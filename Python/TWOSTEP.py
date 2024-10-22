@@ -24,7 +24,7 @@ for i in range(tam):
     z_k[i] = np.linalg.norm(i_vec)**2 - H[i]**2
     mu_k[i] = -(Sigma_noise[i, 0] + Sigma_noise[i, 1] + Sigma_noise[i, 2])
     sigma_k[i] = 4*i_vec.transpose()@np.array([[Sigma_noise[i, 0], 0, 0], [0, Sigma_noise[i, 1], 0], [0, 0, Sigma_noise[i, 2]]])@i_vec + 2*(Sigma_noise[i, 0]**2 + Sigma_noise[i, 1]**2 + Sigma_noise[i, 2]**2)
-    sigma_bar = sigma_bar + 1/sigma_k[i]
+    sigma_bar += 1/sigma_k[i]
     L_k[i] = np.array([2*i_vec[0], 2*i_vec[1], 2*i_vec[2], -mx[i]**2, -my[i]**2, -mz[i]**2, -2*mx[i]*my[i], -2*mx[i]*mz[i], -2*my[i]*mz[i]])
 
 sigma_bar = 1/sigma_bar
@@ -34,9 +34,9 @@ mu_bar = 0
 L_bar = np.zeros(9)
 
 for i in range(tam):
-    z_bar = z_bar + sigma_bar*(z_k[i]/sigma_k[i])
-    mu_bar = mu_bar + sigma_bar*(mu_k[i]/sigma_k[i])
-    L_bar = L_bar + (sigma_bar/sigma_k[i])*L_k[i]
+    z_bar += sigma_bar*(z_k[i]/sigma_k[i])
+    mu_bar += sigma_bar*(mu_k[i]/sigma_k[i])
+    L_bar += (sigma_bar/sigma_k[i])*L_k[i]
 
 z_tilde = np.zeros(tam)
 mu_tilde = np.zeros(tam)
@@ -48,20 +48,18 @@ for i in range(tam):
     L_tilde[i] = L_k[i] - L_bar
 
 F_tt = np.zeros((9, 9))
-
 for i in range(tam):
-    F_tt = F_tt + (1/sigma_k[i]) * (L_tilde[i] @ L_tilde[i].transpose())
+    F_tt += L_tilde[i].reshape(-1,1) @ L_tilde[i].reshape(1,-1) / sigma_k[i]
 
 P_tt = np.linalg.inv(F_tt)
 
 theta = np.zeros(9)
-
 for i in range(tam):
-    theta = theta + ((z_tilde[i] - mu_tilde[i])/sigma_k[i])*L_tilde[i]
+    theta += ((z_tilde[i] - mu_tilde[i])/sigma_k[i])*L_tilde[i]
 
 theta = P_tt@theta
 
-ABC = -(((z_tilde-mu_tilde)/sigma_k)@L_tilde.transpose()).transpose()
+ABC = -(((z_tilde-mu_tilde)/sigma_k)@L_tilde).transpose()
 passo = 0
 loop = 1
 
@@ -72,8 +70,9 @@ while loop == 1:
     c = np.array([theta[0], theta[1], theta[2]])
     E = np.array([[theta[3], theta[6], theta[7]], [theta[6], theta[4], theta[8]], [theta[7], theta[8], theta[5]]])
 
-    E_inv = np.linalg.inv(np.eye(3)+E)
-    tmp = (E_inv@c)@(E_inv@c).transpose()
+    E_inv = np.eye(3) + E
+    E_inv = np.linalg.inv(E_inv)
+    tmp = (E_inv@c)@((E_inv@c).transpose())
     dJdthetap_tilde = ABC + F_tt@theta
     dbsqdtheta_p = np.array([E_inv.transpose(), -tmp[0][0], -tmp[1][1], -tmp[2][2], -2*tmp[0][1], -2*tmp[0][2], -2*tmp[1][2]]).transpose()
     dJdThetap_bar = (-(1/sigma_bar)*(L_bar.transpose() - dbsqdtheta_p)@(z_bar - L_bar.transpose()@theta + c.transpose()@(E_inv@c) - mu_bar)).transpose()
