@@ -114,7 +114,6 @@ for i=1:exe
     [DataNLLS, ParC, Time, Est, Erros] = NLLS_9Dcalib(ParT, ParP, Dados_Corrompido, 1, 0, 0);
     t_NLLSD = t_NLLSD + Time;
     passitos = passitos + Est.Num_It;
-    num_it_log(i) = Est.Num_It;
 
     [tempo1,p1] = test1(Dados_Corrompido);
     t_ETS = t_ETS + tempo1;
@@ -125,21 +124,12 @@ for i=1:exe
     [tempo,passo,D,h] = TWOSTEP(Dados_Corrompido,H,noise);
     t_TWOSTEP = t_TWOSTEP + tempo;
     passos = passos + passo;
-
-    cd 'TWO STEP'\
-    
-     t_TWOSTEP2_start = tic;
-    [D_est,b_est,n,Cov_est]=TWOSTEP_estimate(Dados_Corrompido,H,noise);
-    t_TWOSTEP2 = t_TWOSTEP2 + toc(t_TWOSTEP2_start);
-    cd ..
-
 end
 
 t_ETS = (t_ETS/exe)*10^3;
 t_NLLS = (t_NLLS/exe)*10^3;
 t_TWOSTEP = (t_TWOSTEP/exe)*10^3;
 t_NLLSD = (t_NLLSD/exe)*10^3;
-t_TWOSTEP2 = (t_TWOSTEP2/exe)*10^3;
 passos = passos/exe;
 steps = steps/exe;
 passitos = passitos/exe;
@@ -158,9 +148,6 @@ disp(passitos)
 
 disp("O tempo de execução do TWOSTEP em milissegundos foi:")
 disp(t_TWOSTEP)
-
-disp("O tempo de execução do TWOSTEP2 em milissegundos foi:")
-disp(t_TWOSTEP2)
 
 disp("O tempo de execução do ETS em milissegundos foi:")
 disp(t_ETS)

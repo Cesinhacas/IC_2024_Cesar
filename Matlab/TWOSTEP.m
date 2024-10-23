@@ -72,6 +72,7 @@ while(loop ==1)
         theta = theta_np1;
     end
     c = [theta(1); theta(2); theta(3)];
+    
     E = [theta(4) theta(7) theta(8);
             theta(7) theta(5) theta(9);
             theta(8) theta(9) theta(6)];

@@ -4,7 +4,7 @@ clear all
 close all
 clc
 
-save_data = 1;
+save_data = 0;
 
 phi(1) = 0;
 theta(1) = 0;
@@ -268,7 +268,7 @@ zlabel('z axis (G)');
 
 noise = .006^2*ones(3,1112); 
 H = ones(1112,1)';
-[n,D,b] = TWOSTEP(Dados_Corrompido, H ,noise);
+[Tiempo,n,D,b] = TWOSTEP(Dados_Corrompido, H ,noise);
 
 for i=1:length(Dados_Corrompido(1,:))
     Dados_rest2(:,i) = (eye(3)+D)*Dados_Corrompido(:,i) - b;
