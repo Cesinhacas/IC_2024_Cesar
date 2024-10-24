@@ -1,110 +1,75 @@
 import numpy as np
 import pandas as pd
 
-dados = pd.read_excel('C:/Users/LabT5/Onedrive/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_Corrompidos.xlsx') #/mnt/c/users/labt5/desktop/cesar/IC_2024_Cesar/dados/Dados_Corrompidos.xlsx
-mx = dados.iloc[0].values
-my = dados.iloc[1].values
-mz = dados.iloc[2].values
-
-stop = 1e-24
-tam = len(mx)
+# Critérios de parada
 passo_max = 200
+stop = 1e-24
 
-H = np.ones(tam) + 1
-Sigma_noise = (0.006**2)*np.ones((tam, 3))
+####### Dados de entrada #######
+dados = pd.read_excel('C:/Users/LabT5/Onedrive/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_Corrompidos.xlsx') #/mnt/c/users/labt5/desktop/cesar/IC_2024_Cesar/dados/Dados_Corrompidos.xlsx 
+mx = dados.iloc[0].values # Eixo x campo lido pelo sensor
+my = dados.iloc[1].values # Eixo y campo lido pelo sensor
+mz = dados.iloc[2].values # Eixo z campo lido pelo sensor
+tam = len(mx) # Tamanho dos vetores
 
+noise = 0.006**2*np.ones((3,tam)) # Covariância do erro de medição
+H = np.ones_like(mx) # Módulo do campo magnético
+
+# Inicialização dos parâmetros estatísticos
 z_k = np.zeros(tam)
 mu_k = np.zeros(tam)
 sigma_k = np.zeros(tam)
 L_k = np.zeros((tam, 9))
 sigma_bar = 0
 
+# Atribuindo valores para os parametros estatísticos e sigma_bar
 for i in range(tam):
-    i_vec = np.array([mx[i], my[i], mz[i]]).transpose()
+    i_vec = np.array([mx[i], my[i], mz[i]])
     z_k[i] = np.linalg.norm(i_vec)**2 - H[i]**2
-    mu_k[i] = -(Sigma_noise[i, 0] + Sigma_noise[i, 1] + Sigma_noise[i, 2])
-    sigma_k[i] = 4*i_vec.transpose()@np.array([[Sigma_noise[i, 0], 0, 0], [0, Sigma_noise[i, 1], 0], [0, 0, Sigma_noise[i, 2]]])@i_vec + 2*(Sigma_noise[i, 0]**2 + Sigma_noise[i, 1]**2 + Sigma_noise[i, 2]**2)
-    sigma_bar += 1/sigma_k[i]
+    mu_k[i] = -(noise[0][i] + noise[1][i] + noise[2][i])
+    sigma_k[i] = 4*i_vec@np.array([[noise[0][i], 0, 0], [0, noise[1][i], 0], [0, 0, noise[2][i]]])@i_vec.T + 2*(noise[0][i]**2 + noise[1][i]**2 + noise[2][i]**2)
     L_k[i] = np.array([2*i_vec[0], 2*i_vec[1], 2*i_vec[2], -mx[i]**2, -my[i]**2, -mz[i]**2, -2*mx[i]*my[i], -2*mx[i]*mz[i], -2*my[i]*mz[i]])
+    sigma_bar += 1/sigma_k[i]
 
 sigma_bar = 1/sigma_bar
 
+# Inicializando parâmetros que centralizam os parâmetros estatísticos
 z_bar = 0
 mu_bar = 0
 L_bar = np.zeros(9)
 
+# Atribuindo valores para os parâmetros centralizadores
 for i in range(tam):
     z_bar += sigma_bar*(z_k[i]/sigma_k[i])
     mu_bar += sigma_bar*(mu_k[i]/sigma_k[i])
     L_bar += sigma_bar*(L_k[i]/sigma_k[i])
 
-z_tilde = np.zeros(tam)
-mu_tilde = np.zeros(tam)
-L_tilde = np.zeros((tam, 9))
+# Inicializando os parâmetros estatísticos centralizados
+z_tilde = np.zeros_like(z_k)
+mu_tilde = np.zeros_like(mu_k)
+L_tilde = np.zeros_like(L_k)
 
+# Centralizando os parâmetros estatísticos
 for i in range(tam):
     z_tilde[i] = z_k[i] - z_bar
     mu_tilde[i] = mu_k[i] - mu_bar
     L_tilde[i] = L_k[i] - L_bar
 
-F_tt = np.zeros((9, 9))
+# Inicializando as matrizes fisher
+F_tt = np.zeros((9,9))
+P_tt = np.zeros((9,9))
+
 for i in range(tam):
-    F_tt += L_tilde[i].reshape(-1,1) @ L_tilde[i].reshape(1,-1) / (sigma_k[i])
+    F_tt[0][0] += L_tilde[i][0]**2/sigma_k[i]
+    F_tt[1][1] += L_tilde[i][1]**2/sigma_k[i]
+    F_tt[2][2] += L_tilde[i][2]**2/sigma_k[i]
+    F_tt[3][3] += L_tilde[i][3]**2/sigma_k[i]
+    F_tt[4][4] += L_tilde[i][4]**2/sigma_k[i]
+    F_tt[5][5] += L_tilde[i][5]**2/sigma_k[i]
+    F_tt[6][6] += L_tilde[i][6]**2/sigma_k[i]
+    F_tt[7][7] += L_tilde[i][7]**2/sigma_k[i]
+    F_tt[8][8] += L_tilde[i][8]**2/sigma_k[i]
 
 P_tt = np.linalg.inv(F_tt)
 
-theta = np.zeros(9)
-
-for i in range(tam):
-    theta += ((z_tilde[i] - mu_tilde[i])/sigma_k[i])*L_tilde[i]
-
-theta = P_tt@theta
-
-ABC = -(((z_tilde-mu_tilde)/sigma_k)@L_tilde).transpose()
-passo = 0
-loop = 1
-
-while loop == 1:
-    if passo != 0:
-        theta = theta_np1
-    
-    c = np.array([[theta[0]], [theta[1]], [theta[2]]])
-
-    E = np.array([[theta[3], theta[6], theta[7]],
-                  [theta[6], theta[4], theta[8]],
-                  [theta[7], theta[8], theta[5]]])
-
-    E_inv = np.eye(3) + E
-    E_inv = np.linalg.inv(E_inv)
-    vet = E_inv@c
-    tmp = vet @ (vet.transpose())
-    dJdthetap_tilde = (ABC + F_tt@theta)  
-    dbsqdtheta_p = np.array([[2*vet[0][0]], [2*vet[1][0]], [2*vet[2][0]], [-tmp[0][0]], [-tmp[1][1]], [-tmp[2][2]], [-2*tmp[0][1]], [-2*tmp[0][2]], [-2*tmp[1][2]]])
-    dJdThetap_bar = (-(1/sigma_bar) * (L_bar.transpose() - dbsqdtheta_p)*(z_bar - L_bar.transpose()@theta + c.transpose()@vet - mu_bar)).transpose()
-    dJdTheta = dJdthetap_tilde + dJdThetap_bar
-
-    F_tt_bar = ((L_bar-dbsqdtheta_p).reshape(1,-1)@(L_bar-dbsqdtheta_p))/sigma_bar
-
-    theta_np1 = theta - (np.linalg.inv(F_tt + F_tt_bar)@dJdTheta)
-    TS_erro = (theta_np1 - theta).transpose()@(F_tt + F_tt_bar)@(theta_np1 - theta)
-
-    if passo > passo_max:
-        loop = 0
-    if TS_erro < stop:
-        loop = 0
-    passo += 1
-
-U, S, Vh = np.linalg.svd(E)
-S = np.eye(3) + S
-W = -np.eye(3) + (np.eye(3) + S)**0.5
-
-D = U@W@Vh
-h = np.linalg.inv(D + np.eye(3))@c
-
-print("Os offsets são:\n")
-print("%.4f" % h[0], "Para x")
-print("%.4f" % h[1], "Para y")
-print("%.4f" % h[2], "Para z\n")
-
-print("A matriz interia populada é:\n")
-print(D)
+theta = np.zeros(1,9)
