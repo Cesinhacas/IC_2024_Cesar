@@ -114,7 +114,7 @@ W = -np.eye(3) + S**0.5
 
 D = U @ W @ Vh
 h = np.linalg.inv(np.eye(3) + D) @ c
-
+print("Quantidade de passos: ", passo)
 print("Os offsets são:\n")
 print(h)
 
