@@ -1,7 +1,7 @@
-#cmake_minimum_required(VERSION 3.30.3)
+cmake_minimum_required(VERSION 3.30.2)
 
-#set(CMAKE_C_COMPILER "gcc")
-#set(CMAKE_CXX_COMPILER "g++")
+set(CMAKE_C_COMPILER "gcc")
+set(CMAKE_CXX_COMPILER "g++")
 
 project(IC_2024 C)
 

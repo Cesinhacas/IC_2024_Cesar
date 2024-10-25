@@ -5,7 +5,7 @@ import time
 import ctypes
 import matplotlib.pyplot as plt
 
-my_functions = ctypes.CDLL('./functions.dll')
+my_functions = ctypes.CDLL('./functions.so')
 #dll_path = r'C:\\Users\\LabT5\\Desktop\\Cesar\\IC_2024_Cesar\\ccodes\\functions.dll'
 
 #my_functions = ctypes.CDLL(dll_path)

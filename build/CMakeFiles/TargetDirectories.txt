@@ -1,0 +1,7 @@
+/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/build/CMakeFiles/ETS.dir
+/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/build/CMakeFiles/NLLS.dir
+/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/build/CMakeFiles/functions.so.dir
+/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/build/CMakeFiles/functions.dll.dir
+/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/build/CMakeFiles/teste.dir
+/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/build/CMakeFiles/rebuild_cache.dir
