@@ -29,12 +29,10 @@ for i in range(tam):
     sigma_k[i] = 4 * i_vec.T @ np.diag(Sigma_noise[:, i]) @ i_vec + \
                     2 * np.sum(Sigma_noise[:, i]**2)
     sigma_bar += 1 / sigma_k[i]
-    L_k[:, i] = np.hstack([
-        2 * i_vec, 
-        -B[0, i]**2, -B[1, i]**2, -B[2, i]**2, 
-        -2 * B[0, i] * B[1, i], -2 * B[0, i] * B[2, i], 
-        -2 * B[1, i] * B[2, i]
-    ])
+    L_k[:, i] = np.hstack([2 * i_vec, 
+                            -B[0, i]**2, -B[1, i]**2, -B[2, i]**2, 
+                            -2 * B[0, i] * B[1, i], -2 * B[0, i] * B[2, i], 
+                            -2 * B[1, i] * B[2, i]])    
 sigma_bar = 1 / sigma_bar
 
 # Centralizando parâmetros
@@ -73,21 +71,18 @@ while loop:
         theta = theta_np1
 
     c = theta[:3]
-    E = np.array([
-        [theta[3], theta[6], theta[7]],
-        [theta[6], theta[4], theta[8]],
-        [theta[7], theta[8], theta[5]]
-    ])
+    E = np.array([  [theta[3], theta[6], theta[7]],
+                    [theta[6], theta[4], theta[8]],
+                    [theta[7], theta[8], theta[5]]])
     E_inv = np.linalg.inv(np.eye(3) + E)  # Inversa de (I + E)
     tmp = np.outer(E_inv @ c, E_inv @ c)  # Produto externo (resulta em matriz 3x3)
 
 
     dJdThetap_tilde = ABC + F_tt @ theta
     dbsqdtheta_p = np.hstack([
-        2 * E_inv @ c, 
-        -np.diag(tmp), 
-        -2 * tmp[0, 1], -2 * tmp[0, 2], -2 * tmp[1, 2]
-    ])
+                                2 * E_inv @ c, 
+                                -np.diag(tmp), 
+                                -2 * tmp[0, 1], -2 * tmp[0, 2], -2 * tmp[1, 2]])
 
     scalar_term = np.sum(c.T @ tmp)  # Reduz para escalar
     dJdThetap_bar = -(1 / sigma_bar) * (L_bar - dbsqdtheta_p) * \
@@ -114,7 +109,7 @@ W = -np.eye(3) + S**0.5
 
 D = U @ W @ Vh
 h = np.linalg.inv(np.eye(3) + D) @ c
-print("Quantidade de passos: ", passo)
+print("\nQuantidade de passos: ", passo)
 print("Os offsets são:\n")
 print(h)
 

@@ -32,7 +32,7 @@ while loop == 1
     
     J = (1/2)*(e')*e;
     
-     e_std = sqrt((1/(length(e)))*(e'*e));
+     %e_std = sqrt((1/(length(e)))*(e'*e));
     
     if passo < 3
         error_vet(passo) = J;
@@ -55,7 +55,7 @@ while loop == 1
     h8 = (2*sin(phi).*(sy*sz*(sin(lambida)*sin(rho) - cos(lambida)*cos(rho)*sin(phi)).*(bx - mx) + sx*sy*cos(rho).*(bz - mz) - sx*sz*sin(lambida).*(by - my)).^2)./(sx^2*sy^2*sz^2*cos(lambida)^2*cos(phi)^3*cos(rho)^2) - (2.*(bx - mx).*(sy*sz*(sin(lambida)*sin(rho) - cos(lambida)*cos(rho)*sin(phi)).*(bx - mx) + sx*sy*cos(rho).*(bz - mz) - sx*sz*sin(lambida).*(by - my)))./(sx^2*sy*sz*cos(lambida)*cos(phi)*cos(rho));
     h9 = (2*sin(lambida)*(sy*sz*(sin(lambida)*sin(rho) - cos(lambida)*cos(rho)*sin(phi)).*(bx - mx) + sx*sy*cos(rho).*(bz - mz) - sx*sz*sin(lambida).*(by - my)).^2)./(sx^2*sy^2*sz^2*cos(lambida)^3*cos(phi)^2*cos(rho)^2) + (2*(sy*sz*(cos(lambida)*sin(rho) + cos(rho)*sin(lambida)*sin(phi)).*(bx - mx) - sx*sz*cos(lambida).*(by - my)).*(sy*sz*(sin(lambida)*sin(rho) - cos(lambida)*cos(rho)*sin(phi)).*(bx - mx) + sx*sy*cos(rho).*(bz - mz) - sx*sz*sin(lambida).*(by - my)))./(sx^2*sy^2*sz^2*cos(lambida)^2*cos(phi)^2*cos(rho)^2);
     H = [h1 h2 h3 h4 h5 h6 h7 h8 h9];
-    deltap = inv(H'*H)*H'*e;
+    deltap = ((H'*H)\eye(9))*H'*e;
 
     p0 = p0 + deltap;
 

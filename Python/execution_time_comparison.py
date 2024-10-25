@@ -86,7 +86,7 @@ def NLLS_func(mx, my, mz):
         J = J*0.5
         
     
-        e_std = (2*J*(1/len(e)))**0.5
+        #e_std = (2*J*(1/len(e)))**0.5
         
         if passo < 3:
             error_vet.append(J)

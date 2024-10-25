@@ -13,6 +13,7 @@ mz = dados.iloc[2].values
 passo = 0
 loop = 1
 p0 = [1, 1, 1, 0, 0, 0, 0, 0, 0]
+
 Be = np.ones_like(mx)
 Be = list(map(lambda x: x**2, Be))
 e = Be
