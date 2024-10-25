@@ -1,0 +1,27 @@
+[
+{
+  "directory": "/mnt/c/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/ccodes/build",
+  "command": "/usr/bin/gcc   -g -o CMakeFiles/ETS.dir/ETS.c.o -c /mnt/c/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/ccodes/ETS.c",
+  "file": "/mnt/c/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/ccodes/ETS.c"
+},
+{
+  "directory": "/mnt/c/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/ccodes/build",
+  "command": "/usr/bin/gcc   -g -o CMakeFiles/NLLS.dir/NLLS.c.o -c /mnt/c/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/ccodes/NLLS.c",
+  "file": "/mnt/c/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/ccodes/NLLS.c"
+},
+{
+  "directory": "/mnt/c/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/ccodes/build",
+  "command": "/usr/bin/gcc   -g -o CMakeFiles/functions.so.dir/functions.c.o -c /mnt/c/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/ccodes/build/functions.c",
+  "file": "/mnt/c/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/ccodes/build/functions.c"
+},
+{
+  "directory": "/mnt/c/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/ccodes/build",
+  "command": "/usr/bin/gcc   -g -o CMakeFiles/functions.dll.dir/functions.c.o -c /mnt/c/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/ccodes/build/functions.c",
+  "file": "/mnt/c/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/ccodes/build/functions.c"
+},
+{
+  "directory": "/mnt/c/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/ccodes/build",
+  "command": "/usr/bin/gcc   -g -o CMakeFiles/teste.dir/teste.c.o -c /mnt/c/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/ccodes/teste.c",
+  "file": "/mnt/c/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/ccodes/teste.c"
+}
+]

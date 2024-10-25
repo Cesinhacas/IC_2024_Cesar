@@ -1,0 +1,1 @@
+/usr/bin/gcc -g -rdynamic CMakeFiles/functions.so.dir/functions.c.o -o functions.so  -lm 

@@ -1,0 +1,92 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "IC_2024",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ETS::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ETS-Debug-df43a19225aa2d9d9bfc.json",
+					"name" : "ETS",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "NLLS::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-NLLS-Debug-6e453b312f547954313b.json",
+					"name" : "NLLS",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "functions.dll::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-functions.dll-Debug-331fe3857339595ff188.json",
+					"name" : "functions.dll",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "functions.so::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-functions.so-Debug-4f6db1e7f67eb47771bd.json",
+					"name" : "functions.so",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "teste::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-teste-Debug-4a20d5601d62daf1fadb.json",
+					"name" : "teste",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/mnt/c/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/ccodes/build",
+		"source" : "/mnt/c/Users/LabT5/Desktop/Cesar/IC_2024_Cesar/ccodes"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}

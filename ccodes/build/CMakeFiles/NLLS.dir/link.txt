@@ -1,0 +1,1 @@
+/usr/bin/gcc -g -rdynamic CMakeFiles/NLLS.dir/NLLS.c.o -o NLLS  -lm 
