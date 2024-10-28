@@ -13,7 +13,7 @@ float mz[] = {0.744208241, 0.730223742, 0.688671849, 0.624991368, 0.515331202, 0
 
 #define N 9
 
-void inverter_matriz(float matriz[N][N], float inversa[N][N]) {
+void inverter_matriz9x9(long double matriz[N][N], long double inversa[N][N]) {
     // Inicializando a matriz identidade na matriz inversa
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
@@ -50,17 +50,56 @@ void inverter_matriz(float matriz[N][N], float inversa[N][N]) {
     }
 }
 
+#define N1 3
+
+void inverter_matriz3x3(long double matriz[N1][N1], long double inversa[N1][N1]) {
+    // Inicializando a matriz identidade na matriz inversa
+    for (int i = 0; i < N1; i++) {
+        for (int j = 0; j < N1; j++) {
+            if (i == j) {
+                inversa[i][j] = 1;
+            } else {
+                inversa[i][j] = 0;
+            }
+        }
+    }
+
+    // Aplicando o método de Gauss-Jordan
+    for (int i = 0; i < N1; i++)
+    {
+        float pivot = matriz[i][i];
+        for (int j = 0; j < N1; j++)
+        {
+            matriz[i][j] /= pivot;
+            inversa[i][j] /= pivot;
+        }
+
+        for (int k = 0; k < N1; k++)
+        {
+            if (k != i)
+            {
+                float fator = matriz[k][i];
+                for (int j = 0; j < N1; j++)
+                {
+                    matriz[k][j] -= fator * matriz[i][j];
+                    inversa[k][j] -= fator * inversa[i][j];
+                }
+            }
+        }
+    }
+}
+
 void main()
 {
     int tam1 = (sizeof(mx)/sizeof(float));
     #define tam tam1
 
-    float stop = 1e-24;
+    long double stop = 1e-24;
     int passo_max = 200;
-    float H[tam], Sigma_noise[3][tam];
+    long double H[tam], Sigma_noise[3][tam];
 
 
-    float z_k[tam], mu_k[tam], sigma_k[tam], L_k[9][tam], sigma_bar = 0;
+    long double z_k[tam], mu_k[tam], sigma_k[tam], L_k[9][tam], sigma_bar = 0;
 
     for(int i=0; i < tam; i++)
     {
@@ -83,6 +122,120 @@ void main()
         L_k[8][i] = -2*my[i]*mz[i];
     }
     sigma_bar = 1/sigma_bar;
-    printf("sigma_bar: %f\n", sigma_bar);
+    
+    long double z_bar = 0, mu_bar = 0, L_bar[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+    for(int i=0; i < tam; i++)
+    {
+        z_bar += z_k[i]*sigma_bar/sigma_k[i];
+        mu_bar += mu_k[i]*sigma_bar/sigma_k[i];
+        for(int j=0; j < 9; j++)
+        {
+            L_bar[j] += L_k[j][i]*sigma_bar/sigma_k[i];
+        }
+    }
+
+    long double z_tilde[tam], mu_tilde[tam], L_tilde[9][tam];
+    for(int i=0; i < tam; i++)
+    {
+        z_tilde[i] = z_k[i] - z_bar;
+        mu_tilde[i] = mu_k[i] - mu_bar;
+        for(int j=0; j < 9; j++)
+        {
+            L_tilde[j][i] = L_k[j][i] - L_bar[j];
+        }
+    }
+
+    long double F_tt[9][9], F_tt_copy[9][9], P_tt[9][9];
+    for(int i=0; i < 9; i++)
+    {
+        for(int j=0; j < 9; j++)
+        {
+            F_tt[i][j] = 0;
+            F_tt_copy[i][j] = 0;
+            P_tt[i][j] = 0;
+        }
+    }
+
+    for(int i=0; i < tam; i++)
+    {
+        for(int j=0; j < 9; j++)
+        {
+            for(int k=0; k < 9; k++)
+            {
+                F_tt[j][k] += L_tilde[j][i]*L_tilde[k][i]/sigma_k[i];
+                F_tt_copy[j][k] = F_tt[j][k];
+            }
+        }
+    }
+
+    inverter_matriz9x9(F_tt_copy, P_tt);
+
+    long double theta[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0}, theta1[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+    for(int i=0; i < 9; i++)
+    {
+        for(int j=0; j < tam; j++)
+        {
+            theta1[i] += ((z_tilde[j]-mu_tilde[j])*L_tilde[i][j])/sigma_k[j];
+        }
+    }
+    for(int i=0; i < 9; i++)
+    {
+        for(int j=0; j < 9; j++)
+        {
+            theta[j] += P_tt[i][j]*theta1[i];
+        }
+    }
+
+    long double ABC[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+    for(int i=0; i < 9; i++)
+    {
+        for(int j=0; j < tam; j++)
+        {
+            ABC[i] -= ((z_tilde[j]-mu_tilde[j])*L_tilde[i][j])/sigma_k[j];
+        }
+    }
+    int passo = 0, loop = 1;
+    long double TS_erro = 0, c[3], E[3][3], E_inv[3][3], tmp[3][3], dJdThetap_tilde[9], dbsqdtheta_p[9], dJdThetap_bar[9], dJdTheta[9], F_tt_bar[9][9], theta_np1[9], E_inv_c[3] = {0, 0, 0};
+
+    while(loop == 1)
+    {
+        if(passo != 0)
+        {
+            for(int i=0; i < 9; i++)
+            {
+                theta[i] = theta_np1[i];
+            }
+        }
+        
+        c[0] = theta[0];
+        c[1] = theta[1];
+        c[2] = theta[2];
+
+        E[0][0] = theta[3] + 1;
+        E[0][1] = theta[6];
+        E[0][2] = theta[7];
+        E[1][0] = theta[6];
+        E[1][1] = theta[4] + 1;
+        E[1][2] = theta[8];
+        E[2][0] = theta[7];
+        E[2][1] = theta[8];
+        E[2][2] = theta[5] + 1;
+
+        inverter_matriz3x3(E, E_inv);
+
+        for(int i=0; i < 3; i++)
+        {
+            E_inv_c[i] = (E_inv[0][i] + E_inv[1][i] + E_inv[3][i])*c[i];
+        }
+
+        
+        
+        if(passo > passo_max || TS_erro < stop)
+        {
+            loop = 0;
+        }
+        passo += 1;
+    }
+    
 
 }

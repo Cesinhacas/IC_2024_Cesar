@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "ETS"
+			"path" : "test1"
 		}
 	],
 	"backtrace" : 1,
@@ -25,13 +25,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 8,
+				"line" : 11,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 9,
+				"line" : 12,
 				"parent" : 0
 			}
 		]
@@ -42,7 +42,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g"
+					"fragment" : "-g -O0"
 				}
 			],
 			"language" : "C",
@@ -52,13 +52,13 @@
 			]
 		}
 	],
-	"id" : "ETS::@6890427a1f51a3e7e1df",
+	"id" : "test1::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "-g",
+				"fragment" : "-g -O0",
 				"role" : "flags"
 			},
 			{
@@ -67,14 +67,14 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "-lm",
+				"fragment" : "-ltmwtypes.h",
 				"role" : "libraries"
 			}
 		],
 		"language" : "C"
 	},
-	"name" : "ETS",
-	"nameOnDisk" : "ETS",
+	"name" : "test1",
+	"nameOnDisk" : "test1",
 	"paths" : 
 	{
 		"build" : ".",
@@ -95,7 +95,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "ETS.c",
+			"path" : "test1.c",
 			"sourceGroupIndex" : 0
 		}
 	],

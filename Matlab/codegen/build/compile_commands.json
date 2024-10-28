@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/codegen/build",
+  "command": "/usr/bin/gcc -g -O0 -o CMakeFiles/test1.dir/test1.c.o -c /mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/codegen/lib/test1/test1.c",
+  "file": "/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/codegen/lib/test1/test1.c",
+  "output": "CMakeFiles/test1.dir/test1.c.o"
+}
+]

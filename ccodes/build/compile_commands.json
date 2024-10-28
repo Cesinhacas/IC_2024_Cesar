@@ -1,37 +1,37 @@
 [
 {
   "directory": "/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/build",
-  "command": "/usr/bin/gcc -g -o CMakeFiles/ETS.dir/ETS.c.o -c /mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/ETS.c",
+  "command": "/usr/bin/gcc -g -O0 -o CMakeFiles/ETS.dir/ETS.c.o -c /mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/ETS.c",
   "file": "/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/ETS.c",
   "output": "CMakeFiles/ETS.dir/ETS.c.o"
 },
 {
   "directory": "/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/build",
-  "command": "/usr/bin/gcc -g -o CMakeFiles/NLLS.dir/NLLS.c.o -c /mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/NLLS.c",
+  "command": "/usr/bin/gcc -g -O0 -o CMakeFiles/NLLS.dir/NLLS.c.o -c /mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/NLLS.c",
   "file": "/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/NLLS.c",
   "output": "CMakeFiles/NLLS.dir/NLLS.c.o"
 },
 {
   "directory": "/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/build",
-  "command": "/usr/bin/gcc -g -o CMakeFiles/TWOSTEP.dir/TWOSTEP.c.o -c /mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/TWOSTEP.c",
+  "command": "/usr/bin/gcc -g -O0 -o CMakeFiles/TWOSTEP.dir/TWOSTEP.c.o -c /mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/TWOSTEP.c",
   "file": "/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/TWOSTEP.c",
   "output": "CMakeFiles/TWOSTEP.dir/TWOSTEP.c.o"
 },
 {
   "directory": "/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/build",
-  "command": "/usr/bin/gcc -g -o CMakeFiles/functions.so.dir/functions.c.o -c /mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/functions.c",
+  "command": "/usr/bin/gcc -g -O0 -o CMakeFiles/functions.so.dir/functions.c.o -c /mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/functions.c",
   "file": "/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/functions.c",
   "output": "CMakeFiles/functions.so.dir/functions.c.o"
 },
 {
   "directory": "/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/build",
-  "command": "/usr/bin/gcc -g -o CMakeFiles/functions.dll.dir/functions.c.o -c /mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/functions.c",
+  "command": "/usr/bin/gcc -g -O0 -o CMakeFiles/functions.dll.dir/functions.c.o -c /mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/functions.c",
   "file": "/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/functions.c",
   "output": "CMakeFiles/functions.dll.dir/functions.c.o"
 },
 {
   "directory": "/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/build",
-  "command": "/usr/bin/gcc -g -o CMakeFiles/teste.dir/teste.c.o -c /mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/teste.c",
+  "command": "/usr/bin/gcc -g -O0 -o CMakeFiles/teste.dir/teste.c.o -c /mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/teste.c",
   "file": "/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/teste.c",
   "output": "CMakeFiles/teste.dir/teste.c.o"
 }

@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "functions.dll"
+			"path" : "functions.so"
 		}
 	],
 	"backtrace" : 1,
@@ -42,7 +42,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g"
+					"fragment" : "-g -O0"
 				}
 			],
 			"language" : "C",
@@ -52,13 +52,13 @@
 			]
 		}
 	],
-	"id" : "functions.dll::@6890427a1f51a3e7e1df",
+	"id" : "functions.so::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "-g",
+				"fragment" : "-g -O0",
 				"role" : "flags"
 			},
 			{
@@ -73,8 +73,8 @@
 		],
 		"language" : "C"
 	},
-	"name" : "functions.dll",
-	"nameOnDisk" : "functions.dll",
+	"name" : "functions.so",
+	"nameOnDisk" : "functions.so",
 	"paths" : 
 	{
 		"build" : ".",
