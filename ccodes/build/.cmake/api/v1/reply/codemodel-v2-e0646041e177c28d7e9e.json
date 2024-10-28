@@ -1,0 +1,105 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30.2"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "IC_2024",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ETS::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ETS-Debug-de94afb5b45e0d369fd4.json",
+					"name" : "ETS",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "NLLS::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-NLLS-Debug-fff349bfb391808265f0.json",
+					"name" : "NLLS",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "TWOSTEP::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-TWOSTEP-Debug-c734b2d782c31ec7b4bc.json",
+					"name" : "TWOSTEP",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "functions.dll::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-functions.dll-Debug-aee9bd873efccd15ecee.json",
+					"name" : "functions.dll",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "functions.so::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-functions.so-Debug-4ab9151e300b28613bed.json",
+					"name" : "functions.so",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "teste::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-teste-Debug-29ec464eb92f441d415c.json",
+					"name" : "teste",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/build",
+		"source" : "/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

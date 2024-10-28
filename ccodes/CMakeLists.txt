@@ -11,6 +11,9 @@ target_link_libraries(ETS m)
 add_executable(NLLS NLLS.c)
 target_link_libraries(NLLS m)
 
+add_executable(TWOSTEP TWOSTEP.c)
+target_link_libraries(TWOSTEP m)
+
 add_executable(functions.so functions.c)
 target_link_libraries(functions.so m)
 

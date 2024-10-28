@@ -66,7 +66,7 @@ def gera_dados(erros):
 
     return dados
 
-num_exe = 1000
+num_exe = 2000
 execution_time_ETS = 0
 execution_time_NLLS = 0
 error_vet_ETS = []
