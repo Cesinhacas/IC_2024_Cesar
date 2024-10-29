@@ -77,11 +77,17 @@ while(loop ==1)
             theta(7) theta(5) theta(9);
             theta(8) theta(9) theta(6)];
     E_inv = (eye(3)+E)\eye(3);
+
     tmp = (E_inv*c)*(E_inv*c)';
+
     dJdThetap_tilde = ABC + F_tt*theta;
+
     dbsqdtheta_p=[2*(E_inv*c); -diag(tmp);-2*tmp(1,2); -2*tmp(1,3); -2*tmp(2,3)]';
+
     dJdThetap_bar = (-(1/sigma_bar)*(L_bar' - dbsqdtheta_p)*(z_bar - L_bar'*theta + c'*(E_inv*c) - mu_bar))';
+
     dJdTheta = dJdThetap_tilde + dJdThetap_bar;
+    
     
     F_tt_bar = ((L_bar'-dbsqdtheta_p)'*(L_bar'-dbsqdtheta_p))/sigma_bar;
     

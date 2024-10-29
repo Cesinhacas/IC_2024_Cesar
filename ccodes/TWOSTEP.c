@@ -162,7 +162,7 @@ void main()
         {
             for(int k=0; k < 9; k++)
             {
-                F_tt[j][k] += L_tilde[j][i]*L_tilde[k][i]/sigma_k[i];
+                F_tt[j][k] += (L_tilde[j][i]*L_tilde[k][i])/sigma_k[i];
                 F_tt_copy[j][k] = F_tt[j][k];
             }
         }
@@ -195,7 +195,7 @@ void main()
         }
     }
     int passo = 0, loop = 1;
-    long double TS_erro = 0, c[3], E[3][3], E_inv[3][3], tmp[3][3], dJdThetap_tilde[9], dbsqdtheta_p[9], dJdThetap_bar[9], dJdTheta[9], F_tt_bar[9][9], theta_np1[9], E_inv_c[3] = {0, 0, 0};
+    long double TS_erro = 0, c[3], E[3][3], E_inv[3][3], tmp[3][3], dJdThetap_tilde[9], dbsqdtheta_p[9], dJdThetap_bar[9], dJdThetap_bar_scalar = 0, dJdTheta[9], F_tt_bar[9][9], F_tt_bar_copy[9][9], F_tt_bar_vet[9], F_tt_bar_inv[9][9], theta_np1[9], E_inv_c[3] = {0, 0, 0};
 
     while(loop == 1)
     {
@@ -223,19 +223,137 @@ void main()
 
         inverter_matriz3x3(E, E_inv);
 
+        //Cálculo do vetor E_inv * c
         for(int i=0; i < 3; i++)
         {
-            E_inv_c[i] = (E_inv[0][i] + E_inv[1][i] + E_inv[3][i])*c[i];
+            E_inv_c[i] = (E_inv[i][0] + E_inv[i][2] + E_inv[i][3])*c[i];
         }
 
-        
-        
+        //Cálculo da matriz tmp = E_inv * c * E_inv * c
+        for(int i=0; i < 3; i++)
+        {
+            for(int j=0; j < 3; j++)
+            {
+                tmp[i][j] = E_inv_c[i]*E_inv_c[j];
+            }
+        }
+
+        //Cálculo do vetor dJdThetap_tilde
+        for(int i=0; i < 9; i++)
+        {
+            dJdThetap_tilde[i] = ABC[i];
+            for(int j=0; j < 9; j++)
+            {
+                dJdThetap_tilde[i] += F_tt[j][i]*theta[i];
+            }
+        }
+
+        //Cálculo do vetor dbsqdtheta_p
+        dbsqdtheta_p[0] = 2*E_inv_c[0];
+        dbsqdtheta_p[1] = 2*E_inv_c[1];
+        dbsqdtheta_p[2] = 2*E_inv_c[2];
+        dbsqdtheta_p[3] = -tmp[0][0];
+        dbsqdtheta_p[4] = -tmp[1][1];
+        dbsqdtheta_p[5] = -tmp[2][2];
+        dbsqdtheta_p[6] = -2*tmp[0][1];
+        dbsqdtheta_p[7] = -2*tmp[0][2];
+        dbsqdtheta_p[8] = -2*tmp[1][2];
+
+        //Cálculo do vetor dJdThetap_bar
+        dJdThetap_bar_scalar = 0;
+        for(int i=0; i < 9; i++)
+        {
+            dJdThetap_bar_scalar -= L_bar[i]*theta[i];
+        }
+        for(int i=0; i < 3; i++)
+        {
+            dJdThetap_bar_scalar += c[i]*E_inv_c[i];
+        }
+        dJdThetap_bar_scalar = dJdThetap_bar_scalar - mu_bar + z_bar;
+        dJdThetap_bar_scalar = -dJdThetap_bar_scalar/sigma_bar;
+        for(int i=0; i < 9; i++)
+        {
+            dJdThetap_bar[i] = dJdThetap_bar_scalar*(L_bar[i] - dbsqdtheta_p[i]);
+        }
+
+        //Cálculo do vetor dJdTheta
+        for(int i=0; i < 9; i++)
+        {
+            dJdTheta[i] = dJdThetap_tilde[i] + dJdThetap_bar[i];
+        }
+
+        //Cálculo da matriz F_tt_bar
+        for(int i=0; i < 9; i++)
+        {
+            F_tt_bar_vet[i] = (L_bar[i] - dbsqdtheta_p[i])/sigma_bar;
+        }
+        for(int i=0; i < 9; i++)
+        {
+            for(int j=0; j < 9; j++)
+            {
+                F_tt_bar[i][j] = F_tt_bar_vet[i]*F_tt_bar_vet[j] + F_tt[i][j];
+                F_tt_bar_copy[i][j] = F_tt_bar[i][j];
+            }
+        }
+
+        //Cálculo do vetor theta_np1
+        inverter_matriz9x9(F_tt_bar_copy, F_tt_bar_inv);
+        for(int i=0; i < 9; i++)
+        {
+            theta_np1[i] = theta[i];
+            for(int j=0; j < 9; j++)
+            {
+                theta_np1[i] -= F_tt_bar_inv[i][j]*dJdTheta[i];
+            }
+        }
+
+        //Cálculo do erro
+        TS_erro = 0;
+        for(int i=0; i < 9; i++)
+        {
+            for(int j=0; j < 9; j++)
+            {
+                TS_erro += (theta_np1[i] - theta[i])*F_tt_bar[i][j]*(theta_np1[j] - theta[j]);
+            }
+        }
+
+
         if(passo > passo_max || TS_erro < stop)
         {
             loop = 0;
         }
         passo += 1;
     }
-    
+    c[0] = theta[0];
+    c[1] = theta[1];
+    c[2] = theta[2];
 
+    E[0][0] = theta[3];
+    E[0][1] = theta[6];
+    E[0][2] = theta[7];
+    E[1][0] = theta[6];
+    E[1][1] = theta[4];
+    E[1][2] = theta[8];
+    E[2][0] = theta[7];
+    E[2][1] = theta[8];
+    E[2][2] = theta[5];
+
+    // Segundo passo, encontrando os parâmetros
+    long double U[3][3], S[3][3];
+    printf("Matriz c\n");
+    for(int i=0; i < 3; i++)
+    {
+        printf("%Lf \n", c[i]);
+    }
+    printf("\n");
+
+    printf("Matriz E\n");
+    for(int i=0; i < 3; i++)
+    {
+        for(int j=0; j < 3; j++)
+        {
+            printf("%Lf ", E[i][j]);
+        }
+        printf("\n");
+    }
 }
