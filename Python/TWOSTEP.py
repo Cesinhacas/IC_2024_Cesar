@@ -111,7 +111,7 @@ D = U @ W @ Vh
 h = np.linalg.inv(np.eye(3) + D) @ c
 print("\nQuantidade de passos: ", passo)
 print("Os offsets são:\n")
-print(h)
+print(h.T)
 
 print("Os elementos da matriz com os parâmetros são:\n")
 print(D)
