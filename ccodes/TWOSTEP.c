@@ -340,20 +340,5 @@ void main()
 
     // Segundo passo, encontrando os parâmetros
     double U[3][3], S[3][3];
-    printf("Matriz c\n");
-    for(int i=0; i < 3; i++)
-    {
-        printf("%f \n", c[i]);
-    }
-    printf("\n");
-
-    printf("Matriz E\n");
-    for(int i=0; i < 3; i++)
-    {
-        for(int j=0; j < 3; j++)
-        {
-            printf("%f ", E[i][j]);
-        }
-        printf("\n");
-    }
+    
 }
