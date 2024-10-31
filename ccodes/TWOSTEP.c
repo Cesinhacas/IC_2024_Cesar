@@ -13,6 +13,12 @@ double mz[] = {0.744208241, 0.730223742, 0.688671849, 0.624991368, 0.515331202, 
 
 #define N 9
 
+typedef struct {
+    double r1;
+    double r2;
+    double r3;
+    } raizes_t;
+
 void inverter_matriz9x9(double matriz[N][N], double inversa[N][N]) {
     // Inicializando a matriz identidade na matriz inversa
     for (int i = 0; i < N; i++) {
@@ -89,7 +95,7 @@ void inverter_matriz3x3(double matriz[N1][N1], double inversa[N1][N1]) {
     }
 }
 
-void resolver_cubica(double a, double b, double c, double d, double r1, double r2, double r3)
+void resolver_cubica(double a, double b, double c, double d, raizes_t *raizes)
 {
     // Passo 1: Reduzindo para a forma t^3 + pt + q = 0
     double p = (3 * a * c - b * b) / (3 * a * a);
@@ -102,122 +108,84 @@ void resolver_cubica(double a, double b, double c, double d, double r1, double r
     if (delta == 0) {
         // Três raízes reais (pelo menos duas iguais)
         double u = cbrt(-q / 2);
-        r1 = 2 * u - b / (3 * a);
-        r2 = -u - b / (3 * a);
-        r3 = r2;
+        raizes->r1 = 2 * u - b / (3 * a);
+        raizes->r2 = -u - b / (3 * a);
+        raizes->r3 = raizes->r2;
     } else {
         // Três raízes reais diferentes
         double r = sqrt(-p / 3);
         double theta = acos(-q / (2 * pow(r, 3)));
-        r1 = 2 * r * cos(theta / 3) - b / (3 * a);
-        r2 = 2 * r * cos((theta + 2 * 3.14159265358979323846) / 3) - b / (3 * a);
-        r3 = 2 * r * cos((theta + 4 * 3.14159265358979323846) / 3) - b / (3 * a);
+        raizes->r3 = 2 * r * cos(theta / 3) - b / (3 * a);
+        raizes->r1 = 2 * r * cos((theta + 2 * 3.14159265358979323846) / 3) - b / (3 * a);
+        raizes->r2 = 2 * r * cos((theta + 4 * 3.14159265358979323846) / 3) - b / (3 * a);
     }
 }
 
-// Função para fazer a eliminação de Gauss
-void eliminacao_gauss(double A[N1][N1], double autovetor[N1], double lambda) {
-    // Substitui A por (A - lambda*I)
-    for (int i = 0; i < N1; i++)
-    {
-        A[i][i] -= lambda; // A[i][i] = A[i][i] - lambda
-    }
-
-    // Aplicando o método de eliminação de Gauss
-    for (int i = 0; i < N1; i++)
-    {
-        // Encontra a linha com o maior elemento na coluna i
-        int max_row = i;
-        for (int k = i + 1; k < N1; k++)
-        {
-            if (fabs(A[k][i]) > fabs(A[max_row][i])) {
-                max_row = k;
-            }
-        }
-
-        // Troca a linha atual com a linha da maior entrada
-        for (int k = i; k < N1; k++)
-        {
-            double temp = A[max_row][k];
-            A[max_row][k] = A[i][k];
-            A[i][k] = temp;
-        }
-
-        // Faz a eliminação
-        for (int k = i + 1; k < N1; k++)
-        {
-            double fator = A[k][i] / A[i][i];
-            for (int j = i; j < N1; j++)
-            {
-                A[k][j] -= fator * A[i][j];
-            }
-        }
-    }
-
-    // Solução do sistema (obtemos o autovetor)
-    for (int i = N1 - 1; i >= 0; i--)
-    {
-        autovetor[i] = 0;
-        for (int j = i + 1; j < N1; j++)
-        {
-            autovetor[i] -= A[i][j] * autovetor[j];
-        }
-        autovetor[i] /= A[i][i]; // Normaliza
-    }
-
-    // Reverte a matriz
-    for (int i = 0; i < N1; i++)
-    {
-        A[i][i] += lambda; // Reverte A[i][i] para o original
-    }
-}
-
-
-void SVD_dec(double A[N1][N1], double U[N1][N1], double S[N1][N1], double V[N1][N1])
+void autovetor(double A[N1][N1], double lambda, double x[N1])
 {
-    double A_A_t[3][3], A_t_A[3][3], a, b, c, d, r1, r2, r3;
-    double AU1[3], AU2[3], AU3[3], AV1[3], AV2[3], AV3[3]; 
+    double A_lambda[3][3], v[3] = {1, 1, 1}, A_lambda_inv[3][3], norma = 0;
     for(int i=0; i < 3; i++)
     {
         for(int j=0; j < 3; j++)
         {
-            for(int k=0; k < 3; k++)
+            if(i == j)
             {
-                A_A_t[i][j] += A[i][k]*A[j][k];
-                A_t_A[i][j] += A[k][i]*A[k][j];
+                A_lambda[i][j] = A[i][j] - lambda;
+            }
+            else
+            {
+                A_lambda[i][j] = A[i][j];
             }
         }
     }
-    a = -1;
-    b = A_A_t[0][0] + A_A_t[1][1] + A_A_t[2][2];
-    c = -A_A_t[0][0]*A_A_t[1][1] - A_A_t[0][0]*A_A_t[2][2] - A_A_t[1][1]*A_A_t[2][2] + A_A_t[0][1]*A_A_t[1][0] + A_A_t[0][2]*A_A_t[2][0] + A_A_t[0][2]*A_A_t[2][0];
-    d = A_A_t[0][0]*A_A_t[1][1]*A_A_t[2][2] + A_A_t[0][1]*A_A_t[1][2]*A_A_t[2][0] + A_A_t[0][1]*A_A_t[1][0]*A_A_t[2][1] - A_A_t[0][1]*A_A_t[1][0]*A_A_t[2][2] - A_A_t[1][2]*A_A_t[2][1]*A_A_t[0][0] - A_A_t[0][2]*A_A_t[2][0]*A_A_t[1][1];
+    inverter_matriz3x3(A_lambda, A_lambda_inv);
+    for(int i=0; i < 3; i++)
+    {
+        x[i] = 0;
+        for(int j=0; j < 3; j++)
+        {
+            x[i] += A_lambda_inv[i][j]*v[j];
+        }
+    }
 
-    resolver_cubica(a, b, c, d, r1, r2, r3);
-    S[0][0] = sqrt(r1);
+    for(int i=0; i < 3; i++)
+    {
+        norma += x[i]*x[i];
+    }
+    norma = sqrt(norma);
+    for(int i=0; i < 3; i++)
+    {
+        x[i] /= norma;
+    }
+}
+
+
+void SVD_dec(double A[N1][N1], double U[N1][N1], double S[N1][N1])
+{
+    double a, b, c, d;
+    raizes_t raizes;
+    double AU1[3], AU2[3], AU3[3]; 
+
+    a = -1;
+    b = A[0][0] + A[1][1] + A[2][2];
+    c = -A[0][0]*A[1][1] - A[0][0]*A[2][2] - A[1][1]*A[2][2] + A[0][1]*A[1][0] + A[0][2]*A[2][0] + A[0][2]*A[2][0];
+    d = A[0][0]*A[1][1]*A[2][2] + A[0][1]*A[1][2]*A[2][0] + A[0][1]*A[1][0]*A[2][1] - A[0][1]*A[1][0]*A[2][2] - A[1][2]*A[2][1]*A[0][0] - A[0][2]*A[2][0]*A[1][1];
+
+    resolver_cubica(a, b, c, d, &raizes);
+    S[0][0] = raizes.r1;
     S[0][1] = 0;
     S[0][2] = 0;
-    S[1][1] = sqrt(r2);
+    S[1][1] = raizes.r2;
     S[1][0] = 0;
     S[1][2] = 0;
-    S[2][2] = sqrt(r3);
+    S[2][2] = raizes.r3;
     S[2][0] = 0;
     S[2][1] = 0;
 
-    eliminacao_gauss(A_A_t, AU1, r1);
-    eliminacao_gauss(A_A_t, AU2, r2);
-    eliminacao_gauss(A_A_t, AU3, r3);
-
-    a = -1;
-    b = A_t_A[0][0] + A_t_A[1][1] + A_t_A[2][2];
-    c = -A_t_A[0][0]*A_t_A[1][1] - A_t_A[0][0]*A_t_A[2][2] - A_t_A[1][1]*A_t_A[2][2] + A_t_A[0][1]*A_t_A[1][0] + A_t_A[0][2]*A_t_A[2][0] + A_t_A[0][2]*A_t_A[2][0];
-    d = A_t_A[0][0]*A_t_A[1][1]*A_t_A[2][2] + A_t_A[0][1]*A_t_A[1][2]*A_t_A[2][0] + A_t_A[0][1]*A_t_A[1][0]*A_t_A[2][1] - A_t_A[0][1]*A_t_A[1][0]*A_t_A[2][2] - A_t_A[1][2]*A_t_A[2][1]*A_t_A[0][0] - A_t_A[0][2]*A_t_A[2][0]*A_t_A[1][1];
-
-    resolver_cubica(a, b, c, d, r1, r2, r3);
-
-    eliminacao_gauss(A_t_A, AV1, r1);
-    eliminacao_gauss(A_t_A, AV2, r2);
-    eliminacao_gauss(A_t_A, AV3, r3);
+    autovetor(A, raizes.r1, AU1);
+    autovetor(A, raizes.r2, AU2);
+    autovetor(A, raizes.r3, AU3);
+    
 
     U[0][0] = AU1[0];
     U[0][1] = AU1[1];
@@ -228,16 +196,6 @@ void SVD_dec(double A[N1][N1], double U[N1][N1], double S[N1][N1], double V[N1][
     U[2][0] = AU3[0];
     U[2][1] = AU3[1];
     U[2][2] = AU3[2];
-
-    V[0][0] = AV1[0];
-    V[0][1] = AV1[1];
-    V[0][2] = AV1[2];
-    V[1][0] = AV2[0];
-    V[1][1] = AV2[1];
-    V[1][2] = AV2[2];
-    V[2][0] = AV3[0];
-    V[2][1] = AV3[1];
-    V[2][2] = AV3[2];
 }
 
 void main()
@@ -490,8 +448,8 @@ void main()
     E[2][2] = theta[5];
 
     // Segundo passo, encontrando os parâmetros
-    double U[3][3], S[3][3], V[3][3], W[3][3], D[3][3], D_copy[3][3], h[3], D_inv[3][3];
-    SVD_dec(E, U, S, V);
+    double U[3][3], S[3][3], W[3][3], D[3][3], D_copy[3][3], h[3], D_inv[3][3];
+    SVD_dec(E, U, S);
     W[0][0] = -1 + sqrt(S[0][0] + 1);
     W[0][1] = 0;
     W[0][2] = 0;
@@ -516,7 +474,7 @@ void main()
         {
             for(int k=0; k < 3; k++)
             {
-                D[i][j] += U[i][k]*W[k][k]*V[j][k];
+                D[i][j] += U[i][k]*W[k][k]*U[j][k];
             }
         }
     }
@@ -548,7 +506,7 @@ void main()
     }
 
     printf("Os parâmetros são: \n%f\n%f\n%f\n", h[0], h[1], h[2]);
-
+    printf("\n");
     printf("A matriz D é:\n");
     for(int i=0; i < 3; i++)
     {
