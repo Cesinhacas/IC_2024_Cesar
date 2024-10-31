@@ -14,7 +14,10 @@ my_functions.ETS.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctyp
 my_functions.ETS.restype = ctypes.c_void_p
 
 my_functions.NLLS.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float)]
-my_functions.NLLS.restype = ctypes.c_void_p
+my_functions.NLLS.restype = ctypes.c_int
+
+my_functions.TWOSTEP.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float)]
+my_functions.TWOSTEP.restype = ctypes.c_int
 
 def gera_dados(erros):
 
@@ -66,11 +69,15 @@ def gera_dados(erros):
 
     return dados
 
-num_exe = 2000
+num_exe = 3000
+num_exe_TW = 3000
 execution_time_ETS = 0
 execution_time_NLLS = 0
+execution_time_TWOSTEP = 0
 error_vet_ETS = []
 error_vet_NLLS = []
+passos_NLLS = 0
+passos_TWOSTEP = 0
 
 for i in range(0, num_exe):
     erros = []
@@ -85,8 +92,10 @@ for i in range(0, num_exe):
 
     p0 = np.zeros(9, dtype=np.float32)
     p1 = np.zeros(9, dtype=np.float32)
+    p2 = np.zeros(9, dtype=np.float32)
     p0_ptr = p0.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
     p1_ptr = p1.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
+    p2_ptr = p2.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
 
     time_start_ETS = time.perf_counter_ns()
     my_functions.ETS(mx_ptr, my_ptr, mz_ptr, p0_ptr)
@@ -94,18 +103,49 @@ for i in range(0, num_exe):
     execution_time_ETS += (time_end_ETS - time_start_ETS)
 
     time_start_NLLS = time.perf_counter_ns()
-    my_functions.NLLS(mx_ptr, my_ptr, mz_ptr, p1_ptr)
+    passos_NLLS_c = my_functions.NLLS(mx_ptr, my_ptr, mz_ptr, p1_ptr)
     time_end_NLLS = time.perf_counter_ns()
+    passos_NLLS += passos_NLLS_c
     execution_time_NLLS += (time_end_NLLS - time_start_NLLS)
+
+    time_start_TWOSTEP = time.perf_counter_ns()
+    passos_TWOSTEP_c = my_functions.TWOSTEP(mx_ptr, my_ptr, mz_ptr, p2_ptr)
+    time_end_TWOSTEP = time.perf_counter_ns()
+    if passos_TWOSTEP_c > 199:
+        num_exe_TW -= 1
+        passos_TWOSTEP = passos_TWOSTEP
+        execution_time_TWOSTEP = execution_time_TWOSTEP
+    else:
+        passos_TWOSTEP += passos_TWOSTEP_c
+        execution_time_TWOSTEP += (time_end_TWOSTEP - time_start_TWOSTEP)
+        
+    
+    execution_time_TWOSTEP += (time_end_TWOSTEP - time_start_TWOSTEP)
 
 
 execution_time_ETS = (execution_time_ETS/num_exe)/1000000
 
 execution_time_NLLS = (execution_time_NLLS/num_exe)/1000000
 
-ratio = execution_time_NLLS/execution_time_ETS
+execution_time_TWOSTEP = (execution_time_TWOSTEP/num_exe_TW)/1000000
 
+passos_NLLS = passos_NLLS/num_exe
+passos_TWOSTEP = passos_TWOSTEP/num_exe_TW
+
+ratio = execution_time_NLLS/execution_time_ETS
+ratio1 = execution_time_TWOSTEP/execution_time_ETS
+raatio2 = execution_time_TWOSTEP/execution_time_NLLS
+
+ratio3 = (num_exe_TW/num_exe)*100
+
+print("Número de execuções: ", num_exe)
 print("Execution time ETS: ", execution_time_ETS, "ms")
 print("Execution time NLLS: ", execution_time_NLLS, "ms")
-
+print("Passos NLLS: ", passos_NLLS)
+print("Execution time TWOSTEP: ", execution_time_TWOSTEP, "ms")
+print("Passos TWOSTEP: ", passos_TWOSTEP)
+print("Número de execuções TWOSTEP: ", num_exe_TW)
+print("Taxa de convergência: ", ratio3 , "%")
 print("Execution time razão (tempo NLLS / tempo ETS): ", ratio)
+print("Execution time razão (tempo TWOSTEP / tempo ETS): ", ratio1)
+print("Execution time razão (tempo TWOSTEP / tempo NLLS): ", raatio2)
