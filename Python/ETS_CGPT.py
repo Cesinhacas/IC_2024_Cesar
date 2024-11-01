@@ -71,21 +71,15 @@ print("%.4f" % p[6], "Para rho")
 print("%.4f" % p[7], "Para phi")
 print("%.4f" % p[8], "Para lambda")
 
-scale_i = np.linalg.inv([[p[0], 0, 0], [0, p[1], 0], [0, 0, p[2]]])
-T_inv = np.linalg.inv([[1, 0, 0], [np.sin(p[6]), np.cos(p[6]), 0], [np.sin(p[7])*np.cos(p[8]), np.sin(p[8]), np.cos(p[7])*np.cos(p[8])]])
-offset = [p[3], p[4], p[5]]
-
-dados_corrompidos = np.array([mx, my, mz]).transpose()
-
-dados_rest = dados_corrompidos.copy()
+mx_rest = np.zeros_like(mx)
+my_rest = np.zeros_like(mx)
+mz_rest = np.zeros_like(mx)
 
 for i in range(len(mx)):
-    dados_rest[i] = scale_i @ T_inv @ dados_corrompidos[i] - offset
+    mx_rest[i] = (mx[i] - p[3])/p[0]
+    my_rest[i] = ((my[i] - p[4])/p[1] - mx[i]*np.sin(p[6]))/np.cos(p[6])
+    mz_rest[i] = ((mz[i] - p[5])/p[2] - mx[i]*np.cos(p[7])*np.sin(p[7]) - my[i]*np.sin(p[8]))/(np.cos(p[7]*np.cos(p[8])))
 
-dados_rest = dados_rest.transpose()
-mx_rest = dados_rest[:][0]
-my_rest = dados_rest[:][1]
-mz_rest = dados_rest[:][2]
 
 phi, theta = np.mgrid[0.0:2.0*np.pi:100j, 0.0:np.pi:50j]
 x_sphere = np.sin(theta) * np.cos(phi)
@@ -105,7 +99,6 @@ ax1.set_ylabel('Eixo Y')
 ax1.set_zlabel('Eixo Z')
 ax1.set_title('Plot corrompido')
 ax1.set_box_aspect([1.0, 1.0, 1.0])
-
 
 ax = fig.add_subplot(122, projection='3d')
 ax.scatter(mx_rest, my_rest, mz_rest, c='r', marker='o')

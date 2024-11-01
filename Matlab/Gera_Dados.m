@@ -4,13 +4,13 @@ clear all
 close all
 clc
 
-save_data = 0;
+save_data = 1;
 
 phi(1) = 0;
 theta(1) = 0;
 it(1) = 1;
 k = 2;
-passo = 5;
+passo = 10;
 
 for i=0:passo:180
     for j=6:12:354
@@ -95,7 +95,7 @@ end
 clear all
 clc
 
-save_data = 0;
+save_data = 1;
 
 cd ../
 cd 'Dados'
@@ -126,6 +126,12 @@ for i=1:length(Data_Simul(1,:))
     Ruido(:,i) = mvnrnd(mean,sigma,1)';
     Dados_Corrompido(:,i) = scale*T*Data_Simul(:,i) + offset + Ruido(:,i); 
 end
+
+cd ..\
+cd Dados\
+save Dados_Corrompido
+cd ..\
+cd Matlab\
 
 hFig = figure;
 set(hFig, 'Position', [100 100 700*3/2 300])

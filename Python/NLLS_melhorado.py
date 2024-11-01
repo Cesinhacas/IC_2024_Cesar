@@ -92,30 +92,24 @@ print("Os fatores de escala são:\n")
 print(p0[0], "Para sx")
 print(p0[1], "Para sy")
 print(p0[2], "Para sz\n")
-print("Os fatores de escala são:\n")
+print("Os offsets são:\n")
 print(p0[3], "Para bx")
 print(p0[4], "Para by")
 print(p0[5], "Para bz\n")
-print("Os fatores de escala são:\n")
+print("Os ângulos são:\n")
 print(p0[6], "Para rho")
 print(p0[7], "Para phi")
 print(p0[8], "Para lambida")
 
-scale_i = np.linalg.inv([[p0[0], 0, 0], [0, p0[1], 0], [0, 0, p0[2]]])
-T_inv = np.linalg.inv([[1, 0, 0], [np.sin(p0[6]), np.cos(p0[6]), 0], [np.sin(p0[7])*np.cos(p0[8]), np.sin(p0[8]), np.cos(p0[7])*np.cos(p0[8])]])
-offset = [p0[3], p0[4], p0[5]]
-
-dados_corrompidos = np.array([mx, my, mz]).transpose()
-
-dados_rest = dados_corrompidos.copy()
+mx_rest = np.zeros_like(mx)
+my_rest = np.zeros_like(mx)
+mz_rest = np.zeros_like(mx)
 
 for i in range(len(mx)):
-    dados_rest[i] = scale_i @ T_inv @ dados_corrompidos[i] - offset
+    mx_rest[i] = (mx[i] - p0[3])/p0[0]
+    my_rest[i] = ((my[i] - p0[4])/p0[1] - mx[i]*np.sin(p0[6]))/np.cos(p0[6])
+    mz_rest[i] = ((mz[i] - p0[5])/p0[2] - mx[i]*np.cos(p0[7])*np.sin(p0[7]) - my[i]*np.sin(p0[8]))/(np.cos(p0[7]*np.cos(p0[8])))
 
-dados_rest = dados_rest.transpose()
-mx_rest = dados_rest[:][0]
-my_rest = dados_rest[:][1]
-mz_rest = dados_rest[:][2]
 
 phi, theta = np.mgrid[0.0:2.0*np.pi:100j, 0.0:np.pi:50j]
 x_sphere = np.sin(theta) * np.cos(phi)

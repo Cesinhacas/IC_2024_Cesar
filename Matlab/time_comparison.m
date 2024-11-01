@@ -62,7 +62,7 @@ t_TWOSTEP2 = 0;
 passos = 0;
 steps = 0;
 passitos = 0;
-exe = 2000;
+exe = 5000;
 
 for i=1:exe
     offset = (rand(3,1)*0.4)-0.2;

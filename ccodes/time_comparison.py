@@ -90,6 +90,10 @@ for i in range(0, num_exe):
     my_ptr = my.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
     mz_ptr = mz.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
 
+    mx_ptr1 = mx.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
+    my_ptr1 = my.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
+    mz_ptr1 = mz.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
+
     p0 = np.zeros(9, dtype=np.float32)
     p1 = np.zeros(9, dtype=np.float32)
     p2 = np.zeros(9, dtype=np.float32)
@@ -109,7 +113,7 @@ for i in range(0, num_exe):
     execution_time_NLLS += (time_end_NLLS - time_start_NLLS)
 
     time_start_TWOSTEP = time.perf_counter_ns()
-    passos_TWOSTEP_c = my_functions.TWOSTEP(mx_ptr, my_ptr, mz_ptr, p2_ptr)
+    passos_TWOSTEP_c = my_functions.TWOSTEP(mx_ptr1, my_ptr1, mz_ptr1, p2_ptr)
     time_end_TWOSTEP = time.perf_counter_ns()
     if passos_TWOSTEP_c > 199:
         num_exe_TW -= 1
@@ -118,9 +122,7 @@ for i in range(0, num_exe):
     else:
         passos_TWOSTEP += passos_TWOSTEP_c
         execution_time_TWOSTEP += (time_end_TWOSTEP - time_start_TWOSTEP)
-        
-    
-    execution_time_TWOSTEP += (time_end_TWOSTEP - time_start_TWOSTEP)
+
 
 
 execution_time_ETS = (execution_time_ETS/num_exe)/1000000

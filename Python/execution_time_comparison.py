@@ -264,7 +264,7 @@ y_sphere = np.sin(theta_sphere) * np.sin(phi_sphere)
 z_sphere = np.cos(theta_sphere)
 error_vet_ETS = []
 error_vet_NLLS = []
-num_exe = 1000
+num_exe = 5000
 execution_time_ETS = 0
 execution_time_NLLS = 0
 execution_time_TWOSTEP  = 0
@@ -326,10 +326,10 @@ ratio = execution_time_NLLS/execution_time_ETS
 ratio2 = execution_time_TWOSTEP/execution_time_ETS
 
 print("\n")
-print("O tempo médio de execução do TWOSTEP foi:", execution_time_TWOSTEP, "ms\n")
-print("O número médio de passos foi:", passos_TWOSTEP)
+print("O tempo médio de execução do TWOSTEP foi:", execution_time_TWOSTEP, "ms")
+print("O número médio de passos foi:\n", passos_TWOSTEP)
 print("O tempo médio de execução do ETS foi:", execution_time_ETS, "ms\n")
-print("O tempo médio de execução do NLLS foi:", execution_time_NLLS, "ms\n")
-print("O número médio de passos foi:", passos_NLLS)
+print("O tempo médio de execução do NLLS foi:", execution_time_NLLS, "ms")
+print("O número médio de passos foi:\n", passos_NLLS)
 print("A relação entre a execução foi de:","%.2f" % ratio, "(tempo de execução do NLLS/tempo de execução do ETS)")
 print("A relação entre a execução foi de:","%.2f" % ratio2, "(tempo de execução do TWOSTEP/tempo de execução do ETS)")
