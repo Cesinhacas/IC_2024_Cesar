@@ -1,10 +1,10 @@
 % Dados_Corrompido é a variável que simula as medidas dos sensores.
-% 
+% sf é o módulo do campo magnético
 % Retona-se o parâmetro p, um vetor semelhante a p0, onde os três parâmetros são as estimativas dos fatores de escala, do 4 ao 6 são as estimativas para os offsets (bias) e os três últimos valores são os ângulos Rho, Phi e Lambda.
 
 
 
-function [Time,p1] = test1(Dados_Corrompido)
+function [Time,p1] = test1(Dados_Corrompido, sf)
 
 mx = Dados_Corrompido(1,:)';
 my = Dados_Corrompido(2,:)';
@@ -32,6 +32,9 @@ divs = 2 * abs(X(5)^3) * (X(5)*(X(2)^2) - X(2)*X(3)*X(4) + (X(3)^2) + X(1)*(X(4)
 sx = -((X(5)^3) *sqrt( psi8*(-X(4)^2 + 4*X(5) )))/divs;
 sy = -((X(5)^3) *sqrt(psi8*(-X(3)^2 + 4*X(1)*X(5) )))/divs;
 sz = -((X(5)^3) *sqrt(psi8*(-X(2)^2 + 4*X(1) )))/divs;
+sx = sx/sf;
+sy = sy/sf;
+sz = sz/sf;
 
 rho = -atan( (2*X(2)*X(5) - X(3)*X(4))/(2*X(5)^2*sqrt(-(X(5)*X(2)^2 - X(2)*X(3)*X(4) + X(3)^2 + X(1)*X(4)^2 - 4*X(1)*X(5))/(X(5)^3))));
 lambida = -atan((X(4)/X(5))*sqrt(-(X(5)^2*(X(5)*X(2)^2 - X(2)*X(3)*X(4) + X(3)^2 + X(1)*X(4)^2 - 4*X(1)*X(5))/(2*X(2)^2*X(4)^2*X(5) - 4*X(2)^2*X(5)^2 - X(2)*X(3)*X(4)^3 + X(3)^2*X(4)^2 + X(1)*X(4)^4 - 8*X(1)*X(4)^2*X(5) + 16*X(1)*X(5)^2))));

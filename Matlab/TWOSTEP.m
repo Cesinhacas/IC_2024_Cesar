@@ -21,6 +21,7 @@ sigma_bar = 0;
 
 % Iniciando o 'estatistiquês', cálculo do erro das medidas, variância e
 % média dos erros
+
 for i=1:1:tam
     i_vec = [B(1,i);B(2,i);B(3,i)];
     z_k(i) = norm(i_vec)^2 - H(i)^2;

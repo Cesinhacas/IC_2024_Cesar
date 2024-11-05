@@ -9,6 +9,8 @@ mx = dados.iloc[0].values
 my = dados.iloc[1].values
 mz = dados.iloc[2].values
 
+sf = 0.5
+
 # Cálculo dos termos
 mxs = mx**2
 mys = -my**2
@@ -40,6 +42,10 @@ divs = 2 * abs(vet_X[4])**3 * (vet_X[4] * (vet_X[1]**2) - vet_X[1] * vet_X[2] * 
 sx = -(vet_X[4]**3) * (psi8 * (-vet_X[3]**2 + 4 * vet_X[4]))**0.5 / (divs)
 sy = -(vet_X[4]**3) * (psi8 * (-vet_X[2]**2 + 4 * vet_X[0] * vet_X[4]))**0.5 / (divs)
 sz = -(vet_X[4]**3) * (psi8 * (-vet_X[1]**2 + 4 * vet_X[0]))**0.5 / (divs)
+
+sx = sx/sf
+sy = sy/sf
+sz = sz/sf
 
 rho = (2 * vet_X[1] * vet_X[4] - vet_X[2] * vet_X[3]) / (2 * vet_X[4]**2 * (-(vet_X[4] * vet_X[1]**2 - vet_X[1] * vet_X[2] * vet_X[3] + vet_X[2]**2 + vet_X[0] * vet_X[3]**2 - 4 * vet_X[0] * vet_X[4]) / (vet_X[4]**3))**0.5)
 rho = -np.arctan(rho)
@@ -82,9 +88,9 @@ for i in range(len(mx)):
 
 
 phi, theta = np.mgrid[0.0:2.0*np.pi:100j, 0.0:np.pi:50j]
-x_sphere = np.sin(theta) * np.cos(phi)
-y_sphere = np.sin(theta) * np.sin(phi)
-z_sphere = np.cos(theta)
+x_sphere = (np.sin(theta) * np.cos(phi))*sf
+y_sphere = (np.sin(theta) * np.sin(phi))*sf
+z_sphere = (np.cos(theta))*sf
 
 
 # Criar uma figura

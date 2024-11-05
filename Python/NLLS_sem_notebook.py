@@ -1,10 +1,13 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 dados = pd.read_excel('C:/Users/LabT5/Onedrive/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_Corrompidos.xlsx') #/mnt/c/users/labt5/desktop/cesar/IC_2024_Cesar/dados/Dados_Corrompidos.xlsx
 mx = dados.iloc[0].values
 my = dados.iloc[1].values
 mz = dados.iloc[2].values
+sf = 0.5
 tam = range(len(mx))
 
 passo = 0
@@ -20,7 +23,7 @@ h6 = mx.copy()
 h7 = mx.copy()
 h8 = mx.copy()
 h9 = mx.copy()
-Be = np.ones(len(mx))
+Be = np.ones(len(mx))*sf
 Be = list(map(lambda x: x**2, Be))
 e = Be
 error_vet = mx.copy()
@@ -110,3 +113,44 @@ print("Os ângulos são:\n")
 print(p0[6], "Para rho")
 print(p0[7], "Para phi")
 print(p0[8], "Para lambda")
+
+mx_rest = np.zeros_like(mx)
+my_rest = np.zeros_like(mx)
+mz_rest = np.zeros_like(mx)
+
+for i in range(len(mx)):
+    mx_rest[i] = (mx[i] - p0[3])/p0[0]
+    my_rest[i] = ((my[i] - p0[4])/p0[1] - mx[i]*np.sin(p0[6]))/np.cos(p0[6])
+    mz_rest[i] = ((mz[i] - p0[5])/p0[2] - mx[i]*np.cos(p0[7])*np.sin(p0[7]) - my[i]*np.sin(p0[8]))/(np.cos(p0[7]*np.cos(p0[8])))
+
+
+phi, theta = np.mgrid[0.0:2.0*np.pi:100j, 0.0:np.pi:50j]
+x_sphere = (np.sin(theta) * np.cos(phi))*sf
+y_sphere = (np.sin(theta) * np.sin(phi))*sf
+z_sphere = (np.cos(theta))*sf
+
+
+# Criar uma figura
+fig = plt.figure(figsize=(12,6))
+
+
+ax1 = fig.add_subplot(121, projection='3d')
+ax1.scatter(mx, my, mz, c='r', marker='o')
+ax1.plot_wireframe(x_sphere, y_sphere, z_sphere, color='grey', alpha=0.5)
+ax1.set_xlabel('Eixo X')
+ax1.set_ylabel('Eixo Y')
+ax1.set_zlabel('Eixo Z')
+ax1.set_title('Plot corrompido')
+ax1.set_box_aspect([1.0, 1.0, 1.0])
+
+ax = fig.add_subplot(122, projection='3d')
+ax.scatter(mx_rest, my_rest, mz_rest, c='r', marker='o')
+ax.plot_wireframe(x_sphere, y_sphere, z_sphere, color='grey', alpha=0.5)
+ax.set_xlabel('Eixo X')
+ax.set_ylabel('Eixo Y')
+ax.set_zlabel('Eixo Z')
+ax.set_title('Plot reconstrução')
+ax.set_box_aspect([1.0, 1.0, 1.0])
+
+#plt.tight_layout()
+plt.show()

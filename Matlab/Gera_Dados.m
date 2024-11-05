@@ -29,7 +29,7 @@ it(k) = k;
 phi_Rad = pi/180*phi; 
 theta_Rad = pi/180*theta;
 
-r = 1;
+r = 0.5;
 
 x = r.*cos(theta_Rad).*sin(phi_Rad);
 y = r.*sin(theta_Rad).*sin(phi_Rad);
@@ -38,12 +38,12 @@ z = r.*cos(phi_Rad);
 Dados = [x; y; z];
 % figure
 % plot(it, Dados,'o')
-
+% 
 % norm(Dados(:,60));
 % figure 
 % plot3(x,y,z,'.')
 % grid on
-
+% 
 % hFig = figure
 % set(hFig, 'Position', [100 100 700 300])
 % subplot(1,2,1)
@@ -52,7 +52,7 @@ Dados = [x; y; z];
 % set(gcf,...
 % 'PaperPosition',[0 0 screenposition(3:4)],...
 % 'PaperSize',[screenposition(3:4)]);
-%  e = 1;
+%  e = 0.5;
 %  a = 1.1*e;
 % [x,y,z] = sphere;
 % x = e*x;
@@ -75,7 +75,7 @@ Dados = [x; y; z];
 % xlabel('x axis (G)');
 % ylabel('y axis (G)');
 % zlabel('z axis (G)');
-
+% 
 % Dados_Paper_Ref_Norm = [Dados];
 
 
@@ -95,6 +95,7 @@ end
 clear all
 clc
 
+r = 0.5;
 save_data = 1;
 
 cd ../
@@ -141,7 +142,7 @@ screenposition = get(gcf,'Position');
 set(gcf,...
 'PaperPosition',[0 0 screenposition(3:4)],...
 'PaperSize',[screenposition(3:4)]);
- e = 1;
+ e = 0.5;
  a = 1.1*e;
 [x,y,z] = sphere;
 x = e*x;
@@ -171,7 +172,7 @@ screenposition = get(gcf,'Position');
 set(gcf,...
 'PaperPosition',[0 0 screenposition(3:4)],...
 'PaperSize',[screenposition(3:4)]);
- e = 1;
+ e = 0.5;
  a = 1.1*e;
 [x,y,z] = sphere;
 x = e*x;
@@ -196,12 +197,11 @@ ylabel('y axis (G)');
 zlabel('z axis (G)');
 
 % Reconstrução da esfera
-[Time,p] = test1(Dados_Corrompido); % ETS
+[Time,p] = test1(Dados_Corrompido, r); % ETS
 
 Dados_rest(1,:) =  (Dados_Corrompido(1,:) - p(4))/p(1);
 Dados_rest(2,:) = ((Dados_Corrompido(2,:) - p(5))/p(2) - Dados_rest(1,:)*sin(p(7)))/cos(p(7));
 Dados_rest(3,:) = ((Dados_Corrompido(3,:) - p(6))/p(3) - Dados_rest(1,:)*sin(p(8))*cos(p(9)) - Dados_rest(2,:)*sin(p(9)))/(cos(p(8))*cos(p(9)));
-
 
 subplot(2,3,3)
 set(gcf,'Units','inches');
@@ -209,7 +209,7 @@ screenposition = get(gcf,'Position');
 set(gcf,...
 'PaperPosition',[0 0 screenposition(3:4)],...
 'PaperSize',[screenposition(3:4)]);
- e = 1;
+ e = 0.5;
  a = 1.1*e;
 [x,y,z] = sphere;
 x = e*x;
@@ -233,8 +233,9 @@ xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
 
+H = r*ones(572,1);
 p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0;];
-[Tempo,passo,p1] = test2(Dados_Corrompido, p0); %NLLS
+[Tempo,passo,p1] = test2(Dados_Corrompido, p0, H); %NLLS
 
 Dados_rest1(1,:) =  (Dados_Corrompido(1,:) - p1(4))/p1(1);
 Dados_rest1(2,:) = ((Dados_Corrompido(2,:) - p1(5))/p1(2) - Dados_rest1(1,:)*sin(p1(7)))/cos(p1(7));
@@ -247,7 +248,7 @@ screenposition = get(gcf,'Position');
 set(gcf,...
 'PaperPosition',[0 0 screenposition(3:4)],...
 'PaperSize',[screenposition(3:4)]);
- e = 1;
+ e = 0.5;
  a = 1.1*e;
 [x,y,z] = sphere;
 x = e*x;
@@ -272,8 +273,7 @@ ylabel('y axis (G)');
 zlabel('z axis (G)');
 
 
-noise = .006^2*ones(3,1112); 
-H = ones(1112,1)';
+noise = .006^2*ones(3,1112);
 [Tiempo,n,D,b] = TWOSTEP(Dados_Corrompido, H ,noise);
 
 for i=1:length(Dados_Corrompido(1,:))
@@ -288,7 +288,7 @@ screenposition = get(gcf,'Position');
 set(gcf,...
 'PaperPosition',[0 0 screenposition(3:4)],...
 'PaperSize',[screenposition(3:4)]);
- e = 1;
+ e = 0.5;
  a = 1.1*e;
 [x,y,z] = sphere;
 x = e*x;

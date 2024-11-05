@@ -129,9 +129,9 @@ my_rest = dados_rest[:][1]
 mz_rest = dados_rest[:][2]
 
 phi, theta = np.mgrid[0.0:2.0*np.pi:100j, 0.0:np.pi:50j]
-x_sphere = np.sin(theta) * np.cos(phi)
-y_sphere = np.sin(theta) * np.sin(phi)
-z_sphere = np.cos(theta)
+x_sphere = (np.sin(theta) * np.cos(phi))*0.5
+y_sphere = (np.sin(theta) * np.sin(phi))*0.5
+z_sphere = np.cos(theta)*0.5
 
 
 # Criar uma figura

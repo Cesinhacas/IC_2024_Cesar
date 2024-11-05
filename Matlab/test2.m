@@ -3,16 +3,16 @@
 % é de extrema relevância. Sugestão: p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0], onde
 % os três primeiros valores são o fator de escala, do 4 ao 6 bias(offset) e
 % os três últimos são os ângulos: Rho, Phi e Lambda.
+% Be é o vetor com o módulo do campo de cada medida.
 % Retona-se o parâmetro p, um vetor semelhante a p0.
 
 
-function [Time, passo, p] = test2(Dados_Corrompido, p0)
+function [Time, passo, p] = test2(Dados_Corrompido, p0, Be)
 passo = 1;
 loop = 1;
 mx = Dados_Corrompido(1,:)';
 my = Dados_Corrompido(2,:)';
 mz = Dados_Corrompido(3,:)';
-Be = ones(length(mx),1);
 
 tic;
 while loop == 1
@@ -35,13 +35,13 @@ while loop == 1
      %e_std = sqrt((1/(length(e)))*(e'*e));
     
     if passo < 3
-        error_vet(passo) = J;
+        error_ant = J;
     else
-        error_vet(passo) = J;
-        delta_J = 100*abs(error_vet(passo)-error_vet(passo-1))/error_vet(passo);
+        delta_J = 100*abs(J-error_ant)/J;
         if delta_J < 0.1
             loop = 0;
         end
+        error_ant = J;
     end
     
     
