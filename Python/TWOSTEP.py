@@ -3,18 +3,19 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-dados = pd.read_excel('C:/Users/LabT5/Onedrive/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_Corrompidos.xlsx') #mnt/c/users/labt5/OneDrive/desktop/cesar/IC_2024_Cesar/dados/Dados_Corrompidos.xlsx
+dados = pd.read_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_Corrompido.csv', header=None) #/mnt/c/users/labt5/desktop/cesar/IC_2024_Cesar/dados/Dados_Corrompido.csv
 mx = dados.iloc[0].values
 my = dados.iloc[1].values
 mz = dados.iloc[2].values
 B = np.vstack([mx, my, mz])
+sf = 1
 
 # Parâmetros iniciais
 stop = 1e-24
 tam = B.shape[1]
 passo_max = 200
 Sigma_noise = (0.006**2)*np.ones((3, tam))
-H = np.ones(tam)
+H = np.ones(tam)*sf
 
 # Iniciando variáveis
 z_k = np.zeros(tam)
@@ -77,7 +78,7 @@ while loop:
                     [theta[6], theta[4], theta[8]],
                     [theta[7], theta[8], theta[5]]])
     E_inv = np.linalg.inv(np.eye(3) + E)  # Inversa de (I + E)
-    tmp = np.outer(E_inv @ c, E_inv @ c)  # Produto externo (resulta em matriz 3x3)
+    tmp = np.outer(E_inv @ c, (E_inv @ c).T)  # Produto externo (resulta em matriz 3x3)
 
 
     dJdThetap_tilde = ABC + F_tt @ theta
@@ -129,9 +130,9 @@ my_rest = dados_rest[:][1]
 mz_rest = dados_rest[:][2]
 
 phi, theta = np.mgrid[0.0:2.0*np.pi:100j, 0.0:np.pi:50j]
-x_sphere = (np.sin(theta) * np.cos(phi))*0.5
-y_sphere = (np.sin(theta) * np.sin(phi))*0.5
-z_sphere = np.cos(theta)*0.5
+x_sphere = (np.sin(theta) * np.cos(phi))*sf
+y_sphere = (np.sin(theta) * np.sin(phi))*sf
+z_sphere = np.cos(theta)*sf
 
 
 # Criar uma figura
@@ -156,5 +157,5 @@ ax.set_zlabel('Eixo Z')
 ax.set_title('Plot reconstrução')
 ax.set_box_aspect([1.0, 1.0, 1.0])
 
-#plt.tight_layout()
+plt.tight_layout()
 plt.show()

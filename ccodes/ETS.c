@@ -52,6 +52,8 @@ void main()
     int tam1 = (sizeof(mx)/sizeof(float));
     #define tam tam1
 
+    float sf = 0.5;
+
     //Cria a matriz H
     float mat_H[N][tam], my_2[tam];
     for(int i=0; i < tam; i++)
@@ -125,6 +127,9 @@ void main()
     sx = -pow(X[4], 3) * sqrt(psi8 * (-pow(X[3], 2) + 4*X[4])) / (divs);
     sy = -pow(X[4], 3) * sqrt(psi8 * (-pow(X[2], 2) + 4*X[0]*X[4])) / (divs);
     sz = -pow(X[4], 3) * sqrt(psi8 * (-pow(X[1], 2) + 4*X[0])) / (divs);
+    sx = sx/sf;
+    sy = sy/sf;
+    sz = sz/sf;
 
     rho = (2 * X[1]*X[4] - X[2]*X[3]) / (2*pow(X[4], 2) * sqrt(-(X[4]*pow(X[1], 2) - X[1]*X[2]*X[3] + pow(X[2], 2) + X[0]*pow(X[3], 2) - 4*X[0]*X[4]) / (pow(X[4], 3))));
     rho = -atan(rho);

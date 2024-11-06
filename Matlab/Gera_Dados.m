@@ -10,7 +10,7 @@ phi(1) = 0;
 theta(1) = 0;
 it(1) = 1;
 k = 2;
-passo = 10;
+passo = 5;
 
 for i=0:passo:180
     for j=6:12:354
@@ -29,7 +29,7 @@ it(k) = k;
 phi_Rad = pi/180*phi; 
 theta_Rad = pi/180*theta;
 
-r = 0.5;
+r = 1;
 
 x = r.*cos(theta_Rad).*sin(phi_Rad);
 y = r.*sin(theta_Rad).*sin(phi_Rad);
@@ -95,7 +95,7 @@ end
 clear all
 clc
 
-r = 0.5;
+r = 1;
 save_data = 1;
 
 cd ../
@@ -131,6 +131,7 @@ end
 cd ..\
 cd Dados\
 save Dados_Corrompido
+writematrix(Dados_Corrompido, 'Dados_Corrompido.csv')
 cd ..\
 cd Matlab\
 
@@ -142,7 +143,7 @@ screenposition = get(gcf,'Position');
 set(gcf,...
 'PaperPosition',[0 0 screenposition(3:4)],...
 'PaperSize',[screenposition(3:4)]);
- e = 0.5;
+ e = r;
  a = 1.1*e;
 [x,y,z] = sphere;
 x = e*x;
@@ -172,7 +173,7 @@ screenposition = get(gcf,'Position');
 set(gcf,...
 'PaperPosition',[0 0 screenposition(3:4)],...
 'PaperSize',[screenposition(3:4)]);
- e = 0.5;
+ e = r;
  a = 1.1*e;
 [x,y,z] = sphere;
 x = e*x;
@@ -209,7 +210,7 @@ screenposition = get(gcf,'Position');
 set(gcf,...
 'PaperPosition',[0 0 screenposition(3:4)],...
 'PaperSize',[screenposition(3:4)]);
- e = 0.5;
+ e = r;
  a = 1.1*e;
 [x,y,z] = sphere;
 x = e*x;
@@ -233,7 +234,7 @@ xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
 
-H = r*ones(572,1);
+H = r*ones(1112,1);
 p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0;];
 [Tempo,passo,p1] = test2(Dados_Corrompido, p0, H); %NLLS
 
@@ -248,7 +249,7 @@ screenposition = get(gcf,'Position');
 set(gcf,...
 'PaperPosition',[0 0 screenposition(3:4)],...
 'PaperSize',[screenposition(3:4)]);
- e = 0.5;
+ e = r;
  a = 1.1*e;
 [x,y,z] = sphere;
 x = e*x;
@@ -288,7 +289,7 @@ screenposition = get(gcf,'Position');
 set(gcf,...
 'PaperPosition',[0 0 screenposition(3:4)],...
 'PaperSize',[screenposition(3:4)]);
- e = 0.5;
+ e = r;
  a = 1.1*e;
 [x,y,z] = sphere;
 x = e*x;

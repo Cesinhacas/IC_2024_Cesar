@@ -4,17 +4,18 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 
-dados = pd.read_excel('C:/Users/LabT5/Onedrive/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_Corrompidos.xlsx') #/mnt/c/users/labt5/desktop/cesar/IC_2024_Cesar/dados/Dados_Corrompidos.xlsx
+dados = pd.read_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_Corrompido.csv', header=None) #/mnt/c/users/labt5/desktop/cesar/IC_2024_Cesar/dados/Dados_Corrompido.csv
 mx = dados.iloc[0].values
 my = dados.iloc[1].values
 mz = dados.iloc[2].values
+sf = 1/2
 
 
 passo = 0
 loop = 1
 p0 = [1, 1, 1, 0, 0, 0, 0, 0, 0]
 
-Be = np.ones_like(mx)
+Be = np.ones_like(mx)*sf
 Be = list(map(lambda x: x**2, Be))
 e = Be
 error_vet = []
@@ -112,9 +113,9 @@ for i in range(len(mx)):
 
 
 phi, theta = np.mgrid[0.0:2.0*np.pi:100j, 0.0:np.pi:50j]
-x_sphere = np.sin(theta) * np.cos(phi)
-y_sphere = np.sin(theta) * np.sin(phi)
-z_sphere = np.cos(theta)
+x_sphere = (np.sin(theta) * np.cos(phi))*sf
+y_sphere = (np.sin(theta) * np.sin(phi))*sf
+z_sphere = np.cos(theta)*sf
 
 
 # Criar uma figura
