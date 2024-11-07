@@ -399,7 +399,7 @@ void main()
             dJdThetap_bar_scalar += c[i]*E_inv_c[i];
         }
         dJdThetap_bar_scalar = dJdThetap_bar_scalar - mu_bar + z_bar;
-        dJdThetap_bar_scalar = -dJdThetap_bar_scalar/sigma_bar;
+        dJdThetap_bar_scalar = dJdThetap_bar_scalar*(-1/sigma_bar);
         for(int i=0; i < 9; i++)
         {
             dJdThetap_bar[i] = dJdThetap_bar_scalar*(L_bar[i] - dbsqdtheta_p[i]);

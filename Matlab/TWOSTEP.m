@@ -83,7 +83,7 @@ while(loop ==1)
 
     dJdThetap_tilde = ABC + F_tt*theta;
 
-    dbsqdtheta_p=[2*(E_inv*c); -diag(tmp);-2*tmp(1,2); -2*tmp(1,3); -2*tmp(2,3)]';
+    dbsqdtheta_p=[2*(E_inv*c); -diag(tmp); -2*tmp(1,2); -2*tmp(1,3); -2*tmp(2,3)]';
 
     dJdThetap_bar = (-(1/sigma_bar)*(L_bar' - dbsqdtheta_p)*(z_bar - L_bar'*theta + c'*(E_inv*c) - mu_bar))';
 

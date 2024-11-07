@@ -132,6 +132,7 @@ cd ..\
 cd Dados\
 save Dados_Corrompido
 writematrix(Dados_Corrompido, 'Dados_Corrompido.csv')
+Dados_Corrompido = readmatrix('Dados_Corrompido.csv');
 cd ..\
 cd Matlab\
 

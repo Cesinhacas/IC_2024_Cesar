@@ -77,19 +77,20 @@ while loop:
     E = np.array([  [theta[3], theta[6], theta[7]],
                     [theta[6], theta[4], theta[8]],
                     [theta[7], theta[8], theta[5]]])
-    E_inv = np.linalg.inv(np.eye(3) + E)  # Inversa de (I + E)
-    tmp = np.outer(E_inv @ c, (E_inv @ c).T)  # Produto externo (resulta em matriz 3x3)
+    
+    E_inv = np.array([  [theta[3] + 1, theta[6], theta[7]],
+                        [theta[6], theta[4] + 1, theta[8]],
+                        [theta[7], theta[8], theta[5] + 1]])
+    E_inv = np.linalg.inv(E_inv)  # Inversa de (I + E)
+    tmp = np.outer(E_inv @ c, E_inv @ c)  # Produto externo (resulta em matriz 3x3)
 
 
     dJdThetap_tilde = ABC + F_tt @ theta
-    dbsqdtheta_p = np.hstack([
-                                2 * E_inv @ c, 
+    dbsqdtheta_p = np.hstack([   2 * E_inv @ c, 
                                 -np.diag(tmp), 
                                 -2 * tmp[0, 1], -2 * tmp[0, 2], -2 * tmp[1, 2]])
 
-    scalar_term = np.sum(c.T @ tmp)  # Reduz para escalar
-    dJdThetap_bar = -(1 / sigma_bar) * (L_bar - dbsqdtheta_p) * \
-                    (z_bar - L_bar @ theta + scalar_term - mu_bar)
+    dJdThetap_bar = (-1/sigma_bar) * (L_bar - dbsqdtheta_p) * (z_bar - mu_bar - (L_bar.T @ theta) + (c.T @ E_inv @ c)) 
 
 
     dJdTheta = dJdThetap_tilde + dJdThetap_bar
