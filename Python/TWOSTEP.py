@@ -92,7 +92,6 @@ while loop:
 
     dJdThetap_bar = (-1/sigma_bar) * (L_bar - dbsqdtheta_p) * (z_bar - mu_bar - (L_bar.T @ theta) + (c.T @ E_inv @ c)) 
 
-
     dJdTheta = dJdThetap_tilde + dJdThetap_bar
 
     F_tt_bar = np.outer(L_bar - dbsqdtheta_p, L_bar - dbsqdtheta_p) / sigma_bar

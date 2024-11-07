@@ -217,10 +217,7 @@ def TWOSTEP_func(mx, my, mz):
             -2 * tmp[0, 1], -2 * tmp[0, 2], -2 * tmp[1, 2]
         ])
 
-        scalar_term = np.sum(c.T @ tmp)  # Reduz para escalar
-        dJdThetap_bar = -(1 / sigma_bar) * (L_bar - dbsqdtheta_p) * \
-                        (z_bar - L_bar @ theta + scalar_term - mu_bar)
-
+        dJdThetap_bar = (-1/sigma_bar) * (L_bar - dbsqdtheta_p) * (z_bar - mu_bar - (L_bar.T @ theta) + (c.T @ E_inv @ c)) 
 
         dJdTheta = dJdThetap_tilde + dJdThetap_bar
 
