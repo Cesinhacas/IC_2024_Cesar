@@ -44,7 +44,7 @@ if save_data==1
     cd 'Matlab'
 end
 
-%% Gera dados corrompidos
+% Gera dados corrompidos
 % OFFSET => -0.2 ~ 0.2
 % Fs => 0.8 ~ 1.2
 % Ang => -3 ~ 3 ** transformar de grau para radiano.
@@ -54,6 +54,7 @@ end
 % load Dados_Corrompidos.mat
 
 Data_Simul = Dados_Teoricos;
+r = 1;
 t_NLLS = 0;
 t_NLLSD = 0;
 t_ETS = 0;
@@ -86,7 +87,7 @@ for i=1:exe
 
     p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0];
    
-    [tempo,step,p] = test2(Dados_Corrompido, p0);
+    [tempo,step,p] = test2(Dados_Corrompido, p0, r);
     t_NLLS = t_NLLS + tempo;
     steps = steps + step;
     
@@ -115,7 +116,7 @@ for i=1:exe
     t_NLLSD = t_NLLSD + Time;
     passitos = passitos + Est.Num_It;
 
-    [tempo1,p1] = test1(Dados_Corrompido);
+    [tempo1,p1] = test1(Dados_Corrompido, r);
     t_ETS = t_ETS + tempo1;
     
     noise = 0.006^2*ones(3,1112);

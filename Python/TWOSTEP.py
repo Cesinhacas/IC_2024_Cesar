@@ -8,7 +8,7 @@ mx = dados.iloc[0].values
 my = dados.iloc[1].values
 mz = dados.iloc[2].values
 B = np.vstack([mx, my, mz])
-sf = 1
+sf = 1/2
 
 # Parâmetros iniciais
 stop = 1e-24

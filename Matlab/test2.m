@@ -25,8 +25,15 @@ while loop == 1
     rho = p0(7);
     phi = p0(8);
     lambida = p0(9);
+
+    sin_rho = sin(rho);
+    cos_rho = cos(rho);
+    sin_phi = sin(phi);
+    cos_phi = cos(phi);
+    sin_lambida = sin(lambida);
+    cos_lambida = cos(lambida);
     
-    f = (mx-bx).^2/(sx)^2 + (sx*(my-by) - sy*sin(rho)*(mx-bx)).^2/(sx*sy*cos(rho))^2 + (sx*sy*cos(rho)*(mz-bz) - sx*sz*sin(lambida)*(my-by) + sy*sz*(sin(lambida)*sin(rho) - cos(rho)*sin(phi)*cos(lambida))*(mx-bx)).^2/(sx*sy*sz*cos(rho)*cos(phi)*cos(lambida))^2;
+    f = (mx-bx).^2/(sx)^2 + (sx*(my-by) - sy*sin_rho*(mx-bx)).^2/(sx*sy*cos_rho)^2 + (sx*sy*cos_rho*(mz-bz) - sx*sz*sin_lambida*(my-by) + sy*sz*(sin_lambida*sin_rho - cos_rho*sin_phi*cos_lambida)*(mx-bx)).^2/(sx*sy*sz*cos_rho*cos_phi*cos_lambida)^2;
 
     e = Be.^2 - f;
     
@@ -43,17 +50,16 @@ while loop == 1
         end
         error_ant = J;
     end
-    
-    
-    h1 = (2*(sx*(by - my) - sy*sin(rho)*(bx - mx)).*(by - my))./(sx^2*sy^2*cos(rho)^2) - (2*(sx*(by - my) - sy*sin(rho)*(bx - mx)).^2)./(sx^3*sy^2*cos(rho)^2) - (2*(bx - mx).^2)./sx^3 - (2*(sy*sz*(sin(lambida)*sin(rho) - cos(lambida)*cos(rho)*sin(phi)).*(bx - mx) + sx*sy*cos(rho).*(bz - mz) - sx*sz*sin(lambida)*(by - my)).^2)./(sx^3*sy^2*sz^2*cos(lambida)^2*cos(phi)^2*cos(rho)^2) + (2*(sy*cos(rho).*(bz - mz) - sz*sin(lambida)*(by - my)).*(sy*sz*(sin(lambida)*sin(rho) - cos(lambida)*cos(rho)*sin(phi)).*(bx - mx) + sx*sy*cos(rho).*(bz - mz) - sx*sz*sin(lambida).*(by - my)))./(sx^2*sy^2*sz^2*cos(lambida)^2*cos(phi)^2*cos(rho)^2);
-    h2 = -(2*(by - my).*(by*sx*sz*sin(lambida)^2 - my*sx*sz*sin(lambida)^2 + by*sx*sz*cos(lambida)^2*cos(phi)^2 - my*sx*sz*cos(lambida)^2*cos(phi)^2 - bz*sx*sy*cos(rho)*sin(lambida) + mz*sx*sy*cos(rho)*sin(lambida) - bx*sy*sz*sin(lambida)^2*sin(rho) + mx*sy*sz*sin(lambida)^2*sin(rho) - bx*sy*sz*cos(lambida)^2*cos(phi)^2*sin(rho) + mx*sy*sz*cos(lambida)^2*cos(phi)^2*sin(rho) + bx*sy*sz*cos(lambida)*cos(rho)*sin(lambida)*sin(phi) - mx*sy*sz*cos(lambida)*cos(rho)*sin(lambida)*sin(phi)))/(sx*sy^3*sz*cos(lambida)^2*cos(phi)^2*cos(rho)^2);
-    h3 = -(2*(bz - mz).*(bz*sx*sy*cos(rho) - by*sx*sz*sin(lambida) - mz*sx*sy*cos(rho) + my*sx*sz*sin(lambida) + bx*sy*sz*sin(lambida)*sin(rho) - mx*sy*sz*sin(lambida)*sin(rho) - bx*sy*sz*cos(lambida)*cos(rho)*sin(phi) + mx*sy*sz*cos(lambida)*cos(rho)*sin(phi)))./(sx*sy*sz^3*cos(lambida)^2*cos(phi)^2*cos(rho));
-    h4 = (2*bx - 2*mx)/sx^2 - (2*sin(rho)*(sx*(by - my) - sy*sin(rho)*(bx - mx)))./(sx^2*sy*cos(rho)^2) + (2*(sin(lambida)*sin(rho) - cos(lambida)*cos(rho)*sin(phi))*(sy*sz*(sin(lambida)*sin(rho) - cos(lambida)*cos(rho)*sin(phi)).*(bx - mx) + sx*sy*cos(rho).*(bz - mz) - sx*sz*sin(lambida)*(by - my)))./(sx^2*sy*sz*cos(lambida)^2*cos(phi)^2*cos(rho)^2);
-    h5 = (2.*(sx*(by - my) - sy*sin(rho)*(bx - mx)))./(sx*sy^2*cos(rho)^2) - (2*sin(lambida)*(sy*sz*(sin(lambida)*sin(rho) - cos(lambida)*cos(rho)*sin(phi)).*(bx - mx) + sx*sy*cos(rho).*(bz - mz) - sx*sz*sin(lambida).*(by - my)))./(sx*sy^2*sz*cos(lambida)^2*cos(phi)^2*cos(rho)^2);
-    h6 = (2*(sy*sz*(sin(lambida)*sin(rho) - cos(lambida)*cos(rho)*sin(phi)).*(bx - mx) + sx*sy*cos(rho).*(bz - mz) - sx*sz*sin(lambida).*(by - my)))./(sx*sy*sz^2*cos(lambida)^2*cos(phi)^2*cos(rho)); 
-    h7 = -(2.*(bx*sy - mx*sy - by*sx*sin(rho) + my*sx*sin(rho)).*(by*sx*sz*sin(lambida)^2 - my*sx*sz*sin(lambida)^2 + by*sx*sz*cos(lambida)^2*cos(phi)^2 - my*sx*sz*cos(lambida)^2*cos(phi)^2 - bz*sx*sy*cos(rho)*sin(lambida) + mz*sx*sy*cos(rho)*sin(lambida) - bx*sy*sz*sin(lambida)^2*sin(rho) + mx*sy*sz*sin(lambida)^2*sin(rho) - bx*sy*sz*cos(lambida)^2*cos(phi)^2*sin(rho) + mx*sy*sz*cos(lambida)^2*cos(phi)^2*sin(rho) + bx*sy*sz*cos(lambida)*cos(rho)*sin(lambida)*sin(phi) - mx*sy*sz*cos(lambida)*cos(rho)*sin(lambida)*sin(phi)))./(sx^2*sy^2*sz*cos(lambida)^2*cos(phi)^2*cos(rho)^3);
-    h8 = (2*sin(phi).*(sy*sz*(sin(lambida)*sin(rho) - cos(lambida)*cos(rho)*sin(phi)).*(bx - mx) + sx*sy*cos(rho).*(bz - mz) - sx*sz*sin(lambida).*(by - my)).^2)./(sx^2*sy^2*sz^2*cos(lambida)^2*cos(phi)^3*cos(rho)^2) - (2.*(bx - mx).*(sy*sz*(sin(lambida)*sin(rho) - cos(lambida)*cos(rho)*sin(phi)).*(bx - mx) + sx*sy*cos(rho).*(bz - mz) - sx*sz*sin(lambida).*(by - my)))./(sx^2*sy*sz*cos(lambida)*cos(phi)*cos(rho));
-    h9 = (2*sin(lambida)*(sy*sz*(sin(lambida)*sin(rho) - cos(lambida)*cos(rho)*sin(phi)).*(bx - mx) + sx*sy*cos(rho).*(bz - mz) - sx*sz*sin(lambida).*(by - my)).^2)./(sx^2*sy^2*sz^2*cos(lambida)^3*cos(phi)^2*cos(rho)^2) + (2*(sy*sz*(cos(lambida)*sin(rho) + cos(rho)*sin(lambida)*sin(phi)).*(bx - mx) - sx*sz*cos(lambida).*(by - my)).*(sy*sz*(sin(lambida)*sin(rho) - cos(lambida)*cos(rho)*sin(phi)).*(bx - mx) + sx*sy*cos(rho).*(bz - mz) - sx*sz*sin(lambida).*(by - my)))./(sx^2*sy^2*sz^2*cos(lambida)^2*cos(phi)^2*cos(rho)^2);
+
+    h1 = (2*(sx*(by - my) - sy*sin_rho*(bx - mx)).*(by - my))./(sx^2*sy^2*cos_rho^2) - (2*(sx*(by - my) - sy*sin_rho*(bx - mx)).^2)./(sx^3*sy^2*cos_rho^2) - (2*(bx - mx).^2)./sx^3 - (2*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi).*(bx - mx) + sx*sy*cos_rho.*(bz - mz) - sx*sz*sin_lambida*(by - my)).^2)./(sx^3*sy^2*sz^2*cos_lambida^2*cos_phi^2*cos_rho^2) + (2*(sy*cos_rho.*(bz - mz) - sz*sin_lambida*(by - my)).*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi).*(bx - mx) + sx*sy*cos_rho.*(bz - mz) - sx*sz*sin_lambida.*(by - my)))./(sx^2*sy^2*sz^2*cos_lambida^2*cos_phi^2*cos_rho^2);
+    h2 = -(2*(by - my).*(by*sx*sz*sin_lambida^2 - my*sx*sz*sin_lambida^2 + by*sx*sz*cos_lambida^2*cos_phi^2 - my*sx*sz*cos_lambida^2*cos_phi^2 - bz*sx*sy*cos_rho*sin_lambida + mz*sx*sy*cos_rho*sin_lambida - bx*sy*sz*sin_lambida^2*sin_rho + mx*sy*sz*sin_lambida^2*sin_rho - bx*sy*sz*cos_lambida^2*cos_phi^2*sin_rho + mx*sy*sz*cos_lambida^2*cos_phi^2*sin_rho + bx*sy*sz*cos_lambida*cos_rho*sin_lambida*sin_phi - mx*sy*sz*cos_lambida*cos_rho*sin_lambida*sin_phi))/(sx*sy^3*sz*cos_lambida^2*cos_phi^2*cos_rho^2);
+    h3 = -(2*(bz - mz).*(bz*sx*sy*cos_rho - by*sx*sz*sin_lambida - mz*sx*sy*cos_rho + my*sx*sz*sin_lambida + bx*sy*sz*sin_lambida*sin_rho - mx*sy*sz*sin_lambida*sin_rho - bx*sy*sz*cos_lambida*cos_rho*sin_phi + mx*sy*sz*cos_lambida*cos_rho*sin_phi))./(sx*sy*sz^3*cos_lambida^2*cos_phi^2*cos_rho);
+    h4 = (2*bx - 2*mx)/sx^2 - (2*sin_rho*(sx*(by - my) - sy*sin_rho*(bx - mx)))./(sx^2*sy*cos_rho^2) + (2*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi)*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi).*(bx - mx) + sx*sy*cos_rho.*(bz - mz) - sx*sz*sin_lambida*(by - my)))./(sx^2*sy*sz*cos_lambida^2*cos_phi^2*cos_rho^2);
+    h5 = (2.*(sx*(by - my) - sy*sin_rho*(bx - mx)))./(sx*sy^2*cos_rho^2) - (2*sin_lambida*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi).*(bx - mx) + sx*sy*cos_rho.*(bz - mz) - sx*sz*sin_lambida.*(by - my)))./(sx*sy^2*sz*cos_lambida^2*cos_phi^2*cos_rho^2);
+    h6 = (2*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi).*(bx - mx) + sx*sy*cos_rho.*(bz - mz) - sx*sz*sin_lambida.*(by - my)))./(sx*sy*sz^2*cos_lambida^2*cos_phi^2*cos_rho); 
+    h7 = -(2.*(bx*sy - mx*sy - by*sx*sin_rho + my*sx*sin_rho).*(by*sx*sz*sin_lambida^2 - my*sx*sz*sin_lambida^2 + by*sx*sz*cos_lambida^2*cos_phi^2 - my*sx*sz*cos_lambida^2*cos_phi^2 - bz*sx*sy*cos_rho*sin_lambida + mz*sx*sy*cos_rho*sin_lambida - bx*sy*sz*sin_lambida^2*sin_rho + mx*sy*sz*sin_lambida^2*sin_rho - bx*sy*sz*cos_lambida^2*cos_phi^2*sin_rho + mx*sy*sz*cos_lambida^2*cos_phi^2*sin_rho + bx*sy*sz*cos_lambida*cos_rho*sin_lambida*sin_phi - mx*sy*sz*cos_lambida*cos_rho*sin_lambida*sin_phi))./(sx^2*sy^2*sz*cos_lambida^2*cos_phi^2*cos_rho^3);
+    h8 = (2*sin_phi.*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi).*(bx - mx) + sx*sy*cos_rho.*(bz - mz) - sx*sz*sin_lambida.*(by - my)).^2)./(sx^2*sy^2*sz^2*cos_lambida^2*cos_phi^3*cos_rho^2) - (2.*(bx - mx).*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi).*(bx - mx) + sx*sy*cos_rho.*(bz - mz) - sx*sz*sin_lambida.*(by - my)))./(sx^2*sy*sz*cos_lambida*cos_phi*cos_rho);
+    h9 = (2*sin_lambida*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi).*(bx - mx) + sx*sy*cos_rho.*(bz - mz) - sx*sz*sin_lambida.*(by - my)).^2)./(sx^2*sy^2*sz^2*cos_lambida^3*cos_phi^2*cos_rho^2) + (2*(sy*sz*(cos_lambida*sin_rho + cos_rho*sin_lambida*sin_phi).*(bx - mx) - sx*sz*cos_lambida.*(by - my)).*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi).*(bx - mx) + sx*sy*cos_rho.*(bz - mz) - sx*sz*sin_lambida.*(by - my)))./(sx^2*sy^2*sz^2*cos_lambida^2*cos_phi^2*cos_rho^2);
     H = [h1 h2 h3 h4 h5 h6 h7 h8 h9];
     deltap = ((H'*H)\eye(9))*H'*e;
 

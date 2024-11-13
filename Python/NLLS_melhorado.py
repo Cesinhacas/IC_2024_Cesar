@@ -30,6 +30,13 @@ while loop == 1:
     rho = p0[6]
     phi = p0[7]
     lambida = p0[8]
+
+    sin_rho = np.sin(rho)
+    cos_rho = np.cos(rho)
+    sin_phi = np.sin(phi)
+    cos_phi = np.cos(phi)
+    sin_lambida = np.sin(lambida)
+    cos_lambida = np.cos(lambida)
     
     f = (((mx-bx)**2)/(sx)**2) + (((sx*(my-by) - sy*sin_rho*(mx-bx))**2)/((sx*sy*cos_rho)**2)) + (((sx*sy*cos_rho*(mz-bz) - sx*sz*sin_lambida*(my-by) + sy*sz*(sin_lambida*sin_rho - cos_rho*sin_phi*cos_lambida)*(mx-bx))**2)/((sx*sy*sz*cos_rho*cos_phi*cos_lambida)**2))
     
@@ -50,12 +57,6 @@ while loop == 1:
         if delta_J < 0.1:
             loop = 0
 
-    sin_rho = np.sin(rho)
-    cos_rho = np.cos(rho)
-    sin_phi = np.sin(phi)
-    cos_phi = np.cos(phi)
-    sin_lambida = np.sin(lambida)
-    cos_lambida = np.cos(lambida)
 
     h1 = (2*(sx*(by - my) - sy*sin_rho*(bx - mx))*(by - my))/(sx**2*sy**2*cos_rho**2) - (2*(sx*(by - my) - sy*sin_rho*(bx - mx))**2)/(sx**3*sy**2*cos_rho**2) - (2*(bx - mx)**2)/sx**3 - (2*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi)*(bx - mx) + sx*sy*cos_rho*(bz - mz) - sx*sz*sin_lambida*(by - my))**2)/(sx**3*sy**2*sz**2*cos_lambida**2*cos_phi**2*cos_rho**2) + (2*(sy*cos_rho*(bz - mz) - sz*sin_lambida*(by - my))*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi)*(bx - mx) + sx*sy*cos_rho*(bz - mz) - sx*sz*sin_lambida*(by - my)))/(sx**2*sy**2*sz**2*cos_lambida**2*cos_phi**2*cos_rho**2)
 
