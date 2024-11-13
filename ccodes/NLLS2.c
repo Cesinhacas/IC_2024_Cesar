@@ -122,20 +122,20 @@ void main()
         
         float Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam];
 
-        // for(int i = 0; i < N; i++)
-        // {
-        //     for(int j = 0; j < N; j++)
-        //     {
-        //         Ht_H[i][j] = 0;
-        //         for(int k = 0; k < tam; k++)
-        //         {
-        //             Ht_H[i][j] += mat_H[i][k]*mat_H[j][k];
-        //         }
-        //     }
-        // }
+        for(int i = 0; i < N; i++)
+        {
+            for(int j = 0; j < N; j++)
+            {
+                Ht_H[i][j] = 0;
+                for(int k = 0; k < tam; k++)
+                {
+                    Ht_H[i][j] += mat_H[i][k]*mat_H[j][k];
+                }
+            }
+        }
     
         //#define VMLA(Sd, Sn, Sm) asm("vmla.f32 %0, %1, %2" : "+w" (Sd) : "w" (Sn), "w" (Sm))
-
+        /*
         for(int i = 0; i < N; i++)
         {
             float Ci0, Ci1, Ci2, Ci3, Ci4, Ci5, Ci6, Ci7, Ci8;
@@ -162,7 +162,7 @@ void main()
             Ht_H[i][5] = Ci5;
             Ht_H[i][6] = Ci6;
             Ht_H[i][7] = Ci7;
-        }
+        }*/
 
         inverter_matriz(Ht_H, inv);
 
