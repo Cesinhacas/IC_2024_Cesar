@@ -12,7 +12,8 @@ typedef struct {
     float r3;
     } raizes_t;
 
-void inverter_matriz9x9(float matriz[N][N], float inversa[N][N]) {
+void inverter_matriz9x9(float matriz[N][N], float inversa[N][N])
+{
     // Inicializando a matriz identidade na matriz inversa
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
@@ -49,7 +50,8 @@ void inverter_matriz9x9(float matriz[N][N], float inversa[N][N]) {
     }
 }
 
-void inverter_matriz3x3(float matriz[N1][N1], float inversa[N1][N1]) {
+void inverter_matriz3x3(float matriz[N1][N1], float inversa[N1][N1])
+{
     float fator = 0, pivot = 0;
     // Inicializando a matriz identidade na matriz inversa
     for (int i = 0; i < N1; i++) {
@@ -178,18 +180,19 @@ void SVD_dec(float A[N1][N1], float U[N1][N1], float S[N1][N1])
     autovetor(A, raizes.r3, AU3);
     
 
-    U[0][0] = AU1[0];
-    U[0][1] = AU1[1];
-    U[0][2] = AU1[2];
-    U[1][0] = AU2[0];
-    U[1][1] = AU2[1];
-    U[1][2] = AU2[2];
+    U[0][0] = -AU1[0];
+    U[0][1] = -AU1[1];
+    U[0][2] = -AU1[2];
+    U[1][0] = -AU2[0];
+    U[1][1] = -AU2[1];
+    U[1][2] = -AU2[2];
     U[2][0] = AU3[0];
     U[2][1] = AU3[1];
     U[2][2] = AU3[2];
 }
 
-void inverter_matriz(float matriz[N][N], float inversa[N][N]) {
+void inverter_matriz(float matriz[N][N], float inversa[N][N]) 
+{
     // Inicializando a matriz identidade na matriz inversa
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
@@ -461,18 +464,18 @@ void ETS(float *mx, float *my, float *mz, float *p)
 int TWOSTEP(float *mx, float *my, float *mz, float *p)
 {
     int passo_max = 200;
-    float stop = pow(10, -24);
-    float H[tam], Sigma_noise[3][tam];
-
     int passo = 0, loop = 1;
+    float stop = 10e-24;
+    float H[tam], Sigma_noise[3][tam];
     float z_k[tam], mu_k[tam], sigma_k[tam], L_k[9][tam], sigma_bar = 0;
     float z_bar = 0, mu_bar = 0, L_bar[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
     float z_tilde[tam], mu_tilde[tam], L_tilde[9][tam];
     float F_tt[9][9], F_tt_copy[9][9], P_tt[9][9];
     float theta[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0}, theta1[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-    float ABC[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
     float TS_erro = 0, c[3], E[3][3], E_inv[3][3], tmp[3][3], dJdThetap_tilde[9], dbsqdtheta_p[9], dJdThetap_bar[9], dJdThetap_bar_scalar = 0, dJdTheta[9], F_tt_bar[9][9], F_tt_bar_copy[9][9], F_tt_bar_vet[9], F_tt_bar_inv[9][9], theta_np1[9], E_inv_c[3] = {0, 0, 0};
+    float ABC[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
     float U[3][3], S[3][3], W[3][3], D[3][3], D_copy[3][3], h[3], D_inv[3][3];
+
 
     for(int i=0; i < tam; i++)
     {
@@ -496,7 +499,6 @@ int TWOSTEP(float *mx, float *my, float *mz, float *p)
     }
     sigma_bar = 1/sigma_bar;
     
-    
     for(int i=0; i < tam; i++)
     {
         z_bar += z_k[i]*sigma_bar/sigma_k[i];
@@ -507,7 +509,6 @@ int TWOSTEP(float *mx, float *my, float *mz, float *p)
         }
     }
 
-    
     for(int i=0; i < tam; i++)
     {
         z_tilde[i] = z_k[i] - z_bar;
@@ -518,7 +519,6 @@ int TWOSTEP(float *mx, float *my, float *mz, float *p)
         }
     }
 
-    
     for(int i=0; i < 9; i++)
     {
         for(int j=0; j < 9; j++)
@@ -543,7 +543,6 @@ int TWOSTEP(float *mx, float *my, float *mz, float *p)
 
     inverter_matriz9x9(F_tt_copy, P_tt);
 
-    
     for(int i=0; i < 9; i++)
     {
         for(int j=0; j < tam; j++)
@@ -567,7 +566,7 @@ int TWOSTEP(float *mx, float *my, float *mz, float *p)
             ABC[i] -= ((z_tilde[j]-mu_tilde[j])*L_tilde[i][j])/sigma_k[j];
         }
     }
-    
+
     while(loop == 1)
     {
         if(passo != 0)
@@ -641,7 +640,7 @@ int TWOSTEP(float *mx, float *my, float *mz, float *p)
             dJdThetap_bar_scalar += c[i]*E_inv_c[i];
         }
         dJdThetap_bar_scalar = dJdThetap_bar_scalar - mu_bar + z_bar;
-        dJdThetap_bar_scalar = -dJdThetap_bar_scalar/sigma_bar;
+        dJdThetap_bar_scalar = dJdThetap_bar_scalar*(-1/sigma_bar);
         for(int i=0; i < 9; i++)
         {
             dJdThetap_bar[i] = dJdThetap_bar_scalar*(L_bar[i] - dbsqdtheta_p[i]);
@@ -711,32 +710,54 @@ int TWOSTEP(float *mx, float *my, float *mz, float *p)
 
     // Segundo passo, encontrando os parâmetros
     SVD_dec(E, U, S);
-    W[0][0] = -1 + sqrt(S[0][0] + 1);
-    W[0][1] = 0;
-    W[0][2] = 0;
-    W[1][0] = 0;
-    W[1][1] = -1 + sqrt(S[1][1] + 1);
-    W[1][2] = 0;
-    W[2][0] = 0;
-    W[2][1] = 0;
-    W[2][2] = -1 + sqrt(S[2][2] + 1);
 
     for(int i=0; i < 3; i++)
     {
         for(int j=0; j < 3; j++)
         {
-            D[i][j] = 0;
-            for(int k=0; k < 3; k++)
-            {
-                D[i][j] += U[i][k]*W[k][k]*U[j][k];
-            }
             if(i == j)
             {
-                D_copy[i][j] = D[i][j] + 1;
+                W[i][j] = -1 + sqrt(S[i][j] + 1);
             }
             else
             {
-                D_copy[i][j] = D[i][j];
+                W[i][j] = 0;
+            }
+        }
+    }
+
+    for(int i=0; i < 3; i++)
+    {
+        for(int j=0; j < 3; j++)
+        {
+            D[j][i] = 0;
+            for(int k=0; k < 3; k++)
+            {
+                D[j][i] += U[k][i]*W[k][j];
+            }
+        }
+    }
+
+    for(int i=0; i < 3; i++)
+    {
+        for(int j=0; j < 3; j++)
+        {
+            D_copy[i][j] = 0;
+            for(int k=0; k < 3; k++)
+            {
+                D_copy[i][j] += D[k][i]*U[k][j];
+            }
+        }
+    }    
+
+    for(int i=0; i < 3; i++)
+    {
+        for(int j=0; j < 3; j++)
+        {
+            D[i][j] = D_copy[i][j];
+            if(i == j)
+            {
+                D_copy[i][j] += 1;
             }
         }
     }
@@ -751,6 +772,7 @@ int TWOSTEP(float *mx, float *my, float *mz, float *p)
             h[i] += D_inv[i][j]*c[j];
         }
     }
+
     p[0] = h[0];
     p[1] = h[1];
     p[2] = h[2];

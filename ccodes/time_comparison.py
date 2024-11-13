@@ -115,13 +115,8 @@ for i in range(0, num_exe):
     time_start_TWOSTEP = time.perf_counter_ns()
     passos_TWOSTEP_c = my_functions.TWOSTEP(mx_ptr1, my_ptr1, mz_ptr1, p2_ptr)
     time_end_TWOSTEP = time.perf_counter_ns()
-    if passos_TWOSTEP_c > 199:
-        num_exe_TW -= 1
-        passos_TWOSTEP = passos_TWOSTEP
-        execution_time_TWOSTEP = execution_time_TWOSTEP
-    else:
-        passos_TWOSTEP += passos_TWOSTEP_c
-        execution_time_TWOSTEP += (time_end_TWOSTEP - time_start_TWOSTEP)
+    passos_TWOSTEP += passos_TWOSTEP_c
+    execution_time_TWOSTEP += (time_end_TWOSTEP - time_start_TWOSTEP)
 
 
 

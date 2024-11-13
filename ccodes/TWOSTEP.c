@@ -221,7 +221,7 @@ void main()
     
     int passo_max = 200;
     int passo = 0, loop = 1;
-    double stop = pow(10, -24);
+    double stop = 10e-24;
     double H[tam], Sigma_noise[3][tam];
     double z_k[tam], mu_k[tam], sigma_k[tam], L_k[9][tam], sigma_bar = 0;
     double z_bar = 0, mu_bar = 0, L_bar[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
