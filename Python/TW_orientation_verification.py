@@ -14,11 +14,27 @@ dif_norm_TW = np.zeros((tam,3))
 dif_norm_NLLS = np.zeros((tam,3))
 
 for i in range(tam):
-    dif_norm_TW[i] = dados[:, i] - rest_TW[:, i]
-    dif_norm_NLLS[i] = dados[:, i] - rest_NLLS[:, i]
+    dif_norm_TW[i] = rest_TW[:, i]
+    dif_norm_NLLS[i] = rest_NLLS[:, i]
 
-dif_norm_TW = pd.DataFrame(dif_norm_TW)
-dif_norm_TW.to_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/Dif_norm.csv', header=False)
+dif_norm_TW_data = pd.DataFrame(dif_norm_TW)
+dif_norm_TW_data.to_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/Dif_norm.csv', header=False)
 
-dif_norm_NLLS = pd.DataFrame(dif_norm_NLLS)
-dif_norm_NLLS.to_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/Dif_norm_NLLS.csv', header=False)
+dif_norm_NLLS_data = pd.DataFrame(dif_norm_NLLS)
+dif_norm_NLLS_data.to_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/Dif_norm_NLLS.csv', header=False)
+
+dif_rms_TW_x =  np.sqrt(np.mean(dif_norm_TW[0,:]**2))
+dif_rms_TW_y =  np.sqrt(np.mean(dif_norm_TW[1,:]**2))
+dif_rms_TW_z =  np.sqrt(np.mean(dif_norm_TW[2,:]**2))
+
+print(dif_rms_TW_x)
+print(dif_rms_TW_y) 
+print(dif_rms_TW_z)
+
+dif_rms_NLLS_x =  np.sqrt(np.mean(dif_norm_NLLS[0,:]**2))
+dif_rms_NLLS_y =  np.sqrt(np.mean(dif_norm_NLLS[1,:]**2))
+dif_rms_NLLS_z =  np.sqrt(np.mean(dif_norm_NLLS[2,:]**2))
+
+print(dif_rms_NLLS_x)
+print(dif_rms_NLLS_y)
+print(dif_rms_NLLS_z)

@@ -8,7 +8,7 @@ mx = dados.iloc[0].values
 my = dados.iloc[1].values
 mz = dados.iloc[2].values
 B = np.vstack([mx, my, mz])
-sf = 1/2
+sf = 1
 
 # Parâmetros iniciais
 stop = 1e-24
@@ -114,6 +114,7 @@ D = U @ W @ Vh
 h = np.linalg.inv(np.eye(3) + D) @ c
 print("\nQuantidade de passos: ", passo)
 print("Os offsets são:\n")
+print(c)
 print(h.T)
 
 print("Os elementos da matriz com os parâmetros são:\n")

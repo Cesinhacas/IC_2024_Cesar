@@ -29,7 +29,7 @@ it(k) = k;
 phi_Rad = pi/180*phi; 
 theta_Rad = pi/180*theta;
 
-r = 1/2;
+r = 1;
 
 x = r.*cos(theta_Rad).*sin(phi_Rad);
 y = r.*sin(theta_Rad).*sin(phi_Rad);
@@ -95,7 +95,7 @@ end
 clear all
 clc
 
-r = 1/2;
+r = 1;
 save_data = 1;
 
 cd ../
@@ -112,7 +112,8 @@ Data_Simul = sf*Dados_Teoricos;
 offset = [-0.1723; -0.0741; 0.1342];
 %offset = [-0.4723; -0.3741; 0.6342];
 Escala = [0.9213 0.7634 1.1834];
-Ang = [-2.4532*pi/180; 2.567*pi/180; -1.9674*pi/180];
+% Ang = [-2.4532*pi/180; 2.567*pi/180; -1.9674*pi/180];
+Ang = [-0.02*pi/180; 0.03*pi/180; -0.05*pi/180];
 
 rho = Ang(1);
 phi = Ang(2);

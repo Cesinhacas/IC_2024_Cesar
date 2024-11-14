@@ -8,7 +8,7 @@ dados = pd.read_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/D
 mx = dados.iloc[0].values
 my = dados.iloc[1].values
 mz = dados.iloc[2].values
-sf = 1/2
+sf = 1
 
 
 passo = 0
