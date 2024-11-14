@@ -118,6 +118,10 @@ for i in range(len(mx)):
     my_rest[i] = ((my[i] - p0[4])/p0[1] - mx[i]*np.sin(p0[6]))/np.cos(p0[6])
     mz_rest[i] = ((mz[i] - p0[5])/p0[2] - mx[i]*np.cos(p0[7])*np.sin(p0[7]) - my[i]*np.sin(p0[8]))/(np.cos(p0[7]*np.cos(p0[8])))
 
+dados_rest = np.vstack([mx_rest, my_rest, mz_rest])
+dados_rest = pd.DataFrame(dados_rest)
+dados_rest.to_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_rest_NLLS.csv', header=False)
+
 
 phi, theta = np.mgrid[0.0:2.0*np.pi:100j, 0.0:np.pi:50j]
 x_sphere = (np.sin(theta) * np.cos(phi))*sf

@@ -11,7 +11,7 @@ mz = dados.iloc[2].values
 B = np.vstack([mx, my, mz])
 
 # Parâmetros
-sf = 1
+sf = 1/2
 param = pd.read_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/dados.csv', header=None)
 D = np.vstack([param.iloc[0][0:3].values, param.iloc[1][0:3].values, param.iloc[2][0:3].values])
 h_t = np.vstack([param.iloc[3].values, param.iloc[4].values, param.iloc[5].values])
@@ -25,6 +25,9 @@ dados_rest = dados_rest.transpose()
 mx_rest = dados_rest[:][0]
 my_rest = dados_rest[:][1]
 mz_rest = dados_rest[:][2]
+
+dados_rest = pd.DataFrame(dados_rest)
+dados_rest.to_csv('C:/Users/LabT5/Onedrive/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_rest_TW.csv', header=False)
 
 phi, theta = np.mgrid[0.0:2.0*np.pi:100j, 0.0:np.pi:50j]
 x_sphere = (np.sin(theta) * np.cos(phi))*sf
