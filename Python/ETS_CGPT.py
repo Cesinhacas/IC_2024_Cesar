@@ -8,7 +8,7 @@ dados = pd.read_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/D
 mx = dados.iloc[0].values
 my = dados.iloc[1].values
 mz = dados.iloc[2].values
-sf = 1/2
+sf = 1
 
 # Cálculo dos termos
 mxs = mx**2
@@ -85,6 +85,9 @@ for i in range(len(mx)):
     my_rest[i] = ((my[i] - p[4])/p[1] - mx[i]*np.sin(p[6]))/np.cos(p[6])
     mz_rest[i] = ((mz[i] - p[5])/p[2] - mx[i]*np.cos(p[7])*np.sin(p[7]) - my[i]*np.sin(p[8]))/(np.cos(p[7]*np.cos(p[8])))
 
+dados_rest = np.array([mx_rest, my_rest, mz_rest])
+dados_rest = pd.DataFrame(dados_rest)
+dados_rest.to_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_rest_ETS.csv', header=False)
 
 phi, theta = np.mgrid[0.0:2.0*np.pi:100j, 0.0:np.pi:50j]
 x_sphere = (np.sin(theta) * np.cos(phi))*sf

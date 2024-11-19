@@ -6,6 +6,11 @@ clc
 
 save_data = 1;
 
+% rotate = 0;
+rotate = 1;
+% rotate = 2;
+
+
 phi(1) = 0;
 theta(1) = 0;
 it(1) = 1;
@@ -35,8 +40,17 @@ x = r.*cos(theta_Rad).*sin(phi_Rad);
 y = r.*sin(theta_Rad).*sin(phi_Rad);
 z = r.*cos(phi_Rad);
 
-Dados = [x; y; z];
-% figure
+if rotate==0
+    Dados = [x; y; z];
+end
+if rotate ==1
+    Dados = [z; x; y];
+end
+ if rotate==2
+     Dados = [y; z; x];
+ end
+    
+    % figure
 % plot(it, Dados,'o')
 % 
 % norm(Dados(:,60));
@@ -101,19 +115,19 @@ save_data = 1;
 cd ../
 cd 'Dados'
 load Dados_Teoricos.mat
+writematrix(Dados_Teoricos', 'transpose_dados.csv');
 cd ../
 cd 'Matlab'
-
 
 sf = 1;
 
 Data_Simul = sf*Dados_Teoricos;
 
 offset = [-0.1723; -0.0741; 0.1342];
-%offset = [-0.4723; -0.3741; 0.6342];
+% offset = [-0.4723; -0.3741; 0.6342];
 Escala = [0.9213 0.7634 1.1834];
-% Ang = [-2.4532*pi/180; 2.567*pi/180; -1.9674*pi/180];
-Ang = [-0.02*pi/180; 0.03*pi/180; -0.05*pi/180];
+Ang = [-13.4532*pi/180; 14.567*pi/180; -12.9674*pi/180];
+% Ang = [-0.02*pi/180; 0.03*pi/180; -0.05*pi/180];
 
 rho = Ang(1);
 phi = Ang(2);
@@ -314,3 +328,11 @@ title('(e)');
 xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
+
+cd ..\
+cd Dados
+writematrix(Dados_rest, 'Dados_ETS_m.csv')
+writematrix(Dados_rest1, 'Dados_NLLS_m.csv')
+writematrix(Dados_rest2, 'Dados_TW_m.csv')
+cd ..\
+cd Matlab

@@ -130,6 +130,11 @@ mx_rest = dados_rest[:][0]
 my_rest = dados_rest[:][1]
 mz_rest = dados_rest[:][2]
 
+dados_rest = pd.DataFrame(dados_rest)
+dados_rest.to_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_rest_TW.csv', header=False)
+
+
+
 phi, theta = np.mgrid[0.0:2.0*np.pi:100j, 0.0:np.pi:50j]
 x_sphere = (np.sin(theta) * np.cos(phi))*sf
 y_sphere = (np.sin(theta) * np.sin(phi))*sf
