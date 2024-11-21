@@ -6,8 +6,8 @@ clc
 
 save_data = 1;
 
-% rotate = 0;
-rotate = 1;
+rotate = 0;
+% rotate = 1;
 % rotate = 2;
 
 
@@ -126,8 +126,9 @@ Data_Simul = sf*Dados_Teoricos;
 offset = [-0.1723; -0.0741; 0.1342];
 % offset = [-0.4723; -0.3741; 0.6342];
 Escala = [0.9213 0.7634 1.1834];
-Ang = [-13.4532*pi/180; 14.567*pi/180; -12.9674*pi/180];
+% Ang = [-13.4532*pi/180; 14.567*pi/180; -12.9674*pi/180];
 % Ang = [-0.02*pi/180; 0.03*pi/180; -0.05*pi/180];
+Ang = [-0.173*pi/180; 0.091*pi/180; -0.201*pi/180];
 
 rho = Ang(1);
 phi = Ang(2);
@@ -146,7 +147,7 @@ end
 cd ..\
 cd Dados\
 save Dados_Corrompido
-writematrix(Dados_Corrompido, 'Dados_Corrompido.csv')
+writematrix(Dados_Corrompido, 'Dados_Corrompido.csv');
 Dados_Corrompido = readmatrix('Dados_Corrompido.csv');
 cd ..\
 cd Matlab\
@@ -297,8 +298,6 @@ for i=1:length(Dados_Corrompido(1,:))
     Dados_rest2(:,i) = (eye(3)+D)*Dados_Corrompido(:,i) - b;
 end
 
-
-
 subplot(2,3,5)
 set(gcf,'Units','inches');
 screenposition = get(gcf,'Position');
@@ -329,10 +328,15 @@ xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
 
+param_TW = [b D];
+
 cd ..\
 cd Dados
 writematrix(Dados_rest, 'Dados_ETS_m.csv')
 writematrix(Dados_rest1, 'Dados_NLLS_m.csv')
 writematrix(Dados_rest2, 'Dados_TW_m.csv')
+writematrix(p, 'Calib_param_ETS_m.csv')
+writematrix(p1, 'Calib_param_NLLS_m.csv')
+writematrix(param_TW, 'Calib_param_TW_m.csv')
 cd ..\
 cd Matlab

@@ -48,7 +48,7 @@ sz = sz/sf
 
 rho = (2 * vet_X[1] * vet_X[4] - vet_X[2] * vet_X[3]) / (2 * vet_X[4]**2 * (-(vet_X[4] * vet_X[1]**2 - vet_X[1] * vet_X[2] * vet_X[3] + vet_X[2]**2 + vet_X[0] * vet_X[3]**2 - 4 * vet_X[0] * vet_X[4]) / (vet_X[4]**3))**0.5)
 rho = -np.arctan(rho)
-lambida = -np.arctan((vet_X[3] / vet_X[4]) * (-(vet_X[4]**2 * (vet_X[4] * vet_X[1]**2 - vet_X[1] * vet_X[2] * vet_X[3] + vet_X[2]**2 + vet_X[0]*vet_X[3]**2 - 4 * vet_X[0] * vet_X[4]) / (2 * vet_X[1]**2 * vet_X[3]**2 * vet_X[4] - 4 * vet_X[1]**2 * vet_X[4]**2 - vet_X[1] * vet_X[2] * vet_X[3]**3 + vet_X[2]**2 * vet_X[3]**2 + vet_X[0] * vet_X[3]**4 - 8*vet_X[0]*vet_X[3]**2 * vet_X[4] + 16*vet_X[0] * vet_X[5]**2)))**0.5)
+lambida = -np.arctan((vet_X[3] / vet_X[4]) * (-(vet_X[4]**2 * (vet_X[4] * vet_X[1]**2 - vet_X[1] * vet_X[2] * vet_X[3] + vet_X[2]**2 + vet_X[0]*vet_X[3]**2 - 4 * vet_X[0] * vet_X[4]) / (2 * vet_X[1]**2 * vet_X[3]**2 * vet_X[4] - 4 * vet_X[1]**2 * vet_X[4]**2 - vet_X[1] * vet_X[2] * vet_X[3]**3 + vet_X[2]**2 * vet_X[3]**2 + vet_X[0] * vet_X[3]**4 - 8*vet_X[0]*vet_X[3]**2 * vet_X[4] + 16*vet_X[0] * vet_X[4]**2)))**0.5)
 
 n1 = -vet_X[1]**2 * vet_X[7]**2 + 4 * vet_X[1]**2 * vet_X[4] * vet_X[8] - 4 * vet_X[1] * vet_X[2] * vet_X[3] * vet_X[8] + 2 * vet_X[1] * vet_X[2] * vet_X[6] * vet_X[7] + 2 * vet_X[1] * vet_X[3] * vet_X[5] * vet_X[7] - 4 * vet_X[1] * vet_X[4] * vet_X[5] * vet_X[6] - vet_X[2]**2 * vet_X[6]**2 + 2 * vet_X[2] * vet_X[3] * vet_X[5] * vet_X[6] + 4 * vet_X[2]**2 * vet_X[8] - 4 * vet_X[2] * vet_X[5] * vet_X[7] - vet_X[3]**2 * vet_X[5]**2 + 4 * vet_X[1] * vet_X[3]**2 * vet_X[8] - 4 * vet_X[0] * vet_X[3] * vet_X[6] * vet_X[7] + 4 * vet_X[4] * vet_X[5]**2 + 4 * vet_X[0] * vet_X[4] * vet_X[6]**2 + 4 * vet_X[0] * vet_X[7]**2 - 16 * vet_X[0] * vet_X[4] * vet_X[8]
 n2 = vet_X[1]**2 * vet_X[4] - vet_X[1] * vet_X[2] * vet_X[3] + vet_X[2]**2 + vet_X[0] * vet_X[3]**2 - 4 * vet_X[0] * vet_X[4]
@@ -84,6 +84,9 @@ for i in range(len(mx)):
     mx_rest[i] = (mx[i] - p[3])/p[0]
     my_rest[i] = ((my[i] - p[4])/p[1] - mx[i]*np.sin(p[6]))/np.cos(p[6])
     mz_rest[i] = ((mz[i] - p[5])/p[2] - mx[i]*np.cos(p[7])*np.sin(p[7]) - my[i]*np.sin(p[8]))/(np.cos(p[7]*np.cos(p[8])))
+
+calib_param = pd.DataFrame(p)
+calib_param.to_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/Calib_param_ETS.csv', header=False, index=False)
 
 dados_rest = np.array([mx_rest, my_rest, mz_rest])
 dados_rest = pd.DataFrame(dados_rest)

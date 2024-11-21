@@ -11,7 +11,7 @@ mz = dados.iloc[2].values
 B = np.vstack([mx, my, mz])
 
 # Parâmetros
-sf = 1/2
+sf = 1
 param = pd.read_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/dados.csv', header=None)
 D = np.vstack([param.iloc[0][0:3].values, param.iloc[1][0:3].values, param.iloc[2][0:3].values])
 h_t = np.vstack([param.iloc[3].values, param.iloc[4].values, param.iloc[5].values])

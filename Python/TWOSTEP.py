@@ -114,7 +114,6 @@ D = U @ W @ Vh
 h = np.linalg.inv(np.eye(3) + D) @ c
 print("\nQuantidade de passos: ", passo)
 print("Os offsets são:\n")
-print(c)
 print(h.T)
 
 print("Os elementos da matriz com os parâmetros são:\n")
@@ -129,6 +128,10 @@ dados_rest = dados_rest.transpose()
 mx_rest = dados_rest[:][0]
 my_rest = dados_rest[:][1]
 mz_rest = dados_rest[:][2]
+
+calib_param = np.vstack([h, D])
+calib_param = pd.DataFrame(calib_param)
+calib_param.to_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/Calib_param_TW.csv', header=False, index=False)
 
 dados_rest = pd.DataFrame(dados_rest)
 dados_rest.to_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/Dados_rest_TW.csv', header=False)
