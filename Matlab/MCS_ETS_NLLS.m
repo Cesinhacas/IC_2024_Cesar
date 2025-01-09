@@ -51,7 +51,7 @@ end
 
 Data_Simul = Dados_Teoricos;
 
-for i=1:1000
+for i=1:2000
     offset = (rand(3,1)*0.4)-0.2;
     Escala = (rand(3,1)*0.4)+0.8;
     Ang = (rand(3,1)*6 - 3) * (pi/180);
@@ -83,116 +83,80 @@ for i=1:1000
     ParP = ParT;
 
     p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0];
-    [p1] = test1(Dados_Corrompido);
-    [p] = test2(Dados_Corrompido, p0);
-    [ParC] = FosterAnalytical_Rev00(0, 0, Dados_Corrompido, 1, 0, 0);
-    [ParC2] = NLLS_9Dcalib(ParT, ParP, Dados_Corrompido, 1, 0, 0);
-    p2 = [ParC.a; ParC.b; ParC.c; ParC.x0; ParC.y0; ParC.z0; ParC.rho; ParC.phi; ParC.lambda];
-    p3 = [ParC2.a; ParC2.b; ParC2.c; ParC2.x0; ParC2.y0; ParC2.z0; ParC2.rho; ParC2.phi; ParC2.lambda];
-    
+    [Time,p1] = test1(Dados_Corrompido, 1);
+    H = ones(1, length(Dados_Corrompido(1,:)))';
+    [tempo, passo,p] = test2(Dados_Corrompido, p0, H);
+   
     vet_error_ETS_c(:,i) = e-p1;
     vet_error_NLLS_c(:,i) = e-p;
-    vet_error_ETS_d(:,i) = e-p2;
-    vet_error_NLLS_d(:,i) = e-p3;
 end
 executions = [1:1:i];
 figure(1)
-subplot(3,1,1), plot(executions, vet_error_ETS_c(1,:),'r',executions, vet_error_ETS_d(1,:), 'g');
+subplot(1,3,1), histogram(vet_error_ETS_c(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "red");
+hold on
+histogram(vet_error_NLLS_c(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 grid on;
 title("Offset - eixo x");
 ylabel("Error");
 xlabel("Monte Carlo run");
-subplot(3,1,2), plot(executions, vet_error_ETS_c(2,:),'r', executions, vet_error_ETS_d(2,:), 'g');
+subplot(1,3,2), histogram(vet_error_ETS_c(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "red");
+hold on
+histogram(vet_error_NLLS_c(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 grid on;
 title("Offset - eixo y");
 ylabel("Error");
 xlabel("Monte Carlo run");
-subplot(3,1,3), plot(executions, vet_error_ETS_c(3,:),'r', executions, vet_error_ETS_d(3,:), 'g');
+subplot(1,3,3), histogram(vet_error_ETS_c(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "red");
+hold on
+histogram(vet_error_NLLS_c(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 grid on;
 title("Offset - eixo z");
 ylabel("Error");
 xlabel("Monte Carlo run");
 
 figure(2)
-subplot(3,1,1), plot(executions, vet_error_ETS_c(4,:),'r', executions, vet_error_ETS_d(4,:), 'g');
+title("Erro ETS - Offsets")
+subplot(1,3,1), histogram(vet_error_ETS_c(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "red");
+hold on
+subplot(1,3,1), histogram(vet_error_NLLS_c(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 grid on;
 title("Fator de escala - x");
 ylabel("Error");
 xlabel("Monte Carlo run");
-subplot(3,1,2), plot(executions, vet_error_ETS_c(5,:),'r', executions, vet_error_ETS_d(5,:), 'g');
+subplot(1,3,2), histogram(vet_error_ETS_c(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "red");
+hold on
+subplot(1,3,2), histogram(vet_error_NLLS_c(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 grid on;
 title("Fator de escala - y");
 ylabel("Error");
 xlabel("Monte Carlo run");
-subplot(3,1,3), plot(executions, vet_error_ETS_c(6,:),'r', executions, vet_error_ETS_d(6,:), 'g');
+subplot(1,3,3), histogram(vet_error_ETS_c(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "red");
+hold on
+histogram(vet_error_NLLS_c(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 grid on;
 title("Fator de escala - z");
 ylabel("Error");
 xlabel("Monte Carlo run");
 
 figure(3)
-subplot(3,1,1), plot(executions, vet_error_ETS_c(7,:),'r', executions, vet_error_ETS_d(7,:), 'g');
+title("Erro ETS - Ângulos de desalinhamento")
+subplot(1,3,1), histogram(vet_error_ETS_c(7,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "red");
+hold on
+histogram(vet_error_NLLS_c(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 grid on;
 title("Ângulo Rho");
 ylabel("Error");
 xlabel("Monte Carlo run");
-subplot(3,1,2), plot(executions, vet_error_ETS_c(8,:),'r', executions, vet_error_ETS_d(8,:), 'g');
+subplot(1,3,2), histogram(vet_error_ETS_c(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "red");
+hold on
+histogram(vet_error_NLLS_c(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 grid on;
 title("Ângulo Phi");
 ylabel("Error");
 xlabel("Monte Carlo run");
-subplot(3,1,3), plot(executions, vet_error_ETS_c(9,:),'r', executions, vet_error_ETS_d(9,:), 'g');
-grid on;
-title("Ângulo Lambda");
-ylabel("Error");
-xlabel("Monte Carlo run");
-
-figure(4)
-subplot(3,1,1), plot(executions, vet_error_NLLS_c(1,:),'r', executions, vet_error_NLLS_d(1,:), 'g');
-grid on;
-title("Offset - eixo x");
-ylabel("Error");
-xlabel("Monte Carlo run");
-subplot(3,1,2), plot(executions, vet_error_NLLS_c(2,:),'r', executions, vet_error_NLLS_d(2,:), 'g');
-grid on;
-title("Offset - eixo y");
-ylabel("Error");
-xlabel("Monte Carlo run");
-subplot(3,1,3), plot(executions, vet_error_NLLS_c(3,:),'r', executions, vet_error_NLLS_d(3,:), 'g');
-grid on;
-title("Offset - eixo z");
-ylabel("Error");
-xlabel("Monte Carlo run");
-
-figure(5)
-subplot(3,1,1), plot(executions, vet_error_NLLS_c(4,:),'r', executions, vet_error_NLLS_d(4,:), 'g');
-grid on;
-title("Fator de escala - x");
-ylabel("Error");
-xlabel("Monte Carlo run");
-subplot(3,1,2), plot(executions, vet_error_NLLS_c(5,:),'r', executions, vet_error_NLLS_d(5,:), 'g');
-grid on;
-title("Fator de escala - y");
-ylabel("Error");
-xlabel("Monte Carlo run");
-subplot(3,1,3), plot(executions, vet_error_NLLS_c(6,:),'r', executions, vet_error_NLLS_d(6,:), 'g');
-grid on;
-title("Fator de escala - z");
-ylabel("Error");
-xlabel("Monte Carlo run");
-
-figure(6)
-subplot(3,1,1), plot(executions, vet_error_NLLS_c(7,:),'r', executions, vet_error_NLLS_d(7,:), 'g');
-grid on;
-title("Ângulo Rho");
-ylabel("Error");
-xlabel("Monte Carlo run");
-subplot(3,1,2), plot(executions, vet_error_NLLS_c(8,:),'r', executions, vet_error_NLLS_d(8,:), 'g');
-grid on;
-title("Ângulo Phi");
-ylabel("Error");
-xlabel("Monte Carlo run");
-subplot(3,1,3), plot(executions, vet_error_NLLS_c(9,:),'r', executions, vet_error_NLLS_d(9,:), 'g');
+subplot(1,3,3), histogram(vet_error_ETS_c(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "red");
+hold on
+histogram(vet_error_NLLS_c(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 grid on;
 title("Ângulo Lambda");
 ylabel("Error");
