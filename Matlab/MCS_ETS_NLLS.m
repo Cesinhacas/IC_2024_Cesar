@@ -51,7 +51,9 @@ end
 
 Data_Simul = Dados_Teoricos;
 
-for i=1:2000
+exe = 2000;
+
+for i=1:exe
     offset = (rand(3,1)*0.4)-0.2;
     Escala = (rand(3,1)*0.4)+0.8;
     Ang = (rand(3,1)*6 - 3) * (pi/180);
@@ -71,16 +73,16 @@ for i=1:2000
         Dados_Corrompido(:,j) = scale*T*Data_Simul(:,j) + offset + Ruido(:,j); 
     end
     
-    ParT.x0 = 0;
-    ParT.y0 = 0;
-    ParT.z0 = 0;
-    ParT.a = 1;
-    ParT.b = 1;
-    ParT.c = 1;
-    ParT.rho = 0;
-    ParT.phi = 0;
-    ParT.lambda = 0;
-    ParP = ParT;
+%     ParT.x0 = 0;
+%     ParT.y0 = 0;
+%     ParT.z0 = 0;
+%     ParT.a = 1;
+%     ParT.b = 1;
+%     ParT.c = 1;
+%     ParT.rho = 0;
+%     ParT.phi = 0;
+%     ParT.lambda = 0;
+%     ParP = ParT;
 
     p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0];
     [Time,p1] = test1(Dados_Corrompido, 1);
@@ -90,7 +92,9 @@ for i=1:2000
     vet_error_ETS_c(:,i) = e-p1;
     vet_error_NLLS_c(:,i) = e-p;
 end
+
 executions = [1:1:i];
+
 figure(1)
 subplot(1,3,1), histogram(vet_error_ETS_c(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "red");
 hold on
@@ -161,3 +165,87 @@ grid on;
 title("Ângulo Lambda");
 ylabel("Error");
 xlabel("Monte Carlo run");
+
+figure(4)
+mean_3std = abs((ones(1,exe)*mean(vet_error_NLLS_c(1,:) + 3*std(vet_error_NLLS_c(1,:)))));
+subplot(1,3,1),  plot(executions, vet_error_NLLS_c(1,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
+hold on
+title("Offset - X")
+ylabel("Error");
+xlabel("Monte Carlo run");
+hold off
+
+mean_3std = abs((ones(1,exe)*mean(vet_error_NLLS_c(2,:) + 3*std(vet_error_NLLS_c(2,:)))));
+subplot(1,3,2),  plot(executions, vet_error_NLLS_c(2,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
+hold on
+title("Offset - Y")
+ylabel("Error");
+xlabel("Monte Carlo run");
+hold off
+
+mean_3std = abs((ones(1,exe)*mean(vet_error_NLLS_c(3,:) + 3*std(vet_error_NLLS_c(3,:)))));
+subplot(1,3,3),  plot(executions, vet_error_NLLS_c(3,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
+hold on
+title("Offset - Z")
+ylabel("Error");
+xlabel("Monte Carlo run");
+hold off
+
+legend("Run error","Mean plus 3 standard deviaton")
+
+figure(5)
+mean_3std_pos =(ones(1,exe)*mean(vet_error_NLLS_c(4,:) + 3*std(vet_error_NLLS_c(4,:))));
+mean_3std_neg =(ones(1,exe)*mean(vet_error_NLLS_c(4,:) - 3*std(vet_error_NLLS_c(4,:))));
+subplot(1,3,1),  plot(executions, vet_error_NLLS_c(4,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
+hold on
+title("Fator de escala - X")
+ylabel("Error");
+xlabel("Monte Carlo run");
+hold off
+
+mean_3std_pos =(ones(1,exe)*mean(vet_error_NLLS_c(5,:) + 3*std(vet_error_NLLS_c(5,:))));
+mean_3std_neg =(ones(1,exe)*mean(vet_error_NLLS_c(5,:) - 3*std(vet_error_NLLS_c(5,:))));
+subplot(1,3,2),  plot(executions, vet_error_NLLS_c(5,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
+hold on
+title("Fator de escala - Y")
+ylabel("Error");
+xlabel("Monte Carlo run");
+hold off
+
+mean_3std_pos =(ones(1,exe)*mean(vet_error_NLLS_c(6,:) + 3*std(vet_error_NLLS_c(6,:))));
+mean_3std_neg =(ones(1,exe)*mean(vet_error_NLLS_c(6,:) - 3*std(vet_error_NLLS_c(6,:))));
+subplot(1,3,3),  plot(executions, vet_error_NLLS_c(6,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
+hold on
+title("Fator de escala - Z")
+ylabel("Error");
+xlabel("Monte Carlo run");
+hold off
+
+legend("Run error","Mean plus 3 standard deviaton")
+
+figure(6)
+mean_3std = abs((ones(1,exe)*mean(vet_error_NLLS_c(7,:) + 3*std(vet_error_NLLS_c(7,:)))));
+subplot(1,3,1),  plot(executions, vet_error_NLLS_c(7,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
+hold on
+title("Rho")
+ylabel("Error");
+xlabel("Monte Carlo run");
+hold off
+
+mean_3std = abs((ones(1,exe)*mean(vet_error_NLLS_c(8,:) + 3*std(vet_error_NLLS_c(8,:)))));
+subplot(1,3,2),  plot(executions, vet_error_NLLS_c(8,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
+hold on
+title("Phi")
+ylabel("Error");
+xlabel("Monte Carlo run");
+hold off
+
+mean_3std = abs((ones(1,exe)*mean(vet_error_NLLS_c(9,:) + 3*std(vet_error_NLLS_c(9,:)))));
+subplot(1,3,3),  plot(executions, vet_error_NLLS_c(9,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
+hold on
+title("Lambda")
+ylabel("Error");
+xlabel("Monte Carlo run");
+hold off
+
+legend("Run error","Mean plus 3 standard deviaton")

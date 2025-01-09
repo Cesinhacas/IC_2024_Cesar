@@ -74,7 +74,3 @@ passo = passo -1;
 % P = e_std*inv(H'*H);
 % disp(P)
 end
-
-
-
-
