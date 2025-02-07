@@ -141,10 +141,12 @@ for i in range(0, 180, 5):
 x_sphere = np.sin(theta_sphere) * np.cos(phi_sphere)
 y_sphere = np.sin(theta_sphere) * np.sin(phi_sphere)
 z_sphere = np.cos(theta_sphere)
-error_vet_ETS = []
-error_vet_NLLS = []
 
-for i in range(0,1000):
+exe = 2000
+error_vet_ETS = np.zeros((exe, 9))
+error_vet_NLLS = np.zeros((exe, 9))
+
+for i in range(0,exe):
     e = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     e[0] = (random.random()*0.4) + 0.8
     e[1] = (random.random()*0.4) + 0.8
@@ -177,60 +179,14 @@ for i in range(0,1000):
     p = ETS_func(mx, my, mz)
     p0 = NLLS_func(mx, my, mz)
 
-    error_vet_ETS.append(e-p)
-    error_vet_NLLS.append(e-p0)
+    error_vet_ETS[i] = e-p
+    error_vet_NLLS[i] = e-p0
 
 error_vet_NLLS = np.array(error_vet_NLLS).transpose()
 error_vet_ETS = np.array(error_vet_ETS).transpose()
 
+error_vet_NLLS = pd.DataFrame(error_vet_NLLS)
+error_vet_ETS = pd.DataFrame(error_vet_ETS)
 
-plt.plot(error_vet_NLLS[0])
-plt.plot(error_vet_NLLS[1])
-plt.plot(error_vet_NLLS[2])
-plt.legend(['Fator de escala x', 'Fator de escala y', 'Fator de escala z'])
-plt.xlabel('Número da execução')
-plt.title('Erro no fator de escala')
-plt.ylabel('Erro fator de escala NLLS')
-plt.show() 
-
-plt.plot(error_vet_NLLS[3])
-plt.plot(error_vet_NLLS[4]) 
-plt.plot(error_vet_NLLS[5])
-plt.legend(['Offset de x', 'Offset de y', 'Offset de z'])
-plt.xlabel('Número da execução')
-plt.title('Erro de estimação do offset')
-plt.ylabel('Erro offset NLLS')
-plt.show()
-
-plt.plot(error_vet_NLLS[6])
-plt.plot(error_vet_NLLS[7])
-plt.plot(error_vet_NLLS[8])
-plt.legend(['Rho','Phi','Lambda'])
-plt.xlabel('Número da execução')
-plt.title('Erro na estimação dos ângulos')
-plt.ylabel('Erro dos ângulos NLLS')
-plt.show()
-
-plt.plot(error_vet_ETS[0])
-plt.plot(error_vet_ETS[1])
-plt.plot(error_vet_ETS[2])
-plt.xlabel('Número da execução')
-plt.title('Erro no fator de escala')
-plt.ylabel('Erro fator de escala ETS')
-plt.show() 
-
-plt.plot(error_vet_ETS[3])
-plt.plot(error_vet_ETS[4]) 
-plt.plot(error_vet_ETS[5])
-plt.xlabel('Número da execução')
-plt.title('Erro de estimação do offset')
-plt.ylabel('Erro offset ETS')
-plt.show()
-
-plt.plot(error_vet_ETS[6])
-plt.plot(error_vet_ETS[7])
-plt.plot(error_vet_ETS[8])
-plt.xlabel('Número da execução')
-plt.title('Erro na estimação dos ângulos')
-plt.ylabel('Erro dos ângulos ETS')
-plt.show()
+error_vet_ETS.to_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/MCS_ETS.csv', header=False, index=False)
+error_vet_NLLS.to_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/MCS_NLLS.csv', header=False, index=False)
