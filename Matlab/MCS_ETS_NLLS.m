@@ -51,7 +51,7 @@ end
 
 Data_Simul = Dados_Teoricos;
 
-exe = 5000;
+exe = 10000;
 vet_error_NLLS_c = zeros(9,exe);
 vet_error_ETS_c = zeros(9,exe);
 
@@ -97,6 +97,51 @@ end
 
 executions = [1:1:i];
 
+% Média dos erros
+error_mean_NLLS = [mean(vet_error_NLLS_c(1,:)), mean(vet_error_NLLS_c(2,:)), mean(vet_error_NLLS_c(3,:)), mean(vet_error_NLLS_c(4,:)), mean(vet_error_NLLS_c(5,:)), mean(vet_error_NLLS_c(6,:)), mean(vet_error_NLLS_c(7,:)), mean(vet_error_NLLS_c(8,:)), mean(vet_error_NLLS_c(9,:))];
+error_mean_ETS = [mean(vet_error_ETS_c(1,:)), mean(vet_error_ETS_c(2,:)), mean(vet_error_ETS_c(3,:)), mean(vet_error_ETS_c(4,:)), mean(vet_error_ETS_c(5,:)), mean(vet_error_ETS_c(6,:)), mean(vet_error_ETS_c(7,:)), mean(vet_error_ETS_c(8,:)), mean(vet_error_ETS_c(9,:))];
+
+disp("Média dos erros:")
+disp("ETS:" )
+disp("Offset - x:")
+disp(error_mean_ETS(1))
+disp("Offset - y:")
+disp(error_mean_ETS(2))
+disp("Offset - z:")
+disp(error_mean_ETS(3))
+disp("Fator de escala - x:")
+disp(error_mean_ETS(4))
+disp("Fator de escala - y:")
+disp(error_mean_ETS(5))
+disp("Fator de escala - z:")
+disp(error_mean_ETS(6))
+disp("Ângulo Rho:")
+disp(error_mean_ETS(7))
+disp("Ângulo Phi:")
+disp(error_mean_ETS(8))
+disp("Ângulo Lambda:")
+disp(error_mean_ETS(9))
+
+disp("NLLS:" )
+disp("Offset - x:")
+disp(error_mean_NLLS(1))
+disp("Offset - y:")
+disp(error_mean_NLLS(2))
+disp("Offset - z:")
+disp(error_mean_NLLS(3))
+disp("Fator de escala - x:")
+disp(error_mean_NLLS(4))
+disp("Fator de escala - y:")
+disp(error_mean_NLLS(5))
+disp("Fator de escala - z:")
+disp(error_mean_NLLS(6))
+disp("Ângulo Rho:")
+disp(error_mean_NLLS(7))
+disp("Ângulo Phi:")
+disp(error_mean_NLLS(8))
+disp("Ângulo Lambda:")
+disp(error_mean_NLLS(9))
+
 figure(1)
 subplot(1,3,1), histogram(vet_error_ETS_c(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -119,6 +164,7 @@ grid on;
 title("Offset - eixo z");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
+legend("ETS", "NLLS")
 
 figure(2)
 title("Erro ETS - Offsets")
@@ -143,6 +189,7 @@ grid on;
 title("Fator de escala - z");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
+legend("ETS", "NLLS")
 
 figure(3)
 title("Erro ETS - Ângulos de desalinhamento")
@@ -167,6 +214,7 @@ grid on;
 title("Ângulo Lambda");
 ylabel("Distribuição de probabilidade")
 xlabel("Graus")
+legend("ETS", "NLLS")
 
 figure(4)
 mean_3std = abs((ones(1,exe)*mean(vet_error_ETS_c(1,:) + 3*std(vet_error_ETS_c(1,:)))));

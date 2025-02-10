@@ -1,10 +1,10 @@
 import numpy as np
 import random
 import pandas as pd
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+import time
 
 def ETS_func(mx, my , mz):
+    time_start = time.perf_counter_ns()
     # Cálculo dos termos
     mxs = mx**2
     mys = -my**2
@@ -52,10 +52,12 @@ def ETS_func(mx, my , mz):
 
     p = np.array([sx, sy, sz, bx, by, bz, rho, phi, lambida]).transpose()
 
-    return p
+    time_end = time.perf_counter_ns()
+    Time = time_end - time_start
+
+    return p, Time
 
 def NLLS_func(mx, my, mz):
-    import numpy as np
 
     passo = 0
     loop = 1
@@ -65,6 +67,7 @@ def NLLS_func(mx, my, mz):
     e = Be
     error_vet = []
 
+    time_start = time.perf_counter_ns()
     while loop == 1:
         sx = p0[0]
         sy = p0[1]
@@ -85,7 +88,7 @@ def NLLS_func(mx, my, mz):
         J = J*0.5
         
     
-        e_std = (2*J*(1/len(e)))**0.5
+        #e_std = (2*J*(1/len(e)))**0.5
         
         if passo < 3:
             error_vet.append(J)
@@ -123,9 +126,11 @@ def NLLS_func(mx, my, mz):
 
         passo += 1
 
+    time_end = time.perf_counter_ns()
+    Time = time_end - time_start
 
     #P = e_std*np.linalg.inv(H.transpose()@H)
-    return p0
+    return p0, Time
 
 
 random.seed()
@@ -142,7 +147,9 @@ x_sphere = np.sin(theta_sphere) * np.cos(phi_sphere)
 y_sphere = np.sin(theta_sphere) * np.sin(phi_sphere)
 z_sphere = np.cos(theta_sphere)
 
-exe = 2000
+exe = 10000
+tempo_exe_ETS = 0
+tempo_exe_NLLS = 0
 error_vet_ETS = np.zeros((exe, 9))
 error_vet_NLLS = np.zeros((exe, 9))
 
@@ -176,11 +183,22 @@ for i in range(0,exe):
     my = dados_corrompidos[1]
     mz = dados_corrompidos[2]
 
-    p = ETS_func(mx, my, mz)
-    p0 = NLLS_func(mx, my, mz)
+    p, Time_ETS = ETS_func(mx, my, mz)
+    p0, Time_NLLS = NLLS_func(mx, my, mz)
+
+    tempo_exe_ETS += Time_ETS
+    tempo_exe_NLLS += Time_NLLS
 
     error_vet_ETS[i] = e-p
     error_vet_NLLS[i] = e-p0
+
+tempo_exe_ETS = (tempo_exe_ETS/exe)/1e6
+tempo_exe_NLLS = (tempo_exe_NLLS/exe)/1e6
+ratio = tempo_exe_NLLS/tempo_exe_ETS
+
+print('Tempo de execução ETS: ', tempo_exe_ETS)
+print('Tempo de execução NLLS: ', tempo_exe_NLLS)
+print('Razão de tempo (NLLS/ETS): ', ratio)
 
 error_vet_NLLS = np.array(error_vet_NLLS).transpose()
 error_vet_ETS = np.array(error_vet_ETS).transpose()
