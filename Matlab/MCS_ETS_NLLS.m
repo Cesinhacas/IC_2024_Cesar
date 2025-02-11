@@ -108,8 +108,8 @@ for i=1:exe
     vet_error_NLLS_c(:,i) = e-p;
 end
 
-tempo_exe_NLLS = (tempo_exe_NLLS / exe) * 10e3;
-tempo_exe_ETS = (tempo_exe_ETS / exe) * 10e3;
+tempo_exe_NLLS = (tempo_exe_NLLS / exe);
+tempo_exe_ETS = (tempo_exe_ETS / exe);
 ratio_time = tempo_exe_NLLS/tempo_exe_ETS;
 
 disp('Tempo de execução ETS em ms:')
@@ -130,17 +130,17 @@ error_mean_ETS = [mean(vet_error_ETS_c(1,:)), mean(vet_error_ETS_c(2,:)), mean(v
 disp("Média dos erros:")
 disp("ETS:" )
 disp("Offset - x:")
-disp(error_mean_ETS(1))
-disp("Offset - y:")
-disp(error_mean_ETS(2))
-disp("Offset - z:")
-disp(error_mean_ETS(3))
-disp("Fator de escala - x:")
 disp(error_mean_ETS(4))
-disp("Fator de escala - y:")
+disp("Offset - y:")
 disp(error_mean_ETS(5))
-disp("Fator de escala - z:")
+disp("Offset - z:")
 disp(error_mean_ETS(6))
+disp("Fator de escala - x:")
+disp(error_mean_ETS(1))
+disp("Fator de escala - y:")
+disp(error_mean_ETS(2))
+disp("Fator de escala - z:")
+disp(error_mean_ETS(3))
 disp("Ângulo Rho:")
 disp(error_mean_ETS(7))
 disp("Ângulo Phi:")
@@ -150,17 +150,17 @@ disp(error_mean_ETS(9))
 
 disp("NLLS:" )
 disp("Offset - x:")
-disp(error_mean_NLLS(1))
-disp("Offset - y:")
-disp(error_mean_NLLS(2))
-disp("Offset - z:")
-disp(error_mean_NLLS(3))
-disp("Fator de escala - x:")
 disp(error_mean_NLLS(4))
-disp("Fator de escala - y:")
+disp("Offset - y:")
 disp(error_mean_NLLS(5))
-disp("Fator de escala - z:")
+disp("Offset - z:")
 disp(error_mean_NLLS(6))
+disp("Fator de escala - x:")
+disp(error_mean_NLLS(1))
+disp("Fator de escala - y:")
+disp(error_mean_NLLS(2))
+disp("Fator de escala - z:")
+disp(error_mean_NLLS(3))
 disp("Ângulo Rho:")
 disp(error_mean_NLLS(7))
 disp("Ângulo Phi:")
@@ -169,23 +169,23 @@ disp("Ângulo Lambda:")
 disp(error_mean_NLLS(9))
 
 figure(1)
-subplot(1,3,1), histogram(vet_error_ETS_c(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(1,3,1), histogram(vet_error_ETS_c(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
-histogram(vet_error_NLLS_c(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_c(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 grid on;
 title("Offset - eixo x");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-subplot(1,3,2), histogram(vet_error_ETS_c(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(1,3,2), histogram(vet_error_ETS_c(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
-histogram(vet_error_NLLS_c(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_c(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 grid on;
 title("Offset - eixo y");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-subplot(1,3,3), histogram(vet_error_ETS_c(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(1,3,3), histogram(vet_error_ETS_c(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
-histogram(vet_error_NLLS_c(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_c(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 grid on;
 title("Offset - eixo z");
 ylabel("Distribuição de probabilidade")
@@ -194,23 +194,23 @@ legend("ETS", "NLLS")
 
 figure(2)
 title("Erro ETS - Offsets")
-subplot(1,3,1), histogram(vet_error_ETS_c(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(1,3,1), histogram(vet_error_ETS_c(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
-subplot(1,3,1), histogram(vet_error_NLLS_c(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+subplot(1,3,1), histogram(vet_error_NLLS_c(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 grid on;
 title("Fator de escala - x");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-subplot(1,3,2), histogram(vet_error_ETS_c(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(1,3,2), histogram(vet_error_ETS_c(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
-subplot(1,3,2), histogram(vet_error_NLLS_c(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+subplot(1,3,2), histogram(vet_error_NLLS_c(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 grid on;
 title("Fator de escala - y");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-subplot(1,3,3), histogram(vet_error_ETS_c(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(1,3,3), histogram(vet_error_ETS_c(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
-histogram(vet_error_NLLS_c(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_c(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 grid on;
 title("Fator de escala - z");
 ylabel("Distribuição de probabilidade")
@@ -243,24 +243,24 @@ xlabel("Graus")
 legend("ETS", "NLLS")
 
 figure(4)
-mean_3std = abs((ones(1,exe)*mean(vet_error_ETS_c(1,:) + 3*std(vet_error_ETS_c(1,:)))));
-subplot(1,3,1),  plot(executions, vet_error_ETS_c(1,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
+mean_3std = abs((ones(1,exe)*mean(vet_error_ETS_c(4,:) + 3*std(vet_error_ETS_c(4,:)))));
+subplot(1,3,1),  plot(executions, vet_error_ETS_c(4,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
 hold on
 title("Offset - X")
 ylabel("Error");
 xlabel("Monte Carlo run");
 hold off
 
-mean_3std = abs((ones(1,exe)*mean(vet_error_ETS_c(2,:) + 3*std(vet_error_ETS_c(2,:)))));
-subplot(1,3,2),  plot(executions, vet_error_ETS_c(2,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
+mean_3std = abs((ones(1,exe)*mean(vet_error_ETS_c(5,:) + 3*std(vet_error_ETS_c(5,:)))));
+subplot(1,3,2),  plot(executions, vet_error_ETS_c(5,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
 hold on
 title("Offset - Y")
 ylabel("Error");
 xlabel("Monte Carlo run");
 hold off
 
-mean_3std = abs((ones(1,exe)*mean(vet_error_ETS_c(3,:) + 3*std(vet_error_ETS_c(3,:)))));
-subplot(1,3,3),  plot(executions, vet_error_ETS_c(3,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
+mean_3std = abs((ones(1,exe)*mean(vet_error_ETS_c(6,:) + 3*std(vet_error_ETS_c(6,:)))));
+subplot(1,3,3),  plot(executions, vet_error_ETS_c(6,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
 hold on
 title("Offset - Z")
 ylabel("Error");
@@ -270,27 +270,27 @@ hold off
 legend("Run error","Mean plus 3 standard deviaton")
 
 figure(5)
-mean_3std_pos =(ones(1,exe)*mean(vet_error_ETS_c(4,:) + 3*std(vet_error_ETS_c(4,:))));
-mean_3std_neg =(ones(1,exe)*mean(vet_error_ETS_c(4,:) - 3*std(vet_error_ETS_c(4,:))));
-subplot(1,3,1),  plot(executions, vet_error_ETS_c(4,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
+mean_3std_pos =(ones(1,exe)*mean(vet_error_ETS_c(1,:) + 3*std(vet_error_ETS_c(1,:))));
+mean_3std_neg =(ones(1,exe)*mean(vet_error_ETS_c(1,:) - 3*std(vet_error_ETS_c(1,:))));
+subplot(1,3,1),  plot(executions, vet_error_ETS_c(1,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
 hold on
 title("Fator de escala - X")
 ylabel("Error");
 xlabel("Monte Carlo run");
 hold off
 
-mean_3std_pos =(ones(1,exe)*mean(vet_error_ETS_c(5,:) + 3*std(vet_error_ETS_c(5,:))));
-mean_3std_neg =(ones(1,exe)*mean(vet_error_ETS_c(5,:) - 3*std(vet_error_ETS_c(5,:))));
-subplot(1,3,2),  plot(executions, vet_error_ETS_c(5,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
+mean_3std_pos =(ones(1,exe)*mean(vet_error_ETS_c(2,:) + 3*std(vet_error_ETS_c(2,:))));
+mean_3std_neg =(ones(1,exe)*mean(vet_error_ETS_c(2,:) - 3*std(vet_error_ETS_c(2,:))));
+subplot(1,3,2),  plot(executions, vet_error_ETS_c(2,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
 hold on
 title("Fator de escala - Y")
 ylabel("Error");
 xlabel("Monte Carlo run");
 hold off
 
-mean_3std_pos =(ones(1,exe)*mean(vet_error_ETS_c(6,:) + 3*std(vet_error_ETS_c(6,:))));
-mean_3std_neg =(ones(1,exe)*mean(vet_error_ETS_c(6,:) - 3*std(vet_error_ETS_c(6,:))));
-subplot(1,3,3),  plot(executions, vet_error_ETS_c(6,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
+mean_3std_pos =(ones(1,exe)*mean(vet_error_ETS_c(3,:) + 3*std(vet_error_ETS_c(3,:))));
+mean_3std_neg =(ones(1,exe)*mean(vet_error_ETS_c(3,:) - 3*std(vet_error_ETS_c(3,:))));
+subplot(1,3,3),  plot(executions, vet_error_ETS_c(3,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
 hold on
 title("Fator de escala - Z")
 ylabel("Error");
@@ -327,24 +327,24 @@ hold off
 legend("Run error","Mean plus 3 standard deviaton")
 
 figure(7)
-mean_3std = abs((ones(1,exe)*mean(vet_error_NLLS_c(1,:) + 3*std(vet_error_NLLS_c(1,:)))));
-subplot(1,3,1),  plot(executions, vet_error_NLLS_c(1,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
+mean_3std = abs((ones(1,exe)*mean(vet_error_NLLS_c(4,:) + 3*std(vet_error_NLLS_c(4,:)))));
+subplot(1,3,1),  plot(executions, vet_error_NLLS_c(4,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
 hold on
 title("Offset - X")
 ylabel("Error");
 xlabel("Monte Carlo run");
 hold off
 
-mean_3std = abs((ones(1,exe)*mean(vet_error_NLLS_c(2,:) + 3*std(vet_error_NLLS_c(2,:)))));
-subplot(1,3,2),  plot(executions, vet_error_NLLS_c(2,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
+mean_3std = abs((ones(1,exe)*mean(vet_error_NLLS_c(5,:) + 3*std(vet_error_NLLS_c(5,:)))));
+subplot(1,3,2),  plot(executions, vet_error_NLLS_c(5,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
 hold on
 title("Offset - Y")
 ylabel("Error");
 xlabel("Monte Carlo run");
 hold off
 
-mean_3std = abs((ones(1,exe)*mean(vet_error_NLLS_c(3,:) + 3*std(vet_error_NLLS_c(3,:)))));
-subplot(1,3,3),  plot(executions, vet_error_NLLS_c(3,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
+mean_3std = abs((ones(1,exe)*mean(vet_error_NLLS_c(6,:) + 3*std(vet_error_NLLS_c(6,:)))));
+subplot(1,3,3),  plot(executions, vet_error_NLLS_c(6,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
 hold on
 title("Offset - Z")
 ylabel("Error");
@@ -354,27 +354,27 @@ hold off
 legend("Run error","Mean plus 3 standard deviaton")
 
 figure(8)
-mean_3std_pos =(ones(1,exe)*mean(vet_error_NLLS_c(4,:) + 3*std(vet_error_NLLS_c(4,:))));
-mean_3std_neg =(ones(1,exe)*mean(vet_error_NLLS_c(4,:) - 3*std(vet_error_NLLS_c(4,:))));
-subplot(1,3,1),  plot(executions, vet_error_NLLS_c(4,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
+mean_3std_pos =(ones(1,exe)*mean(vet_error_NLLS_c(1,:) + 3*std(vet_error_NLLS_c(1,:))));
+mean_3std_neg =(ones(1,exe)*mean(vet_error_NLLS_c(1,:) - 3*std(vet_error_NLLS_c(1,:))));
+subplot(1,3,1),  plot(executions, vet_error_NLLS_c(1,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
 hold on
 title("Fator de escala - X")
 ylabel("Error");
 xlabel("Monte Carlo run");
 hold off
 
-mean_3std_pos =(ones(1,exe)*mean(vet_error_NLLS_c(5,:) + 3*std(vet_error_NLLS_c(5,:))));
-mean_3std_neg =(ones(1,exe)*mean(vet_error_NLLS_c(5,:) - 3*std(vet_error_NLLS_c(5,:))));
-subplot(1,3,2),  plot(executions, vet_error_NLLS_c(5,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
+mean_3std_pos =(ones(1,exe)*mean(vet_error_NLLS_c(2,:) + 3*std(vet_error_NLLS_c(2,:))));
+mean_3std_neg =(ones(1,exe)*mean(vet_error_NLLS_c(2,:) - 3*std(vet_error_NLLS_c(2,:))));
+subplot(1,3,2),  plot(executions, vet_error_NLLS_c(2,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
 hold on
 title("Fator de escala - Y")
 ylabel("Error");
 xlabel("Monte Carlo run");
 hold off
 
-mean_3std_pos =(ones(1,exe)*mean(vet_error_NLLS_c(6,:) + 3*std(vet_error_NLLS_c(6,:))));
-mean_3std_neg =(ones(1,exe)*mean(vet_error_NLLS_c(6,:) - 3*std(vet_error_NLLS_c(6,:))));
-subplot(1,3,3),  plot(executions, vet_error_NLLS_c(6,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
+mean_3std_pos =(ones(1,exe)*mean(vet_error_NLLS_c(3,:) + 3*std(vet_error_NLLS_c(3,:))));
+mean_3std_neg =(ones(1,exe)*mean(vet_error_NLLS_c(3,:) - 3*std(vet_error_NLLS_c(3,:))));
+subplot(1,3,3),  plot(executions, vet_error_NLLS_c(3,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
 hold on
 title("Fator de escala - Z")
 ylabel("Error");
