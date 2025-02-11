@@ -140,7 +140,6 @@ def NLLS_func(mx, my, mz):
     return p0, Time
 
 
-random.seed()
 phi_sphere = [0]
 theta_sphere = [0]
 

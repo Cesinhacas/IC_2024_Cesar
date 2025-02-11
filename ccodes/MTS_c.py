@@ -18,33 +18,46 @@ my_functions.NLLS.restype = ctypes.c_int
 my_functions.TWOSTEP.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float)]
 my_functions.TWOSTEP.restype = ctypes.c_int
 
-def gera_dados(erros):
 
-    random.seed()
-    phi_sphere = [0]
-    theta_sphere = [0]
+phi_sphere = [0]
+theta_sphere = [0]
 
-    for i in range(0, 180, 5):
-        for j in range(6,354,12):
-            phi_sphere.append(j)
-            theta_sphere.append(i)
+for i in range(0, 180, 5):
+    for j in range(6,354,12):
+        phi_sphere.append(j)
+        theta_sphere.append(i)
 
 
-    x_sphere = np.sin(theta_sphere) * np.cos(phi_sphere)
-    y_sphere = np.sin(theta_sphere) * np.sin(phi_sphere)
-    z_sphere = np.cos(theta_sphere)
+x_sphere = np.sin(theta_sphere) * np.cos(phi_sphere)
+y_sphere = np.sin(theta_sphere) * np.sin(phi_sphere)
+z_sphere = np.cos(theta_sphere)
+
+param = pd.read_csv('/mnt/c/users/labt5/onedrive/desktop/cesar/IC_2024_Cesar/Dados/commum_param.csv', header=None) #c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/commum_param.csv
+param = param.to_numpy()
+
+num_exe = 3000
+num_exe_TW = num_exe
+execution_time_ETS = 0
+execution_time_NLLS = 0
+execution_time_TWOSTEP = 0
+error_vet_ETS = np.zeros((num_exe, 9))
+error_vet_NLLS = np.zeros((num_exe, 9))
+passos_NLLS = 0
+passos_TWOSTEP = 0
+
+for i in range(0, num_exe):
     e = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    e[0] = (random.random()*0.4) + 0.8
-    e[1] = (random.random()*0.4) + 0.8
-    e[2] = (random.random()*0.4) + 0.8
+    e[0] = param[0][i]
+    e[1] = param[1][i]
+    e[2] = param[2][i]
 
-    e[3] = (random.random()*0.4) - 0.2
-    e[4] = (random.random()*0.4) - 0.2
-    e[5] = (random.random()*0.4) - 0.2
+    e[3] = param[3][i]
+    e[4] = param[4][i]
+    e[5] = param[5][i]
     
-    e[6] = ((random.random()*6) - 3) * (np.pi/180)
-    e[7] = ((random.random()*6) - 3) * (np.pi/180)
-    e[8] = ((random.random()*6) - 3) * (np.pi/180)
+    e[6] = param[6][i]
+    e[7] = param[7][i]
+    e[8] = param[8][i]
 
     dados_corrompidos = np.array([x_sphere, y_sphere, z_sphere]).transpose()
     offset = (np.array([e[3], e[4], e[5]])).transpose()
@@ -58,32 +71,9 @@ def gera_dados(erros):
 
     dados_corrompidos = dados_corrompidos.transpose()
 
-    erros.extend(e)
-
-    mx = dados_corrompidos[0]
-    my = dados_corrompidos[1]
-    mz = dados_corrompidos[2]
-    dados = pd.array([mx, my, mz])
-    dados = dados.transpose()
-
-    return dados
-
-num_exe = 10000
-num_exe_TW = num_exe
-execution_time_ETS = 0
-execution_time_NLLS = 0
-execution_time_TWOSTEP = 0
-error_vet_ETS = np.zeros((num_exe, 9))
-error_vet_NLLS = np.zeros((num_exe, 9))
-passos_NLLS = 0
-passos_TWOSTEP = 0
-
-for i in range(0, num_exe):
-    erros = []
-    dados = gera_dados(erros)
-    mx = dados[0].astype(np.float32)
-    my = dados[1].astype(np.float32)
-    mz = dados[2].astype(np.float32)
+    mx = dados_corrompidos[0].astype(np.float32)
+    my = dados_corrompidos[1].astype(np.float32)
+    mz = dados_corrompidos[2].astype(np.float32)
 
     mx_ptr = mx.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
     my_ptr = my.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
@@ -116,8 +106,8 @@ for i in range(0, num_exe):
     execution_time_NLLS += (time_end_NLLS - time_start_NLLS)
     p1 = np.ctypeslib.as_array(p1_ptr, shape=(9,))
 
-    error_vet_ETS[i] = erros - p1
-    error_vet_NLLS[i] = erros - p0
+    error_vet_ETS[i] = e - p1
+    error_vet_NLLS[i] = e - p0
 
 
     '''
