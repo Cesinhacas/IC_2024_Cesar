@@ -51,14 +51,22 @@ end
 
 Data_Simul = Dados_Teoricos;
 
-exe = 10000;
+exe = 3000;
 vet_error_NLLS_c = zeros(9,exe);
 vet_error_ETS_c = zeros(9,exe);
+tempo_exe_NLLS = 0;
+tempo_exe_ETS = 0;
+
+cd ../
+cd 'Dados'
+param = readmatrix('commum_param.csv');
+cd ../
+cd 'Matlab'
 
 for i=1:exe
-    offset = (rand(3,1)*0.4)-0.2;
-    Escala = (rand(3,1)*0.4)+0.8;
-    Ang = (rand(3,1)*6 - 3) * (pi/180);
+    offset = [param(4,i);param(5,i);param(6,i)];
+    Escala = [param(1,i);param(2,i);param(3,i)];
+    Ang = [param(7,i);param(8,i);param(9,i)];
 
     rho = Ang(1);
     phi = Ang(2);
@@ -90,10 +98,28 @@ for i=1:exe
     [Time,p1] = test1(Dados_Corrompido, 1);
     H = ones(1, length(Dados_Corrompido(1,:)))';
     [tempo, passo,p] = test2(Dados_Corrompido, p0, H);
+
+    tempo_exe_ETS = tempo_exe_ETS + Time;
+    tempo_exe_NLLS = tempo_exe_NLLS + tempo;
+
+
    
     vet_error_ETS_c(:,i) = e-p1;
     vet_error_NLLS_c(:,i) = e-p;
 end
+
+tempo_exe_NLLS = (tempo_exe_NLLS / exe) * 10e3;
+tempo_exe_ETS = (tempo_exe_ETS / exe) * 10e3;
+ratio_time = tempo_exe_NLLS/tempo_exe_ETS;
+
+disp('Tempo de execução ETS em ms:')
+disp(tempo_exe_ETS)
+
+disp('Tempo de execução NLLS em ms:')
+disp(tempo_exe_NLLS)
+
+disp('Razão entre ETS e NLLS (NLLS/ETS):')
+disp(ratio_time)
 
 executions = [1:1:i];
 
