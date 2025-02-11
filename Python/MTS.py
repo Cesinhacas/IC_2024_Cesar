@@ -39,7 +39,7 @@ def ETS_func(mx, my , mz):
 
     rho = (2 * vet_X[1] * vet_X[4] - vet_X[2] * vet_X[3]) / (2 * vet_X[4]**2 * (-(vet_X[4] * vet_X[1]**2 - vet_X[1] * vet_X[2] * vet_X[3] + vet_X[2]**2 + vet_X[0] * vet_X[3]**2 - 4 * vet_X[0] * vet_X[4]) / (vet_X[4]**3))**0.5)
     rho = -np.arctan(rho)
-    lambida = -np.arctan((vet_X[3] / vet_X[4]) * (-(vet_X[4]**2 * (vet_X[4] * vet_X[1]**2 - vet_X[1] * vet_X[2] * vet_X[3] + vet_X[2]**2 - 4 * vet_X[0] * vet_X[4]) / (2 * vet_X[1]**2 * vet_X[3]**2 * vet_X[4] - 4 * vet_X[1]**2 * vet_X[4]**2 - 4 * vet_X[1]**2 * vet_X[4]**2 - vet_X[1] * vet_X[2] * vet_X[3]**3 + vet_X[0] * vet_X[3]**4 - 8 * vet_X[0] * vet_X[3]**2 * vet_X[4] + 16 * vet_X[0] * vet_X[4]**2)))**0.5)
+    lambida = -np.arctan((vet_X[3] / vet_X[4]) * (-((vet_X[4]**2) * (vet_X[4] * (vet_X[1]**2) - vet_X[1] * vet_X[2] * vet_X[3] + (vet_X[2]**2) - 4 * vet_X[0] * vet_X[4]) / (2 * (vet_X[1]**2) * (vet_X[3]**2) * vet_X[4] - 4 * (vet_X[1]**2) * (vet_X[4]**2) - 4 * (vet_X[1]**2) * (vet_X[4]**2) - vet_X[1] * vet_X[2] * (vet_X[3]**3) + vet_X[0] * (vet_X[3]**4) - 8 * vet_X[0] * (vet_X[3]**2) * vet_X[4] + 16 * vet_X[0] * (vet_X[4]**2))))**0.5)
 
     n1 = -vet_X[1]**2 * vet_X[7]**2 + 4 * vet_X[1]**2 * vet_X[4] * vet_X[8] - 4 * vet_X[1] * vet_X[2] * vet_X[3] * vet_X[8] + 2 * vet_X[1] * vet_X[2] * vet_X[6] * vet_X[7] + 2 * vet_X[1] * vet_X[3] * vet_X[5] * vet_X[7] - 4 * vet_X[1] * vet_X[4] * vet_X[5] * vet_X[6] - vet_X[2]**2 * vet_X[6]**2 + 2 * vet_X[2] * vet_X[3] * vet_X[5] * vet_X[6] + 4 * vet_X[2]**2 * vet_X[8] - 4 * vet_X[2] * vet_X[5] * vet_X[7] - vet_X[3]**2 * vet_X[5]**2 + 4 * vet_X[1] * vet_X[3]**2 * vet_X[8] - 4 * vet_X[0] * vet_X[3] * vet_X[6] * vet_X[7] + 4 * vet_X[4] * vet_X[5]**2 + 4 * vet_X[0] * vet_X[4] * vet_X[6]**2 + 4 * vet_X[0] * vet_X[7]**2 - 16 * vet_X[0] * vet_X[4] * vet_X[8]
     n2 = vet_X[1]**2 * vet_X[4] - vet_X[1] * vet_X[2] * vet_X[3] + vet_X[2]**2 + vet_X[0] * vet_X[3]**2 - 4 * vet_X[0] * vet_X[4]
@@ -78,8 +78,15 @@ def NLLS_func(mx, my, mz):
         rho = p0[6]
         phi = p0[7]
         lambida = p0[8]
+
+        sin_rho = np.sin(rho)
+        cos_rho = np.cos(rho)
+        sin_phi = np.sin(phi)
+        cos_phi = np.cos(phi)
+        sin_lambida = np.sin(lambida)
+        cos_lambida = np.cos(lambida)
         
-        f = (((mx-bx)**2)/(sx)**2) + (((sx*(my-by) - sy*np.sin(rho)*(mx-bx))**2)/((sx*sy*np.cos(rho))**2)) + (((sx*sy*np.cos(rho)*(mz-bz) - sx*sz*np.sin(lambida)*(my-by) + sy*sz*(np.sin(lambida)*np.sin(rho) - np.cos(rho)*np.sin(phi)*np.cos(lambida))*(mx-bx))**2)/((sx*sy*sz*np.cos(rho)*np.cos(phi)*np.cos(lambida))**2))
+        f = (((mx-bx)**2)/(sx)**2) + (((sx*(my-by) - sy*sin_rho*(mx-bx))**2)/((sx*sy*cos_rho)**2)) + (((sx*sy*cos_rho*(mz-bz) - sx*sz*sin_lambida*(my-by) + sy*sz*(sin_lambida*sin_rho - cos_rho*sin_phi*cos_lambida)*(mx-bx))**2)/((sx*sy*sz*cos_rho*cos_phi*cos_lambida)**2))
         
         
         e = Be - f
@@ -98,24 +105,24 @@ def NLLS_func(mx, my, mz):
             if delta_J < 0.1:
                 loop = 0
 
-        
-        h1 = (2*(sx*(by - my) - sy*np.sin(rho)*(bx - mx))*(by - my))/(sx**2*sy**2*np.cos(rho)**2) - (2*(sx*(by - my) - sy*np.sin(rho)*(bx - mx))**2)/(sx**3*sy**2*np.cos(rho)**2) - (2*(bx - mx)**2)/sx**3 - (2*(sy*sz*(np.sin(lambida)*np.sin(rho) - np.cos(lambida)*np.cos(rho)*np.sin(phi))*(bx - mx) + sx*sy*np.cos(rho)*(bz - mz) - sx*sz*np.sin(lambida)*(by - my))**2)/(sx**3*sy**2*sz**2*np.cos(lambida)**2*np.cos(phi)**2*np.cos(rho)**2) + (2*(sy*np.cos(rho)*(bz - mz) - sz*np.sin(lambida)*(by - my))*(sy*sz*(np.sin(lambida)*np.sin(rho) - np.cos(lambida)*np.cos(rho)*np.sin(phi))*(bx - mx) + sx*sy*np.cos(rho)*(bz - mz) - sx*sz*np.sin(lambida)*(by - my)))/(sx**2*sy**2*sz**2*np.cos(lambida)**2*np.cos(phi)**2*np.cos(rho)**2)
 
-        h2 = -(2*(by - my)*(by*sx*sz*np.sin(lambida)**2 - my*sx*sz*np.sin(lambida)**2 + by*sx*sz*np.cos(lambida)**2*np.cos(phi)**2 - my*sx*sz*np.cos(lambida)**2*np.cos(phi)**2 - bz*sx*sy*np.cos(rho)*np.sin(lambida) + mz*sx*sy*np.cos(rho)*np.sin(lambida) - bx*sy*sz*np.sin(lambida)**2*np.sin(rho) + mx*sy*sz*np.sin(lambida)**2*np.sin(rho) - bx*sy*sz*np.cos(lambida)**2*np.cos(phi)**2*np.sin(rho) + mx*sy*sz*np.cos(lambida)**2*np.cos(phi)**2*np.sin(rho) + bx*sy*sz*np.cos(lambida)*np.cos(rho)*np.sin(lambida)*np.sin(phi) - mx*sy*sz*np.cos(lambida)*np.cos(rho)*np.sin(lambida)*np.sin(phi)))/(sx*sy**3*sz*np.cos(lambida)**2*np.cos(phi)**2*np.cos(rho)**2)
+        h1 = (2*(sx*(by - my) - sy*sin_rho*(bx - mx))*(by - my))/(sx**2*sy**2*cos_rho**2) - (2*(sx*(by - my) - sy*sin_rho*(bx - mx))**2)/(sx**3*sy**2*cos_rho**2) - (2*(bx - mx)**2)/sx**3 - (2*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi)*(bx - mx) + sx*sy*cos_rho*(bz - mz) - sx*sz*sin_lambida*(by - my))**2)/(sx**3*sy**2*sz**2*cos_lambida**2*cos_phi**2*cos_rho**2) + (2*(sy*cos_rho*(bz - mz) - sz*sin_lambida*(by - my))*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi)*(bx - mx) + sx*sy*cos_rho*(bz - mz) - sx*sz*sin_lambida*(by - my)))/(sx**2*sy**2*sz**2*cos_lambida**2*cos_phi**2*cos_rho**2)
 
-        h3 = -(2*(bz - mz)*(bz*sx*sy*np.cos(rho) - by*sx*sz*np.sin(lambida) - mz*sx*sy*np.cos(rho) + my*sx*sz*np.sin(lambida) + bx*sy*sz*np.sin(lambida)*np.sin(rho) - mx*sy*sz*np.sin(lambida)*np.sin(rho) - bx*sy*sz*np.cos(lambida)*np.cos(rho)*np.sin(phi) + mx*sy*sz*np.cos(lambida)*np.cos(rho)*np.sin(phi)))/(sx*sy*sz**3*np.cos(lambida)**2*np.cos(phi)**2*np.cos(rho))
+        h2 = -(2*(by - my)*(by*sx*sz*sin_lambida**2 - my*sx*sz*sin_lambida**2 + by*sx*sz*cos_lambida**2*cos_phi**2 - my*sx*sz*cos_lambida**2*cos_phi**2 - bz*sx*sy*cos_rho*sin_lambida + mz*sx*sy*cos_rho*sin_lambida - bx*sy*sz*sin_lambida**2*sin_rho + mx*sy*sz*sin_lambida**2*sin_rho - bx*sy*sz*cos_lambida**2*cos_phi**2*sin_rho + mx*sy*sz*cos_lambida**2*cos_phi**2*sin_rho + bx*sy*sz*cos_lambida*cos_rho*sin_lambida*sin_phi - mx*sy*sz*cos_lambida*cos_rho*sin_lambida*sin_phi))/(sx*sy**3*sz*cos_lambida**2*cos_phi**2*cos_rho**2)
 
-        h4 = (2*bx - 2*mx)/sx**2 - (2*np.sin(rho)*(sx*(by - my) - sy*np.sin(rho)*(bx - mx)))/(sx**2*sy*np.cos(rho)**2) + (2*(np.sin(lambida)*np.sin(rho) - np.cos(lambida)*np.cos(rho)*np.sin(phi))*(sy*sz*(np.sin(lambida)*np.sin(rho) - np.cos(lambida)*np.cos(rho)*np.sin(phi))*(bx - mx) + sx*sy*np.cos(rho)*(bz - mz) - sx*sz*np.sin(lambida)*(by - my)))/(sx**2*sy*sz*np.cos(lambida)**2*np.cos(phi)**2*np.cos(rho)**2)
+        h3 = -(2*(bz - mz)*(bz*sx*sy*cos_rho - by*sx*sz*sin_lambida - mz*sx*sy*cos_rho + my*sx*sz*sin_lambida + bx*sy*sz*sin_lambida*sin_rho - mx*sy*sz*sin_lambida*sin_rho - bx*sy*sz*cos_lambida*cos_rho*sin_phi + mx*sy*sz*cos_lambida*cos_rho*sin_phi))/(sx*sy*sz**3*cos_lambida**2*cos_phi**2*cos_rho)
 
-        h5 = (2*(sx*(by - my) - sy*np.sin(rho)*(bx - mx)))/(sx*sy**2*np.cos(rho)**2) - (2*np.sin(lambida)*(sy*sz*(np.sin(lambida)*np.sin(rho) - np.cos(lambida)*np.cos(rho)*np.sin(phi))*(bx - mx) + sx*sy*np.cos(rho)*(bz - mz) - sx*sz*np.sin(lambida)*(by - my)))/(sx*sy**2*sz*np.cos(lambida)**2*np.cos(phi)**2*np.cos(rho)**2)
+        h4 = (2*bx - 2*mx)/sx**2 - (2*sin_rho*(sx*(by - my) - sy*sin_rho*(bx - mx)))/(sx**2*sy*cos_rho**2) + (2*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi)*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi)*(bx - mx) + sx*sy*cos_rho*(bz - mz) - sx*sz*sin_lambida*(by - my)))/(sx**2*sy*sz*cos_lambida**2*cos_phi**2*cos_rho**2)
 
-        h6 = (2*(sy*sz*(np.sin(lambida)*np.sin(rho) - np.cos(lambida)*np.cos(rho)*np.sin(phi))*(bx - mx) + sx*sy*np.cos(rho)*(bz - mz) - sx*sz*np.sin(lambida)*(by - my)))/(sx*sy*sz**2*np.cos(lambida)**2*np.cos(phi)**2*np.cos(rho))
+        h5 = (2*(sx*(by - my) - sy*sin_rho*(bx - mx)))/(sx*sy**2*cos_rho**2) - (2*sin_lambida*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi)*(bx - mx) + sx*sy*cos_rho*(bz - mz) - sx*sz*sin_lambida*(by - my)))/(sx*sy**2*sz*cos_lambida**2*cos_phi**2*cos_rho**2)
 
-        h7 = -(2*(bx*sy - mx*sy - by*sx*np.sin(rho) + my*sx*np.sin(rho))*(by*sx*sz*np.sin(lambida)**2 - my*sx*sz*np.sin(lambida)**2 + by*sx*sz*np.cos(lambida)**2*np.cos(phi)**2 - my*sx*sz*np.cos(lambida)**2*np.cos(phi)**2 - bz*sx*sy*np.cos(rho)*np.sin(lambida) + mz*sx*sy*np.cos(rho)*np.sin(lambida) - bx*sy*sz*np.sin(lambida)**2*np.sin(rho) + mx*sy*sz*np.sin(lambida)**2*np.sin(rho) - bx*sy*sz*np.cos(lambida)**2*np.cos(phi)**2*np.sin(rho) + mx*sy*sz*np.cos(lambida)**2*np.cos(phi)**2*np.sin(rho) + bx*sy*sz*np.cos(lambida)*np.cos(rho)*np.sin(lambida)*np.sin(phi) - mx*sy*sz*np.cos(lambida)*np.cos(rho)*np.sin(lambida)*np.sin(phi)))/(sx**2*sy**2*sz*np.cos(lambida)**2*np.cos(phi)**2*np.cos(rho)**3)
+        h6 = (2*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi)*(bx - mx) + sx*sy*cos_rho*(bz - mz) - sx*sz*sin_lambida*(by - my)))/(sx*sy*sz**2*cos_lambida**2*cos_phi**2*cos_rho)
 
-        h8 = (2*np.sin(phi)*(sy*sz*(np.sin(lambida)*np.sin(rho) - np.cos(lambida)*np.cos(rho)*np.sin(phi))*(bx - mx) + sx*sy*np.cos(rho)*(bz - mz) - sx*sz*np.sin(lambida)*(by - my))**2)/(sx**2*sy**2*sz**2*np.cos(lambida)**2*np.cos(phi)**3*np.cos(rho)**2) - (2*(bx - mx)*(sy*sz*(np.sin(lambida)*np.sin(rho) - np.cos(lambida)*np.cos(rho)*np.sin(phi))*(bx - mx) + sx*sy*np.cos(rho)*(bz - mz) - sx*sz*np.sin(lambida)*(by - my)))/(sx**2*sy*sz*np.cos(lambida)*np.cos(phi)*np.cos(rho))
+        h7 = -(2*(bx*sy - mx*sy - by*sx*sin_rho + my*sx*sin_rho)*(by*sx*sz*sin_lambida**2 - my*sx*sz*sin_lambida**2 + by*sx*sz*cos_lambida**2*cos_phi**2 - my*sx*sz*cos_lambida**2*cos_phi**2 - bz*sx*sy*cos_rho*sin_lambida + mz*sx*sy*cos_rho*sin_lambida - bx*sy*sz*sin_lambida**2*sin_rho + mx*sy*sz*sin_lambida**2*sin_rho - bx*sy*sz*cos_lambida**2*cos_phi**2*sin_rho + mx*sy*sz*cos_lambida**2*cos_phi**2*sin_rho + bx*sy*sz*cos_lambida*cos_rho*sin_lambida*sin_phi - mx*sy*sz*cos_lambida*cos_rho*sin_lambida*sin_phi))/(sx**2*sy**2*sz*cos_lambida**2*cos_phi**2*cos_rho**3)
 
-        h9 = (2*np.sin(lambida)*(sy*sz*(np.sin(lambida)*np.sin(rho) - np.cos(lambida)*np.cos(rho)*np.sin(phi))*(bx - mx) + sx*sy*np.cos(rho)*(bz - mz) - sx*sz*np.sin(lambida)*(by - my))**2)/(sx**2*sy**2*sz**2*np.cos(lambida)**3*np.cos(phi)**2*np.cos(rho)**2) + (2*(sy*sz*(np.cos(lambida)*np.sin(rho) + np.cos(rho)*np.sin(lambida)*np.sin(phi))*(bx - mx) - sx*sz*np.cos(lambida)*(by - my))*(sy*sz*(np.sin(lambida)*np.sin(rho) - np.cos(lambida)*np.cos(rho)*np.sin(phi))*(bx - mx) + sx*sy*np.cos(rho)*(bz - mz) - sx*sz*np.sin(lambida)*(by - my)))/(sx**2*sy**2*sz**2*np.cos(lambida)**2*np.cos(phi)**2*np.cos(rho)**2)
+        h8 = (2*sin_phi*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi)*(bx - mx) + sx*sy*cos_rho*(bz - mz) - sx*sz*sin_lambida*(by - my))**2)/(sx**2*sy**2*sz**2*cos_lambida**2*cos_phi**3*cos_rho**2) - (2*(bx - mx)*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi)*(bx - mx) + sx*sy*cos_rho*(bz - mz) - sx*sz*sin_lambida*(by - my)))/(sx**2*sy*sz*cos_lambida*cos_phi*cos_rho)
+
+        h9 = (2*sin_lambida*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi)*(bx - mx) + sx*sy*cos_rho*(bz - mz) - sx*sz*sin_lambida*(by - my))**2)/(sx**2*sy**2*sz**2*cos_lambida**3*cos_phi**2*cos_rho**2) + (2*(sy*sz*(cos_lambida*sin_rho + cos_rho*sin_lambida*sin_phi)*(bx - mx) - sx*sz*cos_lambida*(by - my))*(sy*sz*(sin_lambida*sin_rho - cos_lambida*cos_rho*sin_phi)*(bx - mx) + sx*sy*cos_rho*(bz - mz) - sx*sz*sin_lambida*(by - my)))/(sx**2*sy**2*sz**2*cos_lambida**2*cos_phi**2*cos_rho**2)
 
         H_t = np.array([h1, h2, h3, h4, h5, h6, h7, h8, h9])
         H = H_t.transpose()
@@ -147,25 +154,29 @@ x_sphere = np.sin(theta_sphere) * np.cos(phi_sphere)
 y_sphere = np.sin(theta_sphere) * np.sin(phi_sphere)
 z_sphere = np.cos(theta_sphere)
 
-exe = 10000
+param = pd.read_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/commum_param.csv', header=None) #/mnt/c/users/labt5/desktop/cesar/IC_2024_Cesar/commum_param.csv
+param = param.to_numpy()
+
+exe = 3000
 tempo_exe_ETS = 0
 tempo_exe_NLLS = 0
 error_vet_ETS = np.zeros((exe, 9))
 error_vet_NLLS = np.zeros((exe, 9))
 
+
 for i in range(0,exe):
     e = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    e[0] = (random.random()*0.4) + 0.8
-    e[1] = (random.random()*0.4) + 0.8
-    e[2] = (random.random()*0.4) + 0.8
+    e[0] = param[0][i]
+    e[1] = param[1][i]
+    e[2] = param[2][i]
 
-    e[3] = (random.random()*0.4) - 0.2
-    e[4] = (random.random()*0.4) - 0.2
-    e[5] = (random.random()*0.4) - 0.2
+    e[3] = param[3][i]
+    e[4] = param[4][i]
+    e[5] = param[5][i]
     
-    e[6] = ((random.random()*6) - 3) * (np.pi/180)
-    e[7] = ((random.random()*6) - 3) * (np.pi/180)
-    e[8] = ((random.random()*6) - 3) * (np.pi/180)
+    e[6] = param[6][i]
+    e[7] = param[7][i]
+    e[8] = param[8][i]
 
     dados_corrompidos = np.array([x_sphere, y_sphere, z_sphere]).transpose()
     offset = (np.array([e[3], e[4], e[5]])).transpose()
