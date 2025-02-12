@@ -243,24 +243,27 @@ xlabel("Graus")
 legend("ETS", "NLLS")
 
 figure(4)
-mean_3std = abs((ones(1,exe)*mean(vet_error_ETS_c(4,:) + 3*std(vet_error_ETS_c(4,:)))));
-subplot(1,3,1),  plot(executions, vet_error_ETS_c(4,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
+mean_3std_pos =(ones(4,exe)*mean(vet_error_ETS_c(4,:) + 3*std(vet_error_ETS_c(4,:))));
+mean_3std_neg =(ones(4,exe)*mean(vet_error_ETS_c(4,:) - 3*std(vet_error_ETS_c(4,:))));
+subplot(1,3,1),  plot(executions, vet_error_ETS_c(4,:),executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
 hold on
 title("Offset - X")
 ylabel("Error");
 xlabel("Monte Carlo run");
 hold off
 
-mean_3std = abs((ones(1,exe)*mean(vet_error_ETS_c(5,:) + 3*std(vet_error_ETS_c(5,:)))));
-subplot(1,3,2),  plot(executions, vet_error_ETS_c(5,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
+mean_3std_pos =(ones(5,exe)*mean(vet_error_ETS_c(5,:) + 3*std(vet_error_ETS_c(5,:))));
+mean_3std_neg =(ones(5,exe)*mean(vet_error_ETS_c(5,:) - 3*std(vet_error_ETS_c(5,:))));
+subplot(1,3,2),  plot(executions, vet_error_ETS_c(5,:),executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
 hold on
 title("Offset - Y")
 ylabel("Error");
 xlabel("Monte Carlo run");
 hold off
 
-mean_3std = abs((ones(1,exe)*mean(vet_error_ETS_c(6,:) + 3*std(vet_error_ETS_c(6,:)))));
-subplot(1,3,3),  plot(executions, vet_error_ETS_c(6,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
+mean_3std_pos =(ones(6,exe)*mean(vet_error_ETS_c(6,:) + 3*std(vet_error_ETS_c(6,:))));
+mean_3std_neg =(ones(6,exe)*mean(vet_error_ETS_c(6,:) - 3*std(vet_error_ETS_c(6,:))));
+subplot(1,3,3),  plot(executions, vet_error_ETS_c(6,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
 hold on
 title("Offset - Z")
 ylabel("Error");
@@ -327,24 +330,27 @@ hold off
 legend("Run error","Mean plus 3 standard deviaton")
 
 figure(7)
-mean_3std = abs((ones(1,exe)*mean(vet_error_NLLS_c(4,:) + 3*std(vet_error_NLLS_c(4,:)))));
-subplot(1,3,1),  plot(executions, vet_error_NLLS_c(4,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
+mean_3std_pos =(ones(1,exe)*mean(vet_error_NLLS_c(4,:) + 3*std(vet_error_NLLS_c(4,:))));
+mean_3std_neg =(ones(1,exe)*mean(vet_error_NLLS_c(4,:) - 3*std(vet_error_NLLS_c(4,:))));
+subplot(1,3,1),  plot(executions, vet_error_NLLS_c(4,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
 hold on
 title("Offset - X")
 ylabel("Error");
 xlabel("Monte Carlo run");
 hold off
 
-mean_3std = abs((ones(1,exe)*mean(vet_error_NLLS_c(5,:) + 3*std(vet_error_NLLS_c(5,:)))));
-subplot(1,3,2),  plot(executions, vet_error_NLLS_c(5,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
+mean_3std_pos =(ones(1,exe)*mean(vet_error_NLLS_c(5,:) + 3*std(vet_error_NLLS_c(5,:))));
+mean_3std_neg =(ones(1,exe)*mean(vet_error_NLLS_c(5,:) - 3*std(vet_error_NLLS_c(5,:))));
+subplot(1,3,2),  plot(executions, vet_error_NLLS_c(5,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
 hold on
 title("Offset - Y")
 ylabel("Error");
 xlabel("Monte Carlo run");
 hold off
 
-mean_3std = abs((ones(1,exe)*mean(vet_error_NLLS_c(6,:) + 3*std(vet_error_NLLS_c(6,:)))));
-subplot(1,3,3),  plot(executions, vet_error_NLLS_c(6,:), executions, mean_3std, '--r', executions, -mean_3std, '--r')
+mean_3std_pos =(ones(1,exe)*mean(vet_error_NLLS_c(6,:) + 3*std(vet_error_NLLS_c(6,:))));
+mean_3std_neg =(ones(1,exe)*mean(vet_error_NLLS_c(6,:) - 3*std(vet_error_NLLS_c(6,:))));
+subplot(1,3,3),  plot(executions, vet_error_NLLS_c(6,:), executions, mean_3std_pos, '--r', executions, mean_3std_neg, '--r')
 hold on
 title("Offset - Z")
 ylabel("Error");
