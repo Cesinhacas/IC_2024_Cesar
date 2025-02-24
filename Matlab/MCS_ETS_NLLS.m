@@ -108,8 +108,8 @@ for i=1:exe
     vet_error_NLLS_c(:,i) = e-p;
 end
 
-tempo_exe_NLLS = (tempo_exe_NLLS / exe);
-tempo_exe_ETS = (tempo_exe_ETS / exe);
+tempo_exe_NLLS = (tempo_exe_NLLS / exe)*1000;
+tempo_exe_ETS = (tempo_exe_ETS / exe)*1000;
 ratio_time = tempo_exe_NLLS/tempo_exe_ETS;
 
 disp('Tempo de execução ETS em ms:')
