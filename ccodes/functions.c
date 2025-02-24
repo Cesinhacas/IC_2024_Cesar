@@ -1,16 +1,15 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <math.h>
 
 #define N 9
 #define N1 3
-#define tam 1045
+#define tam 1111
 
 typedef struct {
     float r1;
     float r2;
     float r3;
-    } raizes_t;
+} raizes_t;
 
 void inverter_matriz9x9(float matriz[N][N], float inversa[N][N])
 {

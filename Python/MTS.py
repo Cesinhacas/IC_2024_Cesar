@@ -1,5 +1,4 @@
 import numpy as np
-import random
 import pandas as pd
 import time
 
@@ -91,7 +90,7 @@ def NLLS_func(mx, my, mz):
         
         e = Be - f
         
-        J = (e.transpose()@e)
+        J = (e.transpose() @ e)
         J = J*0.5
         
     
@@ -143,8 +142,8 @@ def NLLS_func(mx, my, mz):
 phi_sphere = [0]
 theta_sphere = [0]
 
-for i in range(0, 180, 5):
-    for j in range(6,354,12):
+for i in range(0, 181, 5):
+    for j in range(6,355,12):
         phi_sphere.append(j)
         theta_sphere.append(i)
 
