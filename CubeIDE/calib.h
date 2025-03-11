@@ -9,7 +9,7 @@
 #define INC_CALIB_H_
 
 #define N 9
-#define tam 572
+#define tam 1111
 
 void ETS(float *mx, float *my, float *mz, float *p);
 int NLLS(float *mx, float *my, float *mz, float *p);

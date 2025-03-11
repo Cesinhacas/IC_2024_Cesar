@@ -90,6 +90,8 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
+  uint32_t ETS_counter = 0;
+  uint32_t NLLS_counter = 0;
 
   /* USER CODE END 2 */
 
@@ -97,6 +99,19 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	global_counter = 0;
+	HAL_TIM_Base_Start_IT(&htim2);
+
+
+	HAL_TIM_Base_Stop_IT(&htim2);
+	ETS_counter = global_counter + ETS_counter;
+
+	global_counter = 0;
+	HAL_TIM_Base_Start_IT(&htim2);
+
+
+	HAL_TIM_Base_Stop_IT(&htim2);
+	NLLS_counter = global_counter + NLLS_counter;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
