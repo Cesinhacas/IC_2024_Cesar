@@ -25,23 +25,6 @@ my_functions_64.ETS_64.restype = ctypes.c_void_p
 my_functions_64.NLLS_64.argtypes = [ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)]
 my_functions_64.NLLS_64.restype = ctypes.c_int
 
-
-phi_sphere = [0]
-theta_sphere = [0]
-
-for i in range(0, 181, 5):
-    for j in range(6,355,12):
-        phi_sphere.append(j)
-        theta_sphere.append(i)
-
-
-x_sphere = np.sin(theta_sphere) * np.cos(phi_sphere)
-y_sphere = np.sin(theta_sphere) * np.sin(phi_sphere)
-z_sphere = np.cos(theta_sphere)
-
-param = pd.read_csv('/mnt/c/users/labt5/onedrive/desktop/cesar/IC_2024_Cesar/Dados/commum_param.csv', header=None) #c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/commum_param.csv
-param = param.to_numpy()
-
 num_exe = 3000
 num_exe_TW = num_exe
 execution_time_ETS = 0
@@ -58,30 +41,16 @@ passos_NLLS_64 = 0
 passos_TWOSTEP = 0
 
 for i in range(0, num_exe):
-    e = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    e[0] = param[0][i]
-    e[1] = param[1][i]
-    e[2] = param[2][i]
+    str_save = '/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_com_ruido/conjunto_dados_corrompidos_' + str(i+1) + '.csv'
 
-    e[3] = param[3][i]
-    e[4] = param[4][i]
-    e[5] = param[5][i]
-    
-    e[6] = param[6][i]
-    e[7] = param[7][i]
-    e[8] = param[8][i]
+    dados_corrompidos = pd.read_csv(str_save, header=None)
+    dados_corrompidos = dados_corrompidos.to_numpy()
 
-    dados_corrompidos = np.array([x_sphere, y_sphere, z_sphere]).transpose()
-    offset = (np.array([e[3], e[4], e[5]])).transpose()
-    scale =np.array([[e[0], 0, 0], [0, e[1], 0], [0, 0, e[2]]])
-    T = np.array([[1, 0, 0], [np.sin(e[6]), np.cos(e[6]), 0], [np.sin(e[7])*np.cos(e[8]), np.sin(e[8]), np.cos(e[7])*np.cos(e[8])]])
+    str_save = '/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_com_ruido/param_' + str(i+1) + '.csv'
 
-    
-    for j in range(len(x_sphere)):
-        noise = 0.006*(np.random.rand(1,3))
-        dados_corrompidos[j] = scale @ T @ np.array([dados_corrompidos[j][0], dados_corrompidos[j][1], dados_corrompidos[j][2]]).transpose() + offset + noise
-
-    dados_corrompidos = dados_corrompidos.transpose()
+    e = pd.read_csv(str_save, header=None)
+    e = e.to_numpy()
+    e = e.transpose()
 
     mx = dados_corrompidos[0].astype(np.float32)
     my = dados_corrompidos[1].astype(np.float32)

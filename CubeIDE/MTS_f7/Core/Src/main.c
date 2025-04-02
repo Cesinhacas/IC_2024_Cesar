@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "tim.h"
+#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -89,9 +90,28 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM2_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   uint32_t ETS_counter = 0;
   uint32_t NLLS_counter = 0;
+
+  union{
+	  float dado;
+	  uint8_t dado_cagado[4];
+  } mx[1112];
+  union{
+	  float dado;
+	  uint8_t dado_cagado[4];
+  } my[1112];
+  union{
+	  float dado;
+	  uint8_t dado_cagado[4];
+  } mz[1112];
+
+  float p[9] = {0}, p0 = {0};
+  uint8_t passos_NLLS = 0;
+  uint8_t tempo_exe_ETS[4] = {0}, tempo_exe_NLLS[4] = {0};
+
 
   /* USER CODE END 2 */
 
@@ -99,19 +119,28 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	HAL_UART_Receive(&huart2, mx, 1112*4, 5000);
+	HAL_UART_Receive(&huart2, my, 1112*4, 5000);
+	HAL_UART_Receive(&huart2, mz, 1112*4, 5000);
+
 	global_counter = 0;
 	HAL_TIM_Base_Start_IT(&htim2);
 
+	ETS(&mx, &my, &mz, &p);
 
 	HAL_TIM_Base_Stop_IT(&htim2);
 	ETS_counter = global_counter + ETS_counter;
 
+
 	global_counter = 0;
 	HAL_TIM_Base_Start_IT(&htim2);
 
+	passos_NLLS = NLLS(&mx, &my, &mz, &p0);
 
 	HAL_TIM_Base_Stop_IT(&htim2);
 	NLLS_counter = global_counter + NLLS_counter;
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

@@ -43,9 +43,9 @@ void inverter_matriz(float matriz[N][N], float inversa[N][N])
 }
 
 
-int NLLS(float *mx, float *my, float *mz, float *p)
+uint8_t NLLS(float *mx, float *my, float *mz, float *p)
 {
-    int passo = 0, loop = 1;
+    uint8_t passo = 0, loop = 1;
     float p0[9] = {1, 1, 1, 0, 0, 0, 0, 0, 0}, Be[tam], e[tam], f[tam], sx, sy, sz, bx, by, bz, rho, phi, lambida, error_ant, J, delta_J, mat_H[N][tam];
     float sin_phi, sin_rho, sin_lambda, cos_phi, cos_rho, cos_lambda;
     float Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam];

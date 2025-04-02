@@ -2,9 +2,6 @@ import numpy as np
 import pandas as pd
 import functions
 
-param = pd.read_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/commum_param.csv', header=None) #/mnt/c/users/labt5/desktop/cesar/IC_2024_Cesar/commum_param.csv
-param = param.to_numpy()
-
 exe = 3000
 tempo_exe_ETS = 0
 tempo_exe_NLLS = 0
