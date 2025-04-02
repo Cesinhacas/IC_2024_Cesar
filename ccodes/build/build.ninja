@@ -251,6 +251,41 @@ build functions.dll: C_EXECUTABLE_LINKER__functions.2edll_Debug CMakeFiles/funct
   TARGET_PDB = functions.dll.pdb
 
 # =============================================================================
+# Object build statements for EXECUTABLE target functions_64.so
+
+
+#############################################
+# Order-only phony target for functions_64.so
+
+build cmake_object_order_depends_target_functions_64.so: phony || .
+
+build CMakeFiles/functions_64.so.dir/functions_64.c.o: C_COMPILER__functions_64.2eso_unscanned_Debug /mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/functions_64.c || cmake_object_order_depends_target_functions_64.so
+  DEP_FILE = CMakeFiles/functions_64.so.dir/functions_64.c.o.d
+  FLAGS = -g -O0
+  OBJECT_DIR = CMakeFiles/functions_64.so.dir
+  OBJECT_FILE_DIR = CMakeFiles/functions_64.so.dir
+  TARGET_COMPILE_PDB = CMakeFiles/functions_64.so.dir/
+  TARGET_PDB = functions_64.so.pdb
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target functions_64.so
+
+
+#############################################
+# Link the executable functions_64.so
+
+build functions_64.so: C_EXECUTABLE_LINKER__functions_64.2eso_Debug CMakeFiles/functions_64.so.dir/functions_64.c.o
+  FLAGS = -g -O0
+  LINK_LIBRARIES = -lm
+  OBJECT_DIR = CMakeFiles/functions_64.so.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_COMPILE_PDB = CMakeFiles/functions_64.so.dir/
+  TARGET_FILE = functions_64.so
+  TARGET_PDB = functions_64.so.pdb
+
+# =============================================================================
 # Object build statements for EXECUTABLE target teste
 
 
@@ -318,7 +353,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 #############################################
 # Folder: /mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/ccodes/build
 
-build all: phony ETS NLLS NLLS2 TWOSTEP functions.so functions.dll teste
+build all: phony ETS NLLS NLLS2 TWOSTEP functions.so functions.dll functions_64.so teste
 
 # =============================================================================
 # Built-in targets

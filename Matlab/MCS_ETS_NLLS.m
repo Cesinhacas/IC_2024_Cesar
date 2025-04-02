@@ -1,55 +1,13 @@
-%% Código 01a - Gera vetor de 572 (passo = 10) 1112 (passo = 5) pontos similar ao do teste da bobina:
+clc
 clear all
 close all
-clc
 
-save_data = 1;
-
-phi(1) = 0;
-theta(1) = 0;
-it(1) = 1;
-k = 2;
-passo = 5;
-
-for i=0:passo:180
-    for j=6:12:354
-        phi(k) = j;
-        theta(k) = i; 
-        it(k) = k;
-        k = k + 1;
-    end
-end
-phi(k) = 180;
-theta(k) = 0;
-it(k) = k;
-
-phi_Rad = pi/180*phi; 
-theta_Rad = pi/180*theta;
-
-r = 1;
-
-x = r.*cos(theta_Rad).*sin(phi_Rad);
-y = r.*sin(theta_Rad).*sin(phi_Rad);
-z = r.*cos(phi_Rad);
-
-Dados = [x; y; z];
-
-if save_data==1
-    Dados_Teoricos = Dados;
-    clearvars -except Dados_Teoricos 
-    cd ../
-    cd 'Dados'
-    save Dados_Teoricos.mat
-    cd ../
-    cd 'Matlab'
-end
-
-%% Gera dados corrompidos
-% OFFSET => -0.2 ~ 0.2
-% Fs => 0.8 ~ 1.2
-% Ang => -3 ~ 3 ** transformar de grau para radiano.
-
-Data_Simul = Dados_Teoricos;
+cd ..\
+cd Dados\
+load Dados_Teoricos.mat
+Data_Simul = Dados_Teoricos';
+cd ..\
+cd Matlab\
 
 exe = 3000;
 vet_error_NLLS_c = zeros(9,exe);
@@ -57,31 +15,14 @@ vet_error_ETS_c = zeros(9,exe);
 tempo_exe_NLLS = 0;
 tempo_exe_ETS = 0;
 
-cd ../
-cd 'Dados'
-param = readmatrix('commum_param.csv');
-cd ../
-cd 'Matlab'
-
 for i=1:exe
-    offset = [param(4,i);param(5,i);param(6,i)];
-    Escala = [param(1,i);param(2,i);param(3,i)];
-    Ang = [param(7,i);param(8,i);param(9,i)];
+    cd Dados_com_ruido\
+    strg_save = sprintf("conjunto_dados_corrompidos_%d.csv", i);
+    Dados_Corrompido = readmatrix(strg_save);
 
-    rho = Ang(1);
-    phi = Ang(2);
-    lambda = Ang(3);
-    
-    e = [Escala; offset; Ang];
-
-    scale = diag(Escala);
-
-    T = [1 0 0; sin(rho) cos(rho) 0; sin(phi)*cos(lambda) sin(lambda) cos(phi)*cos(lambda)];
-
-    for j=1:length(Data_Simul(1,:))
-        Ruido(:,j) = 0.006*(rand(3,1));
-        Dados_Corrompido(:,j) = scale*T*Data_Simul(:,j) + offset + Ruido(:,j); 
-    end
+    strg_save = sprintf("param_%d.csv", i);
+    e = readmatrix(strg_save);
+    cd ..\
     
 %     ParT.x0 = 0;
 %     ParT.y0 = 0;

@@ -298,7 +298,7 @@ int NLLS(float *mx, float *my, float *mz, float *p)
         else
         {
             delta_J = 100*fabsf(J-error_ant)/J;
-            if(delta_J < 0.05)
+            if(delta_J < 0.1)
             {
                 loop = 0;
             }

@@ -4,6 +4,7 @@ import time
 import ctypes
 
 my_functions = ctypes.CDLL('./functions.so')
+my_functions_64 = ctypes.CDLL('./functions_64.so')
 #dll_path = r'C:\\Users\\LabT5\\Desktop\\Cesar\\IC_2024_Cesar\\ccodes\\functions.dll'
 
 #my_functions = ctypes.CDLL(dll_path)
@@ -16,6 +17,13 @@ my_functions.NLLS.restype = ctypes.c_int
 
 my_functions.TWOSTEP.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float)]
 my_functions.TWOSTEP.restype = ctypes.c_int
+
+
+my_functions_64.ETS_64.argtypes = [ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)]
+my_functions_64.ETS_64.restype = ctypes.c_void_p
+
+my_functions_64.NLLS_64.argtypes = [ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)]
+my_functions_64.NLLS_64.restype = ctypes.c_int
 
 
 phi_sphere = [0]
@@ -38,10 +46,15 @@ num_exe = 3000
 num_exe_TW = num_exe
 execution_time_ETS = 0
 execution_time_NLLS = 0
+execution_time_ETS_64 = 0
+execution_time_NLLS_64 = 0
 execution_time_TWOSTEP = 0
 error_vet_ETS = np.zeros((num_exe, 9))
 error_vet_NLLS = np.zeros((num_exe, 9))
+error_vet_ETS_64 = np.zeros((num_exe, 9))
+error_vet_NLLS_64 = np.zeros((num_exe, 9))
 passos_NLLS = 0
+passos_NLLS_64 = 0
 passos_TWOSTEP = 0
 
 for i in range(0, num_exe):
@@ -78,6 +91,14 @@ for i in range(0, num_exe):
     my_ptr = my.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
     mz_ptr = mz.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
 
+    mx_64 = dados_corrompidos[0].astype(np.double)
+    my_64 = dados_corrompidos[1].astype(np.double)
+    mz_64 = dados_corrompidos[2].astype(np.double)
+
+    mx_ptr_64 = mx_64.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
+    my_ptr_64 = my_64.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
+    mz_ptr_64 = mz_64.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
+
     '''
     mx_ptr1 = mx.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
     my_ptr1 = my.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
@@ -108,7 +129,28 @@ for i in range(0, num_exe):
     error_vet_ETS[i] = e - p1
     error_vet_NLLS[i] = e - p0
 
+    p0_64 = np.zeros(9, dtype=np.double)
+    p1_64 = np.zeros(9, dtype=np.double)
 
+    p0_ptr_64 = p0_64.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
+    p1_ptr_64 = p1_64.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
+
+    time_start_ETS_64 = time.perf_counter_ns()
+    my_functions_64.ETS_64(mx_ptr_64, my_ptr_64, mz_ptr_64, p0_ptr_64)
+    time_end_ETS_64 = time.perf_counter_ns()
+    execution_time_ETS_64 += (time_end_ETS_64 - time_start_ETS_64)
+    p0_64 = np.ctypeslib.as_array(p0_ptr_64, shape=(9,))
+
+
+    time_start_NLLS_64 = time.perf_counter_ns()
+    passos_NLLS_c_64 = my_functions_64.NLLS_64(mx_ptr_64, my_ptr_64, mz_ptr_64, p1_ptr_64)
+    time_end_NLLS_64 = time.perf_counter_ns()
+    passos_NLLS_64 += passos_NLLS_c_64
+    execution_time_NLLS_64 += (time_end_NLLS_64 - time_start_NLLS_64)
+    p1_64 = np.ctypeslib.as_array(p1_ptr_64, shape=(9,))
+    
+    error_vet_ETS_64[i] = e - p1_64
+    error_vet_NLLS_64[i] = e - p0_64
     '''
     time_start_TWOSTEP = time.perf_counter_ns()
     passos_TWOSTEP_c = my_functions.TWOSTEP(mx_ptr1, my_ptr1, mz_ptr1, p2_ptr)
@@ -120,22 +162,37 @@ for i in range(0, num_exe):
 error_vet_ETS = error_vet_ETS.transpose()
 error_vet_NLLS = error_vet_NLLS.transpose()
 
+error_vet_ETS_64 = error_vet_ETS_64.transpose()
+error_vet_NLLS_64 = error_vet_NLLS_64.transpose()
+
 error_vet_NLLS = pd.DataFrame(error_vet_NLLS)
 error_vet_ETS = pd.DataFrame(error_vet_ETS)
 
+error_vet_NLLS_64 = pd.DataFrame(error_vet_NLLS_64)
+error_vet_ETS_64 = pd.DataFrame(error_vet_ETS_64)
+
 error_vet_ETS.to_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/MCS_ETS_c.csv', header=False, index=False)
 error_vet_NLLS.to_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/MCS_NLLS_c.csv', header=False, index=False)
+
+error_vet_ETS_64.to_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/MCS_ETS_c_64.csv', header=False, index=False)
+error_vet_NLLS_64.to_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/MCS_NLLS_c_64.csv', header=False, index=False)
 
 execution_time_ETS = (execution_time_ETS/num_exe)/1000000
 
 execution_time_NLLS = (execution_time_NLLS/num_exe)/1000000
 
+execution_time_ETS_64 = (execution_time_ETS_64/num_exe)/1000000
+
+execution_time_NLLS_64 = (execution_time_NLLS_64/num_exe)/1000000
+
 #execution_time_TWOSTEP = (execution_time_TWOSTEP/num_exe_TW)/1000000
 
 passos_NLLS = passos_NLLS/num_exe
+passos_NLLS_64 = passos_NLLS_64/num_exe
 #passos_TWOSTEP = passos_TWOSTEP/num_exe_TW
 
 ratio = execution_time_NLLS/execution_time_ETS
+ratio_64 = execution_time_NLLS_64/execution_time_ETS_64
 #ratio1 = execution_time_TWOSTEP/execution_time_ETS
 #raatio2 = execution_time_TWOSTEP/execution_time_NLLS
 
@@ -143,12 +200,16 @@ ratio = execution_time_NLLS/execution_time_ETS
 
 print("Número de execuções: ", num_exe)
 print("Execution time ETS: ", execution_time_ETS, "ms")
+print("execution time ETS 64: ", execution_time_ETS_64, "ms")
 print("Execution time NLLS: ", execution_time_NLLS, "ms")
 print("Passos NLLS: ", passos_NLLS)
+print("Execution time NLLS 64: ", execution_time_NLLS_64, "ms")
+print("Passos NLLS 64: ", passos_NLLS_64)
 #print("Execution time TWOSTEP: ", execution_time_TWOSTEP, "ms")
 #print("Passos TWOSTEP: ", passos_TWOSTEP)
 #print("Número de execuções TWOSTEP: ", num_exe_TW)
 #print("Taxa de convergência: ", ratio3 , "%")
 print("Execution time razão (tempo NLLS / tempo ETS): ", ratio)
+print("Execution time razão (tempo NLLS / tempo ETS 64): ", ratio_64)
 #print("Execution time razão (tempo TWOSTEP / tempo ETS): ", ratio1)
 #print("Execution time razão (tempo TWOSTEP / tempo NLLS): ", raatio2)

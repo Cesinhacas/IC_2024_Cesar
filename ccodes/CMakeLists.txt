@@ -26,6 +26,9 @@ target_link_libraries(functions.so m)
 add_executable(functions.dll functions.c)
 target_link_libraries(functions.dll m)
 
+add_executable(functions_64.so functions_64.c)
+target_link_libraries(functions_64.so m)
+
 add_executable(teste teste.c)
 
 # set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
