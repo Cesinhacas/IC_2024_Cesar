@@ -19,7 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "tim.h"
-#include "usart.h"
+#include "usb_device.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -45,7 +45,12 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+extern uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
+extern static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len);
+
 uint16_t global_counter = 0;
+
+uint8_t send_msg[] = "Dados recebidos\n";
 
 /* USER CODE END PV */
 
@@ -90,23 +95,12 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM2_Init();
-  MX_USART2_UART_Init();
+  MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
   uint32_t ETS_counter = 0;
   uint32_t NLLS_counter = 0;
 
-  union{
-	  float dado;
-	  uint8_t dado_cagado[4];
-  } mx[1112];
-  union{
-	  float dado;
-	  uint8_t dado_cagado[4];
-  } my[1112];
-  union{
-	  float dado;
-	  uint8_t dado_cagado[4];
-  } mz[1112];
+  uint8_t mx_int[4*1112] = {0}, my_int[4*1112] = {0}, mz_int[4*1112] = {0};
 
   float p[9] = {0}, p0 = {0};
   uint8_t passos_NLLS = 0;
@@ -119,14 +113,16 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	HAL_UART_Receive(&huart2, mx, 1112*4, 5000);
-	HAL_UART_Receive(&huart2, my, 1112*4, 5000);
-	HAL_UART_Receive(&huart2, mz, 1112*4, 5000);
+	mx_int[0] = 5;
+	CDC_Receive_FS(mx_int, 1);
+	//HAL_UART_Receive_IT(&huart2, mx_int, 1);
+	/*HAL_UART_Receive(&huart2, my, 1112*4, 5000);
+	HAL_UART_Receive(&huart2, mz, 1112*4, 5000);*/
 
 	global_counter = 0;
-	HAL_TIM_Base_Start_IT(&htim2);
+	//HAL_TIM_Base_Start_IT(&htim2);
 
-	ETS(&mx, &my, &mz, &p);
+	/*ETS(&mx, &my, &mz, &p);
 
 	HAL_TIM_Base_Stop_IT(&htim2);
 	ETS_counter = global_counter + ETS_counter;
@@ -160,28 +156,20 @@ void SystemClock_Config(void)
   /** Configure the main internal regulator output voltage
   */
   __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
 
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 216;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 4;
+  RCC_OscInitStruct.PLL.PLLN = 72;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 2;
+  RCC_OscInitStruct.PLL.PLLQ = 3;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Activate the Over-Drive mode
-  */
-  if (HAL_PWREx_EnableOverDrive() != HAL_OK)
   {
     Error_Handler();
   }
@@ -192,20 +180,16 @@ void SystemClock_Config(void)
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_7) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
   {
     Error_Handler();
   }
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-	global_counter ++;
-}
 
 /* USER CODE END 4 */
 
