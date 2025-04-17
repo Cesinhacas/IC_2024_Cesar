@@ -19,8 +19,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "tim.h"
-#include "usb_device.h"
+#include "usart.h"
 #include "gpio.h"
+#include "calib.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -45,12 +46,10 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-extern uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
-extern static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len);
 
-uint16_t global_counter = 0;
-
-uint8_t send_msg[] = "Dados recebidos\n";
+uint8_t global_counter = 0;
+uint32_t timer_counter = 0;
+uint8_t run = 0;
 
 /* USER CODE END PV */
 
@@ -62,7 +61,10 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+union {
+	    uint8_t b[4];
+	    float f;
+  } conv;
 /* USER CODE END 0 */
 
 /**
@@ -95,16 +97,18 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM2_Init();
-  MX_USB_DEVICE_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  uint8_t data_received = 1;
+
   uint32_t ETS_counter = 0;
   uint32_t NLLS_counter = 0;
 
-  uint8_t mx_int[4*1112] = {0}, my_int[4*1112] = {0}, mz_int[4*1112] = {0};
-
+  float mx[1112] = {0}, my[1112] = {0}, mz[1112] = {0};
   float p[9] = {0}, p0 = {0};
   uint8_t passos_NLLS = 0;
   uint8_t tempo_exe_ETS[4] = {0}, tempo_exe_NLLS[4] = {0};
+
 
 
   /* USER CODE END 2 */
@@ -113,31 +117,54 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	mx_int[0] = 5;
-	CDC_Receive_FS(mx_int, 1);
-	//HAL_UART_Receive_IT(&huart2, mx_int, 1);
-	/*HAL_UART_Receive(&huart2, my, 1112*4, 5000);
-	HAL_UART_Receive(&huart2, mz, 1112*4, 5000);*/
+	HAL_UART_Receive(&huart2, &run, 1, 100);
+	if(run != 0)
+	{
+		for(uint16_t i = 0; i <= 1112; i+=4)
+			{
+				HAL_UART_Receive_IT(&huart2, conv.b, 1);
+				mx[i] = conv.f;
+			}
+			HAL_UART_Transmit(&huart2, &data_received, 1, 10);
 
-	global_counter = 0;
-	//HAL_TIM_Base_Start_IT(&htim2);
+			for(uint16_t i = 0; i <= 1112; i+=4)
+			{
+				HAL_UART_Receive_IT(&huart2, conv.b, 1);
+				my[i] = conv.f;
+			}
+			HAL_UART_Transmit(&huart2, &data_received, 1, 10);
 
-	/*ETS(&mx, &my, &mz, &p);
+			for(uint16_t i = 0; i <= 1112; i+=4)
+			{
+				HAL_UART_Receive_IT(&huart2, conv.b, 1);
+				mz[i] = conv.f;
+			}
+			HAL_UART_Transmit(&huart2, &data_received, 1, 10);
 
-	HAL_TIM_Base_Stop_IT(&htim2);
-	ETS_counter = global_counter + ETS_counter;
+			global_counter = 0;
+			//HAL_TIM_Base_Start_IT(&htim2);
+
+			ETS(mx, my, mz, p);
+
+			HAL_TIM_Base_Stop_IT(&htim2);
+			ETS_counter = timer_counter + ETS_counter;
 
 
-	global_counter = 0;
-	HAL_TIM_Base_Start_IT(&htim2);
+			timer_counter = 0;
+			HAL_TIM_Base_Start_IT(&htim2);
 
-	passos_NLLS = NLLS(&mx, &my, &mz, &p0);
+			//passos_NLLS = NLLS(mx, my, mz, p0);
 
-	HAL_TIM_Base_Stop_IT(&htim2);
-	NLLS_counter = global_counter + NLLS_counter;
+			HAL_TIM_Base_Stop_IT(&htim2);
+			NLLS_counter = timer_counter + NLLS_counter;
 
-
-    /* USER CODE END WHILE */
+			for(uint8_t i = 0; i <= 9; i++)
+			{
+				conv.f = p[i];
+				HAL_UART_Transmit(&huart2, conv.b, 4, 100);
+			}
+	}
+	/* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
   }
@@ -190,7 +217,18 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if (huart->Instance == USART2) {
+        // Recomeça a recepção de 4 bytes
+    	global_counter++;
+        HAL_UART_Receive_IT(&huart2, &conv.b[global_counter], 1);
+    }
+    if(global_counter <= 4)
+    {
+    	global_counter = 0;
+    }
+}
 /* USER CODE END 4 */
 
 /**
