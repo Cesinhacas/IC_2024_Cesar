@@ -18,13 +18,20 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "fatfs.h"
+#include "spi.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
-#include "calib.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "calib.h"
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
+
 
 /* USER CODE END Includes */
 
@@ -46,10 +53,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
-uint8_t global_counter = 0;
-uint32_t timer_counter = 0;
-uint8_t run = 0;
+float mx[1112] = {0}, my[1112] = {0}, mz[1112] = {0};
+float p1[9] = {0}, p0[9] = {0};
+uint8_t passos_NLLS = 0;
 
 /* USER CODE END PV */
 
@@ -61,10 +67,6 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-union {
-	    uint8_t b[4];
-	    float f;
-  } conv;
 /* USER CODE END 0 */
 
 /**
@@ -75,7 +77,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+  char file_read[20] = {0};
+  FILE *fp;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -98,16 +101,14 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   MX_USART2_UART_Init();
+  MX_FATFS_Init();
+  MX_SPI3_Init();
   /* USER CODE BEGIN 2 */
-  uint8_t data_received = 1;
-
+  uint32_t start_time = 0;
   uint32_t ETS_counter = 0;
   uint32_t NLLS_counter = 0;
-
-  float mx[1112] = {0}, my[1112] = {0}, mz[1112] = {0};
-  float p[9] = {0}, p0 = {0};
-  uint8_t passos_NLLS = 0;
-  uint8_t tempo_exe_ETS[4] = {0}, tempo_exe_NLLS[4] = {0};
+  uint16_t file_cont = 1;
+  float ETS_time = 0, NLLS_time = 0;
 
 
 
@@ -117,54 +118,76 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	HAL_UART_Receive(&huart2, &run, 1, 100);
-	if(run != 0)
+	if(file_cont > 42)
 	{
-		for(uint16_t i = 0; i <= 1112; i+=4)
-			{
-				HAL_UART_Receive_IT(&huart2, conv.b, 1);
-				mx[i] = conv.f;
-			}
-			HAL_UART_Transmit(&huart2, &data_received, 1, 10);
-
-			for(uint16_t i = 0; i <= 1112; i+=4)
-			{
-				HAL_UART_Receive_IT(&huart2, conv.b, 1);
-				my[i] = conv.f;
-			}
-			HAL_UART_Transmit(&huart2, &data_received, 1, 10);
-
-			for(uint16_t i = 0; i <= 1112; i+=4)
-			{
-				HAL_UART_Receive_IT(&huart2, conv.b, 1);
-				mz[i] = conv.f;
-			}
-			HAL_UART_Transmit(&huart2, &data_received, 1, 10);
-
-			global_counter = 0;
-			//HAL_TIM_Base_Start_IT(&htim2);
-
-			ETS(mx, my, mz, p);
-
-			HAL_TIM_Base_Stop_IT(&htim2);
-			ETS_counter = timer_counter + ETS_counter;
-
-
-			timer_counter = 0;
-			HAL_TIM_Base_Start_IT(&htim2);
-
-			//passos_NLLS = NLLS(mx, my, mz, p0);
-
-			HAL_TIM_Base_Stop_IT(&htim2);
-			NLLS_counter = timer_counter + NLLS_counter;
-
-			for(uint8_t i = 0; i <= 9; i++)
-			{
-				conv.f = p[i];
-				HAL_UART_Transmit(&huart2, conv.b, 4, 100);
-			}
+		return 1;
 	}
-	/* USER CODE END WHILE */
+	printf("Run number %d", file_cont);
+	sprintf(file_read, "data\\run%d.txt", file_cont);
+	fp=fopen(file_read, "r");
+	if (!fp)
+	{
+		printf("Erro ao abrir o arquivo.\n");
+		return 1;
+	}
+	char line[61336];
+
+	float *linhas[] = {mx, my, mz};  // Vetor de ponteiros para facilitar o acesso
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (fgets(line, sizeof(line), fp) == NULL)
+		{
+		  fprintf(stderr, "Erro ao ler a linha %d\n", i);
+		  return 1;
+		}
+
+		char *token = strtok(line, ",");
+		int j = 0;
+
+		while (token != NULL && j < 1112)
+		{
+		  linhas[i][j] = strtof(token, NULL);
+		  token = strtok(NULL, ",");
+		  j++;
+		}
+
+		if (j != 1112)
+		{
+		  fprintf(stderr, "Linha %d com número incorreto de colunas: esperadas 1112, encontradas %d\n", i + 1, j);
+		  return 1;
+		}
+	}
+
+	fclose(fp);
+
+	start_time = SysTick->VAL;
+	ETS(mx, my, mz, p1);
+	ETS_counter = start_time - SysTick->VAL;
+	ETS_time = ETS_counter/SystemCoreClock;
+
+	start_time = SysTick->VAL;
+	passos_NLLS = NLLS(mx, my, mz, p0);
+	NLLS_counter = start_time - SysTick->VAL;
+	NLLS_time = NLLS_counter/SystemCoreClock;
+
+	FILE *arquivoA = fopen(file_read, "w");
+	if (arquivoA == NULL)
+	{
+		perror("Erro ao criar o arquivo do ETS");
+		return 1;
+	}
+	for (int i = 0; i < 9; i++) {
+		fprintf(arquivoA, "%f, ", p1[i]);
+		fprintf(arquivoA, "%f\n", p0[i]);
+	}
+	fprintf(arquivoA, "%f, %f\n", ETS_time, NLLS_time);
+	fprintf(arquivoA, "%u", passos_NLLS);
+	fclose(arquivoA);
+
+	file_cont++;
+
+    /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
   }
@@ -217,18 +240,7 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-    if (huart->Instance == USART2) {
-        // Recomeça a recepção de 4 bytes
-    	global_counter++;
-        HAL_UART_Receive_IT(&huart2, &conv.b[global_counter], 1);
-    }
-    if(global_counter <= 4)
-    {
-    	global_counter = 0;
-    }
-}
+
 /* USER CODE END 4 */
 
 /**
