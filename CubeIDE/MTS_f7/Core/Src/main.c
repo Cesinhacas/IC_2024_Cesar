@@ -78,7 +78,6 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
   char file_read[20] = {0};
-  FILE *fp;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -105,11 +104,18 @@ int main(void)
   MX_SPI3_Init();
   /* USER CODE BEGIN 2 */
   uint32_t start_time = 0;
-  uint32_t ETS_counter = 0;
-  uint32_t NLLS_counter = 0;
   uint16_t file_cont = 1;
   float ETS_time = 0, NLLS_time = 0;
 
+  FATFS fs;
+  FRESULT res;
+
+  // Monta o sistema de arquivos na unidade lógica "0:"
+  res = f_mount(&fs, "0:", 1);
+  if (res != FR_OK) {
+      printf("Falha ao montar o sistema de arquivos: %d\n", res);
+      Error_Handler(); // ou retorne um erro
+  }
 
 
   /* USER CODE END 2 */
@@ -118,74 +124,95 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	if(file_cont > 42)
+	if(file_cont >= 3000)
 	{
 		return 1;
 	}
-	printf("Run number %d", file_cont);
-	sprintf(file_read, "data\\run%d.txt", file_cont);
-	fp=fopen(file_read, "r");
-	if (!fp)
+
+	sprintf(file_read, "0:/DATA/run%d.txt", file_cont);  // Prefixo de volume (0:) é comum no FatFs
+
+	FIL fil;
+	FRESULT res;
+
+	res = f_open(&fil, file_read, FA_READ);
+	if (res != FR_OK)
 	{
-		printf("Erro ao abrir o arquivo.\n");
 		return 1;
 	}
-	char line[61336];
+
+	char line[61340];
+	UINT br; // Bytes lidos
 
 	float *linhas[] = {mx, my, mz};  // Vetor de ponteiros para facilitar o acesso
 
 	for (int i = 0; i < 3; i++)
 	{
-		if (fgets(line, sizeof(line), fp) == NULL)
-		{
-		  fprintf(stderr, "Erro ao ler a linha %d\n", i);
-		  return 1;
-		}
+		// lê uma linha completa (até '\n' ou fim do buffer)
+		int line_pos = 0;
+		char ch;
+		do {
+			res = f_read(&fil, &ch, 1, &br);
+			if (res != FR_OK || br == 0) {
+				return 1;
+			}
+			line[line_pos++] = ch;
+		} while (ch != '\n' && line_pos < sizeof(line)-1);
+		line[line_pos] = '\0';
 
 		char *token = strtok(line, ",");
 		int j = 0;
 
 		while (token != NULL && j < 1112)
 		{
-		  linhas[i][j] = strtof(token, NULL);
-		  token = strtok(NULL, ",");
-		  j++;
+			linhas[i][j] = strtof(token, NULL);
+			token = strtok(NULL, ",");
+			j++;
 		}
 
 		if (j != 1112)
 		{
-		  fprintf(stderr, "Linha %d com número incorreto de colunas: esperadas 1112, encontradas %d\n", i + 1, j);
-		  return 1;
+			return 1;
 		}
 	}
 
-	fclose(fp);
+	f_close(&fil);
 
-	start_time = SysTick->VAL;
+	start_time = HAL_GetTick();
 	ETS(mx, my, mz, p1);
-	ETS_counter = start_time - SysTick->VAL;
-	ETS_time = ETS_counter/SystemCoreClock;
+	ETS_time = HAL_GetTick() - start_time;
 
-	start_time = SysTick->VAL;
+	start_time = HAL_GetTick();
 	passos_NLLS = NLLS(mx, my, mz, p0);
-	NLLS_counter = start_time - SysTick->VAL;
-	NLLS_time = NLLS_counter/SystemCoreClock;
+	NLLS_time = HAL_GetTick() - start_time;
 
-	FILE *arquivoA = fopen(file_read, "w");
-	if (arquivoA == NULL)
+
+	sprintf(file_read, "0:/RES/run%d.txt", file_cont);
+	res = f_open(&fil, file_read, FA_WRITE | FA_CREATE_ALWAYS);
+	if (res != FR_OK)
 	{
-		perror("Erro ao criar o arquivo do ETS");
 		return 1;
 	}
+
+	char out_line[128];
+	UINT bw;
+
 	for (int i = 0; i < 9; i++) {
-		fprintf(arquivoA, "%f, ", p1[i]);
-		fprintf(arquivoA, "%f\n", p0[i]);
+		sprintf(out_line, "%f, %f\n", p1[i], p0[i]);
+		f_write(&fil, out_line, strlen(out_line), &bw);
 	}
-	fprintf(arquivoA, "%f, %f\n", ETS_time, NLLS_time);
-	fprintf(arquivoA, "%u", passos_NLLS);
-	fclose(arquivoA);
+
+	sprintf(out_line, "%f, %f\n", ETS_time, NLLS_time);
+	f_write(&fil, out_line, strlen(out_line), &bw);
+
+	sprintf(out_line, "%u\n", passos_NLLS);
+	f_write(&fil, out_line, strlen(out_line), &bw);
+
+	f_close(&fil);
 
 	file_cont++;
+	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
+	HAL_Delay(100);
+	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
 
     /* USER CODE END WHILE */
 

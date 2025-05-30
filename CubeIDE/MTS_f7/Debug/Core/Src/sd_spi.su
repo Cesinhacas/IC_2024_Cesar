@@ -1,0 +1,10 @@
+../Core/Src/sd_spi.c:20:13:SD_SendDummyClock	16	static
+../Core/Src/sd_spi.c:26:16:SD_TransmitByte	32	static
+../Core/Src/sd_spi.c:32:16:SD_ReceiveByte	8	static
+../Core/Src/sd_spi.c:36:16:SD_WaitReady	16	static
+../Core/Src/sd_spi.c:46:13:SD_Select	8	static
+../Core/Src/sd_spi.c:51:13:SD_Deselect	8	static
+../Core/Src/sd_spi.c:56:16:SD_SendCommand	32	static
+../Core/Src/sd_spi.c:86:9:SD_Init	16	static
+../Core/Src/sd_spi.c:107:9:SD_ReadBlock	40	static
+../Core/Src/sd_spi.c:130:9:SD_WriteBlock	24	static
