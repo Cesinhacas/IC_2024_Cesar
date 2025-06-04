@@ -11,7 +11,7 @@
 #include "stm32f7xx_hal.h"
 
 #define N 9
-#define tam 1112
+#define tam 1111
 
 void ETS(double *mx, double *my, double *mz, double *p);
 uint8_t NLLS(double *mx, double *my, double *mz, double *p);

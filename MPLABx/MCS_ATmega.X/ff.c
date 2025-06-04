@@ -6138,3 +6138,9 @@ int f_printf (
 
 #endif /* !_FS_READONLY */
 #endif /* _USE_STRFUNC */
+
+DWORD get_fattime(void)
+{
+    // 2025-01-01 00:00:00 ? timestamp fixo
+    return ((DWORD)(2025 - 1980) << 25) | ((DWORD)1 << 21) | ((DWORD)1 << 16);
+}

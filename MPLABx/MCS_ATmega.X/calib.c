@@ -47,7 +47,7 @@ int NLLS(float *mx, float *my, float *mz, float *p)
 {
     int passo = 0, loop = 1;
     float p0[9] = {1, 1, 1, 0, 0, 0, 0, 0, 0}, Be[tam], e[tam], f[tam], sx, sy, sz, bx, by, bz, rho, phi, lambida, error_ant, J, delta_J, mat_H[N][tam];
-    static float sin_phi, sin_rho, sin_lambda, cos_phi, cos_rho, cos_lambda;
+    float sin_phi, sin_rho, sin_lambda, cos_phi, cos_rho, cos_lambda;
     static float Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam];
 
     for (int i=0; i < tam; i++)
@@ -178,10 +178,10 @@ int NLLS(float *mx, float *my, float *mz, float *p)
 void ETS(float *mx, float *my, float *mz, float *p)
 {
     //Cria a matriz H
-    static float mat_H[N][tam], my_2[tam];
-    static float H_Ht[N][N], inv[N][N];
-    static float mul_mat[N][tam];
-    static float X[N];
+    float mat_H[N][tam], my_2[tam];
+    float H_Ht[N][N], inv[N][N];
+    float mul_mat[N][tam];
+    float X[N];
     float psi7 = 0, psi8 = 0, divs = 0, n1 = 0, n2 = 0, n3 = 0, n4 = 0, n5 = 0, n6 = 0, bx = 0, by = 0, bz = 0, sx = 0, sy = 0, sz = 0, rho = 0, phi = 0, lambida = 0;
     float X1_2 = 0, X2_2 = 0, X3_2 = 0, X4_2 = 0, X5_2 = 0, X6_2 = 0, X7_2 = 0;
     for(int i=0; i < tam; i++)

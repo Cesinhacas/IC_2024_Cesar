@@ -87,7 +87,7 @@ int main(void)
             return 1;
         }
 
-        char line[30670];
+        char line[7645];
         UINT br; // Bytes lidos
 
         float *linhas[] = {mx, my, mz};  // Vetor de ponteiros para facilitar o acesso
@@ -109,19 +109,54 @@ int main(void)
             char *token = strtok(line, ",");
             int j = 0;
 
-            while (token != NULL && j < 556)
+            while (token != NULL && j < tam)
             {
                 linhas[i][j] = strtof(token, NULL);
                 token = strtok(NULL, ",");
                 j++;
             }
 
-            if (j != 556)
+            if (j != tam)
             {
                 return 1;
             }
         }
 
-            f_close(&fil);
+        f_close(&fil);
+        
+        //start_time = HAL_GetTick();
+        ETS(mx, my, mz, p1);
+        //ETS_time = HAL_GetTick() - start_time;
+
+        //start_time = HAL_GetTick();
+        /*passos_NLLS = NLLS(mx, my, mz, p0);
+        //NLLS_time = HAL_GetTick() - start_time;
+
+
+        sprintf(file_read, "0:/RES/run%d.txt", file_cont);
+        res = f_open(&fil, file_read, FA_WRITE | FA_CREATE_ALWAYS);
+        if (res != FR_OK)
+        {
+            return 1;
         }
+
+        char out_line[128];
+        UINT bw;
+
+        for (int i = 0; i < 9; i++) {
+            sprintf(out_line, "%f, %f\n", p1[i], p0[i]);
+            f_write(&fil, out_line, strlen(out_line), &bw);
+        }
+
+        sprintf(out_line, "%f, %f\n", ETS_time, NLLS_time);
+        f_write(&fil, out_line, strlen(out_line), &bw);
+
+        sprintf(out_line, "0, %u\n", passos_NLLS);
+        f_write(&fil, out_line, strlen(out_line), &bw);
+
+        f_close(&fil);
+
+        file_cont++;*/
+                    
+    }
 }

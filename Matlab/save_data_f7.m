@@ -5,7 +5,7 @@ clc
 ETS_param = zeros(11,3000);
 NLLS_param = zeros(11,3000);
 
-cd RES_F7_FPU\
+cd RES_F7_double\
 
 for i = 1:1:3000
     strg_save = sprintf("run%d.TXT", i);
@@ -32,7 +32,7 @@ cd ..\
 
 cd ..\
 cd Dados\
-writematrix(ETS_param, 'MTS_ETS_f7_FPU.csv')
-writematrix(NLLS_param, 'MTS_NLLS_f7_FPU.csv')
+writematrix(ETS_param, 'MTS_ETS_f7_double.csv')
+writematrix(NLLS_param, 'MTS_NLLS_f7_double.csv')
 cd ..\
 cd Matlab\
