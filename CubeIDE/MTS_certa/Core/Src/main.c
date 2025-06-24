@@ -51,8 +51,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-double mx[1112] = {0}, my[1112] = {0}, mz[1112] = {0};
-double p1[9] = {0}, p0[9] = {0};
+float mx[1112] = {0}, my[1112] = {0}, mz[1112] = {0};
+float p1[9] = {0};//, p0[9] = {0};
 uint8_t passos_NLLS = 0;
 
 /* USER CODE END PV */
@@ -75,7 +75,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  char file_read[20] = {0};
+  char file_read[25] = {0};
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -101,7 +101,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   uint32_t start_time = 0;
   uint16_t file_cont = 1;
-  double ETS_time = 0, NLLS_time = 0;
+  float NLLS_time = 0;//, NLLS_time = 0;
 
   FATFS fs;
   FRESULT res;
@@ -109,7 +109,7 @@ int main(void)
   // Monta o sistema de arquivos na unidade lógica "0:"
   res = f_mount(&fs, "0:", 1);
   if (res != FR_OK) {
-      printf("Falha ao montar o sistema de arquivos: %d\n", res);
+      //printf("Falha ao montar o sistema de arquivos: %d\n", res);
       Error_Handler(); // ou retorne um erro
   }
 
@@ -125,7 +125,7 @@ int main(void)
 		return 1;
 	}
 
-	sprintf(file_read, "0:/DATA/run%d.txt", file_cont);  // Prefixo de volume (0:) é comum no FatFs
+	sprintf(file_read, "0:/DATA1/run%d.txt", file_cont);  // Prefixo de volume (0:) é comum no FatFs
 
 	FIL fil;
 	FRESULT res;
@@ -136,10 +136,10 @@ int main(void)
 		return 1;
 	}
 
-	char line[61340];
+	char line[30670];
 	UINT br; // Bytes lidos
 
-	double *linhas[] = {mx, my, mz};  // Vetor de ponteiros para facilitar o acesso
+	float *linhas[] = {mx, my, mz};  // Vetor de ponteiros para facilitar o acesso
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -158,14 +158,14 @@ int main(void)
 		char *token = strtok(line, ",");
 		int j = 0;
 
-		while (token != NULL && j < 1112)
+		while (token != NULL && j < tam)
 		{
 			linhas[i][j] = strtof(token, NULL);
 			token = strtok(NULL, ",");
 			j++;
 		}
 
-		if (j != 1112)
+		if (j != tam)
 		{
 			return 1;
 		}
@@ -173,12 +173,12 @@ int main(void)
 
 	f_close(&fil);
 
-	start_time = HAL_GetTick();
+	/*start_time = HAL_GetTick();
 	ETS(mx, my, mz, p1);
-	ETS_time = HAL_GetTick() - start_time;
+	ETS_time = HAL_GetTick() - start_time;*/
 
 	start_time = HAL_GetTick();
-	passos_NLLS = NLLS(mx, my, mz, p0);
+	passos_NLLS = NLLS(mx, my, mz, p1);
 	NLLS_time = HAL_GetTick() - start_time;
 
 
@@ -193,14 +193,14 @@ int main(void)
 	UINT bw;
 
 	for (int i = 0; i < 9; i++) {
-		sprintf(out_line, "%f, %f\n", p1[i], p0[i]);
+		sprintf(out_line, "%f\n", p1[i]);
 		f_write(&fil, out_line, strlen(out_line), &bw);
 	}
 
-	sprintf(out_line, "%f, %f\n", ETS_time, NLLS_time);
+	sprintf(out_line, "%f\n", NLLS_time);
 	f_write(&fil, out_line, strlen(out_line), &bw);
 
-	sprintf(out_line, "0, %u\n", passos_NLLS);
+	sprintf(out_line, "%u\n", passos_NLLS);
 	f_write(&fil, out_line, strlen(out_line), &bw);
 
 	f_close(&fil);

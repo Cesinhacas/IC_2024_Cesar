@@ -44,7 +44,7 @@
     Main application
 */
 
-static float mx[tam] = {0}, my[tam] = {0}, mz[tam] = {0};
+float mx[tam] = {0}, my[tam] = {0}, mz[tam] = {0};
 float p1[9] = {0}, p0[9] = {0};
 uint8_t passos_NLLS = 0;
 

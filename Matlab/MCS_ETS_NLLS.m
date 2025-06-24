@@ -16,10 +16,11 @@ tempo_exe_NLLS = 0;
 tempo_exe_ETS = 0;
 
 for i=1:exe
-    cd Dados_com_ruido\
-    strg_save = sprintf("conjunto_dados_corrompidos_%d.csv", i);
+    cd Dados_ATmega\
+    strg_save = sprintf("run%d.txt", i);
     Dados_Corrompido = readmatrix(strg_save);
-
+    cd ..\
+    cd Dados_com_ruido\
     strg_save = sprintf("param_%d.csv", i);
     e = readmatrix(strg_save);
     cd ..\

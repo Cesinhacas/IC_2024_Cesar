@@ -48,7 +48,7 @@ int NLLS(float *mx, float *my, float *mz, float *p)
     int passo = 0, loop = 1;
     float p0[9] = {1, 1, 1, 0, 0, 0, 0, 0, 0}, Be[tam], e[tam], f[tam], sx, sy, sz, bx, by, bz, rho, phi, lambida, error_ant, J, delta_J, mat_H[N][tam];
     float sin_phi, sin_rho, sin_lambda, cos_phi, cos_rho, cos_lambda;
-    static float Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam];
+    float Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam];
 
     for (int i=0; i < tam; i++)
     {
@@ -67,12 +67,14 @@ int NLLS(float *mx, float *my, float *mz, float *p)
         phi = p0[7];
         lambida = p0[8];
 
-        sin_phi = sinf(phi);
+        /*sin_phi = sinf(phi);
         sin_rho = sinf(rho);
         sin_lambda = sinf(lambida);
         cos_phi = cosf(phi);
         cos_rho = cosf(rho);
-        cos_lambda = cosf(lambida);
+        cos_lambda = cosf(lambida);*/
+        
+        
 
         for(int i=0; i < tam; i++)
         {

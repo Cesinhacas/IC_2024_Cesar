@@ -5,15 +5,14 @@ clc
 ETS_param = zeros(11,3000);
 NLLS_param = zeros(11,3000);
 
-cd RES_F7_double\
+cd RES_ST_primeiro\
 
 for i = 1:1:3000
     strg_save = sprintf("run%d.TXT", i);
     dados = readmatrix(strg_save);
     
-    ETS_param(:,i) = dados(:,1);
-    NLLS_param(:,i) = dados(:,2);
-    
+    %ETS_param(:,i) = dados(:,1);
+    NLLS_param(:,i) = dados(:,1);    
 end
 
 cd ..\
@@ -23,7 +22,7 @@ for i = 1:1:3000
     strg_save = sprintf("param_%d.csv", i);
     dados = readmatrix(strg_save);
     for j = 1:1:9
-        ETS_param(j,i) = dados(j) - ETS_param(j,i);
+        %ETS_param(j,i) = dados(j) - ETS_param(j,i);
         NLLS_param(j,i) = dados(j) - NLLS_param(j,i);
     end
 end
@@ -32,7 +31,7 @@ cd ..\
 
 cd ..\
 cd Dados\
-writematrix(ETS_param, 'MTS_ETS_f7_double.csv')
-writematrix(NLLS_param, 'MTS_NLLS_f7_double.csv')
+%writematrix(ETS_param, 'MTS_ETS_f7_ST_primeiro.csv')
+writematrix(NLLS_param, 'MTS_NLLS_f7_ST_primeiro.csv')
 cd ..\
 cd Matlab\

@@ -41,7 +41,8 @@ passos_NLLS_64 = 0
 passos_TWOSTEP = 0
 
 for i in range(0, num_exe):
-    str_save = '/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_com_ruido/conjunto_dados_corrompidos_' + str(i+1) + '.csv'
+    #str_save = '/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_com_ruido/conjunto_dados_corrompidos_' + str(i+1) + '.csv'
+    str_save = '/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/dados_ATmega/run' + str(i+1) + '.txt'
 
     dados_corrompidos = pd.read_csv(str_save, header=None)
     dados_corrompidos = dados_corrompidos.to_numpy()

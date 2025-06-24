@@ -13,9 +13,9 @@
 #define N 9
 #define tam 1111
 
-void ETS(double *mx, double *my, double *mz, double *p);
-uint8_t NLLS(double *mx, double *my, double *mz, double *p);
+//void ETS(float *mx, float *my, float *mz, float *p);
+uint8_t NLLS(float *mx, float *my, float *mz, float *p);
 
-void inverter_matriz(double matriz[N][N], double inversa[N][N]);
+void inverter_matriz(float matriz[N][N], float inversa[N][N]);
 
 #endif /* INC_CALIB_H_ */
