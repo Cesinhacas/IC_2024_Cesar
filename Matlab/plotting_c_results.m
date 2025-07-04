@@ -11,6 +11,12 @@ vet_error_NLLS_c = readmatrix('MCS_NLLS_c.csv');
 cd ..\
 cd Matlab\
 
+vet_error_NLLS_c = vet_error_NLLS_c.^2;
+vet_error_NLLS_c = vet_error_NLLS_c.^(1/2);
+
+vet_error_ETS_c = vet_error_ETS_c.^2;
+vet_error_ETS_c = vet_error_ETS_c.^(1/2);
+
 exe = length(vet_error_NLLS_c(1,:));
 executions = [1:1:exe];
 

@@ -11,12 +11,16 @@ cd Matlab\
 
 exe = 3000;
 vet_error_NLLS_c = zeros(9,exe);
+vet_error_NLLS_ST = zeros(9,exe);
+vet_error_NLLS_ST2 = zeros(9,exe);
 vet_error_ETS_c = zeros(9,exe);
 tempo_exe_NLLS = 0;
+tempo_exe_NLLS_ST = 0;
+tempo_exe_NLLS_ST2 = 0;
 tempo_exe_ETS = 0;
 
 for i=1:exe
-    cd Dados_ATmega\
+    cd dados_f7\
     strg_save = sprintf("run%d.txt", i);
     Dados_Corrompido = readmatrix(strg_save);
     cd ..\
@@ -40,17 +44,33 @@ for i=1:exe
     [Time,p1] = test1(Dados_Corrompido, 1);
     H = ones(1, length(Dados_Corrompido(1,:)))';
     [tempo, passo,p] = test2(Dados_Corrompido, p0, H);
+    [tiempo, passo_ST, p2] = NLLS_ST(Dados_Corrompido, p0, H);
+    [tiempito, passo_ST2, p3] = NLLS_ST2(Dados_Corrompido, p0, H);
 
     tempo_exe_ETS = tempo_exe_ETS + Time;
     tempo_exe_NLLS = tempo_exe_NLLS + tempo;
+    tempo_exe_NLLS_ST = tempo_exe_NLLS_ST + tiempo;
+    tempo_exe_NLLS_ST2 = tiempito + tempo_exe_NLLS_ST2;
 
 
    
     vet_error_ETS_c(:,i) = e-p1;
     vet_error_NLLS_c(:,i) = e-p;
+    vet_error_NLLS_ST(:,i) = e-p2;
+    vet_error_NLLS_ST2(:,i) = e-p3;
 end
 
+cd ..\
+cd Dados\
+writematrix(vet_error_ETS_c, "MCS_ETS_Matlab.csv");
+writematrix(vet_error_NLLS_c, "MCS_NLLS_Matlab.csv");
+writematrix(vet_error_NLLS_ST, "MCS_NLLS_ST_Matlab.csv");
+writematrix(vet_error_NLLS_ST2, "MCS_NLLS_ST2_Matlab.csv");
+cd ..\
+cd Matlab\
+
 tempo_exe_NLLS = (tempo_exe_NLLS / exe)*1000;
+tempo_exe_NLLS_ST = (tempo_exe_NLLS_ST/exe)*1000;
 tempo_exe_ETS = (tempo_exe_ETS / exe)*1000;
 ratio_time = tempo_exe_NLLS/tempo_exe_ETS;
 
@@ -60,6 +80,9 @@ disp(tempo_exe_ETS)
 disp('Tempo de execução NLLS em ms:')
 disp(tempo_exe_NLLS)
 
+disp('Tempo de execução NLLS usando expansão de taylor em ms:')
+disp(tempo_exe_NLLS_ST)
+
 disp('Razão entre ETS e NLLS (NLLS/ETS):')
 disp(ratio_time)
 
@@ -67,6 +90,7 @@ executions = [1:1:i];
 
 % Média dos erros
 error_mean_NLLS = [mean(vet_error_NLLS_c(1,:)), mean(vet_error_NLLS_c(2,:)), mean(vet_error_NLLS_c(3,:)), mean(vet_error_NLLS_c(4,:)), mean(vet_error_NLLS_c(5,:)), mean(vet_error_NLLS_c(6,:)), mean(vet_error_NLLS_c(7,:)), mean(vet_error_NLLS_c(8,:)), mean(vet_error_NLLS_c(9,:))];
+error_mean_NLLS_ST = [mean(vet_error_NLLS_ST(1,:)), mean(vet_error_NLLS_ST(2,:)), mean(vet_error_NLLS_ST(3,:)), mean(vet_error_NLLS_ST(4,:)), mean(vet_error_NLLS_ST(5,:)), mean(vet_error_NLLS_ST(6,:)), mean(vet_error_NLLS_ST(7,:)), mean(vet_error_NLLS_ST(8,:)), mean(vet_error_NLLS_ST(9,:))];
 error_mean_ETS = [mean(vet_error_ETS_c(1,:)), mean(vet_error_ETS_c(2,:)), mean(vet_error_ETS_c(3,:)), mean(vet_error_ETS_c(4,:)), mean(vet_error_ETS_c(5,:)), mean(vet_error_ETS_c(6,:)), mean(vet_error_ETS_c(7,:)), mean(vet_error_ETS_c(8,:)), mean(vet_error_ETS_c(9,:))];
 
 disp("Média dos erros:")
@@ -110,10 +134,31 @@ disp(error_mean_NLLS(8))
 disp("Ângulo Lambda:")
 disp(error_mean_NLLS(9))
 
+disp("NLLS com expansão da série de Taylor:" )
+disp("Offset - x:")
+disp(error_mean_NLLS_ST(4))
+disp("Offset - y:")
+disp(error_mean_NLLS_ST(5))
+disp("Offset - z:")
+disp(error_mean_NLLS_ST(6))
+disp("Fator de escala - x:")
+disp(error_mean_NLLS_ST(1))
+disp("Fator de escala - y:")
+disp(error_mean_NLLS_ST(2))
+disp("Fator de escala - z:")
+disp(error_mean_NLLS_ST(3))
+disp("Ângulo Rho:")
+disp(error_mean_NLLS_ST(7))
+disp("Ângulo Phi:")
+disp(error_mean_NLLS_ST(8))
+disp("Ângulo Lambda:")
+disp(error_mean_NLLS_ST(9))
+
 figure(1)
 subplot(3,3,1), histogram(vet_error_ETS_c(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 histogram(vet_error_NLLS_c(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_ST(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 grid on;
 title("Offset - eixo x");
 ylabel("Distribuição de probabilidade")
@@ -121,6 +166,7 @@ xlabel("Adimensional")
 subplot(3,3,2), histogram(vet_error_ETS_c(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 histogram(vet_error_NLLS_c(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_ST(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 grid on;
 title("Offset - eixo y");
 ylabel("Distribuição de probabilidade")
@@ -128,6 +174,7 @@ xlabel("Adimensional")
 subplot(3,3,3), histogram(vet_error_ETS_c(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 histogram(vet_error_NLLS_c(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_ST(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 grid on;
 title("Offset - eixo z");
 ylabel("Distribuição de probabilidade")
@@ -137,6 +184,7 @@ legend("ETS", "NLLS")
 subplot(3,3,4), histogram(vet_error_ETS_c(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 histogram(vet_error_NLLS_c(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_ST(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 grid on;
 title("Fator de escala - x");
 ylabel("Distribuição de probabilidade")
@@ -144,6 +192,7 @@ xlabel("Adimensional")
 subplot(3,3,5), histogram(vet_error_ETS_c(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 histogram(vet_error_NLLS_c(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_ST(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 grid on;
 title("Fator de escala - y");
 ylabel("Distribuição de probabilidade")
@@ -151,6 +200,7 @@ xlabel("Adimensional")
 subplot(3,3,6), histogram(vet_error_ETS_c(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 histogram(vet_error_NLLS_c(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_ST(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 grid on;
 title("Fator de escala - z");
 ylabel("Distribuição de probabilidade")
@@ -161,6 +211,7 @@ legend("ETS", "NLLS")
 subplot(3,3,7), histogram(vet_error_ETS_c(7,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 histogram(vet_error_NLLS_c(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_ST(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 grid on;
 title("Ângulo Rho");
 ylabel("Distribuição de probabilidade")
@@ -168,6 +219,7 @@ xlabel("Graus")
 subplot(3,3,8), histogram(vet_error_ETS_c(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 histogram(vet_error_NLLS_c(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_ST(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 grid on;
 title("Ângulo Phi");
 ylabel("Distribuição de probabilidade")
@@ -175,6 +227,7 @@ xlabel("Graus")
 subplot(3,3,9), histogram(vet_error_ETS_c(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 histogram(vet_error_NLLS_c(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_ST(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 grid on;
 title("Ângulo Lambda");
 ylabel("Distribuição de probabilidade")

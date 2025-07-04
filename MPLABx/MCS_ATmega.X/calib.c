@@ -67,12 +67,12 @@ int NLLS(float *mx, float *my, float *mz, float *p)
         phi = p0[7];
         lambida = p0[8];
 
-        /*sin_phi = sinf(phi);
-        sin_rho = sinf(rho);
-        sin_lambda = sinf(lambida);
-        cos_phi = cosf(phi);
-        cos_rho = cosf(rho);
-        cos_lambda = cosf(lambida);*/
+        sin_phi = phi - (phi*phi*phi)/6;
+		sin_rho = rho - (rho*rho*rho)/6;
+		sin_lambda = lambida - (lambida*lambida*lambida)/6;
+		cos_phi = 1 - (phi*phi)/2;
+		cos_rho = 1 - (rho*rho)/2;
+		cos_lambda = 1 - (lambida*lambida)/2;
         
         
 
@@ -177,7 +177,7 @@ int NLLS(float *mx, float *my, float *mz, float *p)
     return passo;
 }
 
-void ETS(float *mx, float *my, float *mz, float *p)
+/*void ETS(float *mx, float *my, float *mz, float *p)
 {
     //Cria a matriz H
     float mat_H[N][tam], my_2[tam];
@@ -283,4 +283,4 @@ void ETS(float *mx, float *my, float *mz, float *p)
     p[6] = rho;
     p[7] = phi;
     p[8] = lambida;
-}
+}*/

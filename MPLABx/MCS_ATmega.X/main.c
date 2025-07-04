@@ -45,7 +45,7 @@
 */
 
 float mx[tam] = {0}, my[tam] = {0}, mz[tam] = {0};
-float p1[9] = {0}, p0[9] = {0};
+float p1[9] = {0};//, p0[9] = {0};
 uint8_t passos_NLLS = 0;
 
 int main(void)
@@ -56,7 +56,7 @@ int main(void)
     
     uint32_t start_time = 0;
     uint16_t file_cont = 1;
-    float ETS_time = 0, NLLS_time = 0;
+    float ETS_time = 0;//, NLLS_time = 0;
     
     FATFS fs;
     FRESULT res;
@@ -76,7 +76,7 @@ int main(void)
             return 1;
         }
 
-        sprintf(file_read, "0:/DATA/run%d.txt", file_cont);  // Prefixo de volume (0:) é comum no FatFs
+        sprintf(file_read, "0:/DATA1/run%d.txt", file_cont);  // Prefixo de volume (0:) é comum no FatFs
 
         FIL fil;
         FRESULT res;
@@ -125,11 +125,11 @@ int main(void)
         f_close(&fil);
         
         //start_time = HAL_GetTick();
-        ETS(mx, my, mz, p1);
+        //ETS(mx, my, mz, p1);
         //ETS_time = HAL_GetTick() - start_time;
 
         //start_time = HAL_GetTick();
-        /*passos_NLLS = NLLS(mx, my, mz, p0);
+        passos_NLLS = NLLS(mx, my, mz, p1);
         //NLLS_time = HAL_GetTick() - start_time;
 
 
@@ -144,19 +144,19 @@ int main(void)
         UINT bw;
 
         for (int i = 0; i < 9; i++) {
-            sprintf(out_line, "%f, %f\n", p1[i], p0[i]);
+            sprintf(out_line, "%f\n", p1[i]);
             f_write(&fil, out_line, strlen(out_line), &bw);
         }
 
-        sprintf(out_line, "%f, %f\n", ETS_time, NLLS_time);
-        f_write(&fil, out_line, strlen(out_line), &bw);
+        //sprintf(out_line, "%f, %f\n", ETS_time, NLLS_time);
+        //f_write(&fil, out_line, strlen(out_line), &bw);
 
         sprintf(out_line, "0, %u\n", passos_NLLS);
         f_write(&fil, out_line, strlen(out_line), &bw);
 
         f_close(&fil);
 
-        file_cont++;*/
+        file_cont++;
                     
     }
 }

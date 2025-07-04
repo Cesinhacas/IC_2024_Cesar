@@ -11,7 +11,7 @@
 #define N 9
 #define tam 139
 
-void ETS(float *mx, float *my, float *mz, float *p);
+//void ETS(float *mx, float *my, float *mz, float *p);
 int NLLS(float *mx, float *my, float *mz, float *p);
 
 void inverter_matriz(float matriz[N][N], float inversa[N][N]);

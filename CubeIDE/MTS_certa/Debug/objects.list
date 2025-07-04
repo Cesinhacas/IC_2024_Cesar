@@ -1,4 +1,3 @@
-"./Core/Src/calib.o"
 "./Core/Src/gpio.o"
 "./Core/Src/main.o"
 "./Core/Src/sd_spi.o"
@@ -31,4 +30,5 @@
 "./FATFS/Target/user_diskio.o"
 "./Middlewares/Third_Party/FatFs/src/ff.o"
 "./Middlewares/Third_Party/FatFs/src/ff_gen_drv.o"
+"./Middlewares/Third_Party/FatFs/src/option/ccsbcs.o"
 "./Middlewares/Third_Party/FatFs/src/option/syscall.o"

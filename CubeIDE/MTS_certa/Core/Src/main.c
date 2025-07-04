@@ -24,7 +24,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "calib.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -35,6 +34,12 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+union calib_t{
+	uint8_t inteiro[4];
+	float flutuante;
+};
+
+#define tam 556
 
 /* USER CODE END PTD */
 
@@ -52,7 +57,8 @@
 
 /* USER CODE BEGIN PV */
 float mx[1112] = {0}, my[1112] = {0}, mz[1112] = {0};
-float p1[9] = {0};//, p0[9] = {0};
+union calib_t mx_[1112] = {0}, my_[1112] = {0}, mz_[1112] = {0};
+/*float p1[9] = {0};//, p0[9] = {0};*/
 uint8_t passos_NLLS = 0;
 
 /* USER CODE END PV */
@@ -96,12 +102,16 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_FATFS_Init();
   MX_SPI3_Init();
+  MX_FATFS_Init();
+  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-  uint32_t start_time = 0;
+  //uint32_t start_time = 0;
   uint16_t file_cont = 1;
-  float NLLS_time = 0;//, NLLS_time = 0;
+  union calib_t param[9], time;
+  float p1[9];
+  float NLLS_time;
+  //float NLLS_time = 0;//, NLLS_time = 0;
 
   FATFS fs;
   FRESULT res;
@@ -173,13 +183,55 @@ int main(void)
 
 	f_close(&fil);
 
+	for(uint16_t i = 0; i <= 1111; i++)
+	{
+		mx_[i].flutuante = mx[i];
+		my_[i].flutuante = my[i];
+		mz_[i].flutuante = mz[i];
+	}
+
 	/*start_time = HAL_GetTick();
 	ETS(mx, my, mz, p1);
-	ETS_time = HAL_GetTick() - start_time;*/
+	ETS_time = HAL_GetTick() - start_time;
 
 	start_time = HAL_GetTick();
 	passos_NLLS = NLLS(mx, my, mz, p1);
-	NLLS_time = HAL_GetTick() - start_time;
+	NLLS_time = HAL_GetTick() - start_time;*/
+
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, SET);
+	while(!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_0));
+	HAL_Delay(5);
+	for(uint16_t i = 0; i <= 1111; i++)
+	{
+		HAL_SPI_Transmit(&hspi1, mx_[i].inteiro, 4, HAL_MAX_DELAY);
+	}
+	for(uint16_t i = 0; i <= 1111; i++)
+	{
+		HAL_SPI_Transmit(&hspi1, my_[i].inteiro, 4, HAL_MAX_DELAY);
+	}
+	for(uint16_t i = 0; i <= 1111; i++)
+	{
+		HAL_SPI_Transmit(&hspi1, mz_[i].inteiro, 4, HAL_MAX_DELAY);
+	}
+
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, RESET);
+
+	while(!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_0));
+	for(uint8_t i = 0; i < 10; i++)
+	{
+		HAL_SPI_Receive(&hspi1, param[i].inteiro, 4, HAL_MAX_DELAY);
+	}
+	HAL_SPI_Receive(&hspi1, time.inteiro, 4, HAL_MAX_DELAY);
+	HAL_SPI_Receive(&hspi1, &passos_NLLS, 1, HAL_MAX_DELAY);
+
+	for(uint8_t i = 0; i < 10; i++)
+	{
+		p1[i] = param[i].flutuante;
+	}
+	NLLS_time = time.flutuante;
+
+
+
 
 
 	sprintf(file_read, "0:/RES/run%d.txt", file_cont);
@@ -234,14 +286,10 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 4;
-  RCC_OscInitStruct.PLL.PLLN = 72;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 3;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -251,12 +299,12 @@ void SystemClock_Config(void)
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     Error_Handler();
   }
@@ -275,6 +323,7 @@ void Error_Handler(void)
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, SET);
   while (1)
   {
   }
