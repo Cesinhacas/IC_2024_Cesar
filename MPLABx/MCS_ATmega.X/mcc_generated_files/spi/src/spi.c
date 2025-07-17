@@ -31,6 +31,8 @@
     THIS SOFTWARE.
 */
 
+#include <avr/io.h>
+
 #include "../spi.h"
 #include "../spi_polling_types.h"
 
@@ -67,9 +69,23 @@ void SPI_Initialize(void)
     SPCR = 0U;
     SPSR = 0U;
     
-    DDRB = 0;
-    DDRB = (1<<5)|(1<<3)|(2<<1); // Configura os pinos 5(CLK), 3(MOSI) e 2(SS) como saída
-    SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);
+    
+    DDRB = 0; // COnfigura todos os pinos da porta B como entrada
+    DDRB = (1 << 4); // Configura o pino 4(MISO) como saída
+    SPCR = 0x40; //  Habilita a SPI no modo escravo
+}
+
+uint8_t SPI_receive()
+{
+    while(!(SPCR & (1 << SPIF)));
+    
+    return SPDR;
+}
+
+void SPI_transmit(uint8_t data)
+{
+    SPDR = data;
+    while(!(SPCR & (1 << SPIF)));
 }
 
 void SPI_Deinitialize(void)

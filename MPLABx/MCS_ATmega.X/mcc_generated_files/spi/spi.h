@@ -120,6 +120,10 @@ typedef enum
     SPI_DEFAULT
 } spi_configuration_name_t;
 
+
+uint8_t SPI_receive();
+
+void SPI_transmit(uint8_t data);
 /**
  * @ingroup spi
  * @brief Initializes the SPI module.

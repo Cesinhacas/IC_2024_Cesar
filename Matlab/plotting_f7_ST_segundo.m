@@ -39,6 +39,11 @@ passos_NLLS_ST = passos_NLLS_ST/3000;
 
 time_ratio = exe_time_NLLS/exe_time_ETS;
 
+error_mse_NLLS = [sum(vet_error_NLLS_c(1,:).^2)/exe, sum(vet_error_NLLS_c(2,:).^2)/exe, sum(vet_error_NLLS_c(3,:).^2)/exe, sum(vet_error_NLLS_c(4,:).^2)/exe, sum(vet_error_NLLS_c(5,:).^2)/exe, sum(vet_error_NLLS_c(6,:).^2)/exe, sum(vet_error_NLLS_c(7,:).^2)/exe, sum(vet_error_NLLS_c(8,:).^2)/exe, sum(vet_error_NLLS_c(9,:).^2)/exe];
+error_mse_ETS = [sum(vet_error_ETS_c(1,:).^2)/exe, sum(vet_error_ETS_c(2,:).^2)/exe, sum(vet_error_ETS_c(3,:).^2)/exe, sum(vet_error_ETS_c(4,:).^2)/exe, sum(vet_error_ETS_c(5,:).^2)/exe, sum(vet_error_ETS_c(6,:).^2)/exe, sum(vet_error_ETS_c(7,:).^2)/exe, sum(vet_error_ETS_c(8,:).^2)/exe, sum(vet_error_ETS_c(9,:).^2)/exe];
+
+
+
 disp("Tempo de execução do NLLS completo:")
 disp(exe_time_ETS)
 

@@ -34,8 +34,6 @@
 */
 #include "mcc_generated_files/system/system.h"
 #include "calib.h"
-#include "ff.h"
-#include "diskio.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,120 +41,89 @@
 /*
     Main application
 */
+union calib_t{
+	uint8_t inteiro[4];
+	float flutuante;
+};
 
 float mx[tam] = {0}, my[tam] = {0}, mz[tam] = {0};
-float p1[9] = {0};//, p0[9] = {0};
+union calib_t mx_[tam] = {0}, my_[tam] = {0}, mz_[tam] = {0};
+float p1[9] = {0}, p0[9] = {0};
 uint8_t passos_NLLS = 0;
 
 int main(void)
 {
     SYSTEM_Initialize();
     
-    char file_read[20] = {0};
-    
-    uint32_t start_time = 0;
-    uint16_t file_cont = 1;
-    float ETS_time = 0;//, NLLS_time = 0;
-    
-    FATFS fs;
-    FRESULT res;
-
-    // Monta o sistema de arquivos na unidade lógica "0:"
-    res = f_mount(&fs, "0:", 1);
-    if (res != FR_OK) {
-        //printf("Falha ao montar o sistema de arquivos: %d\n", res);
-        return 1;
-    }
-    
+    union calib_t param[9], time;
+    //uint32_t start_time = 0; 
+    //float ETS_time = 0;//, NLLS_time = 0;   
 
     while(1)
     {
-        if(file_cont >= 3001)
-        {
-            return 1;
-        }
-
-        sprintf(file_read, "0:/DATA1/run%d.txt", file_cont);  // Prefixo de volume (0:) é comum no FatFs
-
-        FIL fil;
-        FRESULT res;
-
-        res = f_open(&fil, file_read, FA_READ);
-        if (res != FR_OK)
-        {
-            return 1;
-        }
-
-        char line[7645];
-        UINT br; // Bytes lidos
-
-        float *linhas[] = {mx, my, mz};  // Vetor de ponteiros para facilitar o acesso
-
-        for (int i = 0; i < 3; i++)
-        {
-            // lê uma linha completa (até '\n' ou fim do buffer)
-            int line_pos = 0;
-            char ch;
-            do {
-                res = f_read(&fil, &ch, 1, &br);
-                if (res != FR_OK || br == 0) {
-                    return 1;
-                }
-                line[line_pos++] = ch;
-            } while (ch != '\n' && line_pos < sizeof(line)-1);
-            line[line_pos] = '\0';
-
-            char *token = strtok(line, ",");
-            int j = 0;
-
-            while (token != NULL && j < tam)
-            {
-                linhas[i][j] = strtof(token, NULL);
-                token = strtok(NULL, ",");
-                j++;
-            }
-
-            if (j != tam)
-            {
-                return 1;
-            }
-        }
-
-        f_close(&fil);
+        while(PORTC & 0x01);
+        PORTC &= 0x02;
         
+        for(uint16_t i = 0; i < tam; i++)
+        {
+            for(uint8_t j = 0; j < 4; j++)
+            {
+                mx_[i].inteiro[j] = SPI_receive();
+            }
+        }
+        for(uint16_t i = 0; i < tam; i++)
+        {
+            for(uint8_t j = 0; j < 4; j++)
+            {
+                my_[i].inteiro[j] = SPI_receive();
+            }
+        }
+        for(uint16_t i = 0; i < tam; i++)
+        {
+            for(uint8_t j = 0; j < 4; j++)
+            {
+                mz_[i].inteiro[j] = SPI_receive();
+            }
+        }
+        
+        PORTC |= 0xFD;
+        
+        for(uint16_t i = 0; i<=tam; i++)
+        {
+            mx[i] = mx_[i].flutuante;
+            my[i] = my_[i].flutuante;
+            mz[i] = mz_[i].flutuante;
+        }
         //start_time = HAL_GetTick();
         //ETS(mx, my, mz, p1);
         //ETS_time = HAL_GetTick() - start_time;
 
         //start_time = HAL_GetTick();
         passos_NLLS = NLLS(mx, my, mz, p1);
+        time.flutuante = 0;
         //NLLS_time = HAL_GetTick() - start_time;
-
-
-        sprintf(file_read, "0:/RES/run%d.txt", file_cont);
-        res = f_open(&fil, file_read, FA_WRITE | FA_CREATE_ALWAYS);
-        if (res != FR_OK)
+        
+        for(uint8_t i = 0; i < 10; i++)
         {
-            return 1;
+            param[i].flutuante = p1[i];
         }
-
-        char out_line[128];
-        UINT bw;
-
-        for (int i = 0; i < 9; i++) {
-            sprintf(out_line, "%f\n", p1[i]);
-            f_write(&fil, out_line, strlen(out_line), &bw);
+        
+        PORTC &= 0x02;
+        
+        for(uint8_t i = 0; i < 10; i++)
+        {
+            for(uint8_t j = 0; j < 4; j++)
+            {
+                SPI_transmit(param[i].inteiro[j]);
+            }
         }
-
-        //sprintf(out_line, "%f, %f\n", ETS_time, NLLS_time);
-        //f_write(&fil, out_line, strlen(out_line), &bw);
-
-        sprintf(out_line, "0, %u\n", passos_NLLS);
-        f_write(&fil, out_line, strlen(out_line), &bw);
-
-        f_close(&fil);
-
-        file_cont++;
-                    
+        
+        for(uint8_t i = 0; i < 4; i++)
+        {
+            SPI_transmit(time.inteiro[i]);
+        }
+        SPI_transmit(passos_NLLS);
+        
+        PORTC |= 0xFD;
     }
 }

@@ -39,7 +39,7 @@ union calib_t{
 	float flutuante;
 };
 
-#define tam 556
+#define tam 159
 
 /* USER CODE END PTD */
 

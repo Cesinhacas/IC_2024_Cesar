@@ -14,8 +14,53 @@ cd Matlab\
 exe = length(vet_error_NLLS_c(1,:));
 executions = [1:1:exe];
 
+error_mse_NLLS = [sum(vet_error_NLLS_c(1,:).^2)/exe, sum(vet_error_NLLS_c(2,:).^2)/exe, sum(vet_error_NLLS_c(3,:).^2)/exe, sum(vet_error_NLLS_c(4,:).^2)/exe, sum(vet_error_NLLS_c(5,:).^2)/exe, sum(vet_error_NLLS_c(6,:).^2)/exe, sum(vet_error_NLLS_c(7,:).^2)/exe, sum(vet_error_NLLS_c(8,:).^2)/exe, sum(vet_error_NLLS_c(9,:).^2)/exe].^(1/2);
+error_mse_ETS = [sum(vet_error_ETS_c(1,:).^2)/exe, sum(vet_error_ETS_c(2,:).^2)/exe, sum(vet_error_ETS_c(3,:).^2)/exe, sum(vet_error_ETS_c(4,:).^2)/exe, sum(vet_error_ETS_c(5,:).^2)/exe, sum(vet_error_ETS_c(6,:).^2)/exe, sum(vet_error_ETS_c(7,:).^2)/exe, sum(vet_error_ETS_c(8,:).^2)/exe, sum(vet_error_ETS_c(9,:).^2)/exe].^(1/2);
+
+
 error_mean_NLLS = [mean(vet_error_NLLS_c(1,:)), mean(vet_error_NLLS_c(2,:)), mean(vet_error_NLLS_c(3,:)), mean(vet_error_NLLS_c(4,:)), mean(vet_error_NLLS_c(5,:)), mean(vet_error_NLLS_c(6,:)), mean(vet_error_NLLS_c(7,:)), mean(vet_error_NLLS_c(8,:)), mean(vet_error_NLLS_c(9,:))];
 error_mean_ETS = [mean(vet_error_ETS_c(1,:)), mean(vet_error_ETS_c(2,:)), mean(vet_error_ETS_c(3,:)), mean(vet_error_ETS_c(4,:)), mean(vet_error_ETS_c(5,:)), mean(vet_error_ETS_c(6,:)), mean(vet_error_ETS_c(7,:)), mean(vet_error_ETS_c(8,:)), mean(vet_error_ETS_c(9,:))];
+
+disp("MSE:")
+disp("ETS:")
+disp("Offset - x:")
+disp(error_mse_ETS(1))
+disp("Offset - y:")
+disp(error_mse_ETS(2))
+disp("Offset - z:")
+disp(error_mse_ETS(3))
+disp("Fator de escala - x:")
+disp(error_mse_ETS(4))
+disp("Fator de escala - y:")
+disp(error_mse_ETS(5))
+disp("Fator de escala - z:")
+disp(error_mse_ETS(6))
+disp("Ângulo Rho:")
+disp(error_mse_ETS(7))
+disp("Ângulo Phi:")
+disp(error_mse_ETS(8))
+disp("Ângulo Lambda:")
+disp(error_mse_ETS(9))
+
+disp("NLLS:")
+disp("Offset - x:")
+disp(error_mse_NLLS(1))
+disp("Offset - y:")
+disp(error_mse_NLLS(2))
+disp("Offset - z:")
+disp(error_mse_NLLS(3))
+disp("Fator de escala - x:")
+disp(error_mse_NLLS(4))
+disp("Fator de escala - y:")
+disp(error_mse_NLLS(5))
+disp("Fator de escala - z:")
+disp(error_mse_NLLS(6))
+disp("Ângulo Rho:")
+disp(error_mse_NLLS(7))
+disp("Ângulo Phi:")
+disp(error_mse_NLLS(8))
+disp("Ângulo Lambda:")
+disp(error_mse_NLLS(9))
 
 disp("Média dos erros:")
 disp("ETS:" )

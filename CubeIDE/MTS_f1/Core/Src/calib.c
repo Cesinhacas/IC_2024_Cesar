@@ -3,6 +3,7 @@
 #include <math.h>
 #include "calib.h"
 
+extern float Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam];
 
 void inverter_matriz(float matriz[N][N], float inversa[N][N])
 {
@@ -49,7 +50,7 @@ uint8_t NLLS(float *mx, float *my, float *mz, float *p)
 	float sf = 1;
 	float p0[9] = {1, 1, 1, 0, 0, 0, 0, 0, 0}, Be[tam], e[tam], f[tam], sx, sy, sz, bx, by, bz, rho, phi, lambida, error_ant, J, delta_J, mat_H[N][tam];
 	float sin_phi, sin_rho, sin_lambda, cos_phi, cos_rho, cos_lambda;
-	float Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam];
+	//float Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam];
 
 	for (int i=0; i < tam; i++)
 	{

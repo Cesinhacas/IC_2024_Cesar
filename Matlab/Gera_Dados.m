@@ -110,7 +110,7 @@ clear all
 clc
 
 r = 1;
-save_data = 1;
+save_data = 0;
 
 cd ../
 cd 'Dados'
@@ -290,13 +290,13 @@ xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
 
-
-noise = .006^2*ones(3,1112);
-[Tiempo,n,D,b] = TWOSTEP(Dados_Corrompido, H ,noise);
-
-for i=1:length(Dados_Corrompido(1,:))
-    Dados_rest2(:,i) = (eye(3)+D)*Dados_Corrompido(:,i) - b;
-end
+% 
+% noise = .006^2*ones(3,1112);
+% [Tiempo,n,D,b] = TWOSTEP(Dados_Corrompido, H ,noise);
+% 
+% for i=1:length(Dados_Corrompido(1,:))
+%     Dados_rest2(:,i) = (eye(3)+D)*Dados_Corrompido(:,i) - b;
+% end
 
 % subplot(2,3,5)
 % set(gcf,'Units','inches');
@@ -328,15 +328,15 @@ end
 % ylabel('y axis (G)');
 % zlabel('z axis (G)');
 
-param_TW = [b D];
-
-cd ..\
-cd Dados
-writematrix(Dados_rest, 'Dados_ETS_m.csv')
-writematrix(Dados_rest1, 'Dados_NLLS_m.csv')
-writematrix(Dados_rest2, 'Dados_TW_m.csv')
-writematrix(p, 'Calib_param_ETS_m.csv')
-writematrix(p1, 'Calib_param_NLLS_m.csv')
-writematrix(param_TW, 'Calib_param_TW_m.csv')
-cd ..\
-cd Matlab
+% param_TW = [b D];
+% 
+% cd ..\
+% cd Dados
+% writematrix(Dados_rest, 'Dados_ETS_m.csv')
+% writematrix(Dados_rest1, 'Dados_NLLS_m.csv')
+% writematrix(Dados_rest2, 'Dados_TW_m.csv')
+% writematrix(p, 'Calib_param_ETS_m.csv')
+% writematrix(p1, 'Calib_param_NLLS_m.csv')
+% writematrix(param_TW, 'Calib_param_TW_m.csv')
+% cd ..\
+% cd Matlab

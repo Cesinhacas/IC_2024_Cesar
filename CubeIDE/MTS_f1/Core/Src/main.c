@@ -49,8 +49,9 @@ union calib_t{
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-float mx[tam] = {0}, my[tam] = {0}, mz[tam] = {0};
+//float mx[tam] = {0}, my[tam] = {0}, mz[tam] = {0};
 union calib_t mx_[tam] = {0}, my_[tam] = {0}, mz_[tam] = {0};
+float Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam];
 float p1[9] = {0}, p0[9] = {0};
 uint8_t passos_NLLS = 0;
 
@@ -96,7 +97,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_SPI1_Init();
+  MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
   union calib_t param[9], time;
   uint32_t start_time = 0;
@@ -110,49 +111,50 @@ int main(void)
 	  while(!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10));
 	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, SET);
 
-	  for(uint16_t i = 0; i<=1111; i++)
+	  for(uint16_t i = 0; i<=tam; i++)
 	  {
-		  HAL_SPI_Receive(&hspi1, mx_[i].inteiro, 4, HAL_MAX_DELAY);
+		  HAL_SPI_Receive(&hspi2, mx_[i].inteiro, 4, 1000);
 	  }
-	  for(uint16_t i = 0; i<=1111; i++)
+	  for(uint16_t i = 0; i<=tam; i++)
 	  {
-		  HAL_SPI_Receive(&hspi1, my_[i].inteiro, 4, HAL_MAX_DELAY);
+		  HAL_SPI_Receive(&hspi2, my_[i].inteiro, 4, 1000);
 	  }
-	  for(uint16_t i = 0; i<=1111; i++)
+	  for(uint16_t i = 0; i<=tam; i++)
 	  {
-		  HAL_SPI_Receive(&hspi1, mz_[i].inteiro, 4, HAL_MAX_DELAY);
+		  HAL_SPI_Receive(&hspi2, mz_[i].inteiro, 4, 1000);
 	  }
 	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, RESET);
 
-	  for(uint16_t i = 0; i<=1111; i++)
+	  /*for(uint16_t i = 0; i<=tam; i++)
 	  {
 		  mx[i] = mx_[i].flutuante;
 		  my[i] = my_[i].flutuante;
 		  mz[i] = mz_[i].flutuante;
-	  }
+	  }*/
 
 	  /*start_time = HAL_GetTick();
 	  ETS(mx, my, mz, p1);
-	  ETS_time = HAL_GetTick() - start_time;*/
+	  time.flutuante = HAL_GetTick() - start_time;*/
 
 	  start_time = HAL_GetTick();
-	  passos_NLLS = NLLS(mx, my, mz, p1);
+	  passos_NLLS = NLLS((float *)mx_, (float *)my_, (float *)mz_, p1);
 	  time.flutuante = HAL_GetTick() - start_time;
 
-	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, SET);
+
 
 	  for(uint8_t i = 0; i < 10; i++)
 	  {
 		  param[i].flutuante = p1[i];
 	  }
 
+	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, SET);
 
 	  for(uint8_t i = 0; i < 10; i++)
 	  {
-		  HAL_SPI_Transmit(&hspi1, param[i].inteiro, 4, HAL_MAX_DELAY);
+		  HAL_SPI_Transmit(&hspi2, param[i].inteiro, 4, HAL_MAX_DELAY);
 	  }
-	  HAL_SPI_Transmit(&hspi1, time.inteiro, 4, HAL_MAX_DELAY);
-	  HAL_SPI_Transmit(&hspi1, &passos_NLLS, 1, HAL_MAX_DELAY);
+	  HAL_SPI_Transmit(&hspi2, time.inteiro, 4, HAL_MAX_DELAY);
+	  HAL_SPI_Transmit(&hspi2, &passos_NLLS, 1, HAL_MAX_DELAY);
 	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, RESET);
 
 

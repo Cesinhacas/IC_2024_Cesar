@@ -1991,7 +1991,7 @@ int main(void)
  80014b8:	f647 5374 	movw	r3, #32116	@ 0x7d74
  80014bc:	443b      	add	r3, r7
  80014be:	681b      	ldr	r3, [r3, #0]
- 80014c0:	f5b3 7f0b 	cmp.w	r3, #556	@ 0x22c
+ 80014c0:	f5b3 7f8b 	cmp.w	r3, #278	@ 0x116
  80014c4:	dbc6      	blt.n	8001454 <main+0x1c4>
 		}
 
@@ -1999,7 +1999,7 @@ int main(void)
  80014c6:	f647 5374 	movw	r3, #32116	@ 0x7d74
  80014ca:	443b      	add	r3, r7
  80014cc:	681b      	ldr	r3, [r3, #0]
- 80014ce:	f5b3 7f0b 	cmp.w	r3, #556	@ 0x22c
+ 80014ce:	f5b3 7f8b 	cmp.w	r3, #278	@ 0x116
  80014d2:	d001      	beq.n	80014d8 <main+0x248>
 		{
 			return 1;
@@ -3259,9 +3259,9 @@ void MX_SPI1_Init(void)
  8001dd8:	4b11      	ldr	r3, [pc, #68]	@ (8001e20 <MX_SPI1_Init+0x74>)
  8001dda:	f44f 2280 	mov.w	r2, #262144	@ 0x40000
  8001dde:	619a      	str	r2, [r3, #24]
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
  8001de0:	4b0f      	ldr	r3, [pc, #60]	@ (8001e20 <MX_SPI1_Init+0x74>)
- 8001de2:	2228      	movs	r2, #40	@ 0x28
+ 8001de2:	2230      	movs	r2, #48	@ 0x30
  8001de4:	61da      	str	r2, [r3, #28]
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
  8001de6:	4b0e      	ldr	r3, [pc, #56]	@ (8001e20 <MX_SPI1_Init+0x74>)
