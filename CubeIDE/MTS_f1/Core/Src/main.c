@@ -49,7 +49,7 @@ union calib_t{
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-//float mx[tam] = {0}, my[tam] = {0}, mz[tam] = {0};
+float mx[tam] = {0}, my[tam] = {0}, mz[tam] = {0};
 union calib_t mx_[tam] = {0}, my_[tam] = {0}, mz_[tam] = {0};
 float Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam];
 float p1[9] = {0}, p0[9] = {0};
@@ -125,19 +125,19 @@ int main(void)
 	  }
 	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, RESET);
 
-	  /*for(uint16_t i = 0; i<=tam; i++)
+	  for(uint16_t i = 0; i<=tam; i++)
 	  {
 		  mx[i] = mx_[i].flutuante;
 		  my[i] = my_[i].flutuante;
 		  mz[i] = mz_[i].flutuante;
-	  }*/
+	  }
 
 	  /*start_time = HAL_GetTick();
 	  ETS(mx, my, mz, p1);
 	  time.flutuante = HAL_GetTick() - start_time;*/
 
 	  start_time = HAL_GetTick();
-	  passos_NLLS = NLLS((float *)mx_, (float *)my_, (float *)mz_, p1);
+	  passos_NLLS = NLLS(mx, my, mz, p1);
 	  time.flutuante = HAL_GetTick() - start_time;
 
 
