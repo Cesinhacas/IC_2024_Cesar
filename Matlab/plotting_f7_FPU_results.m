@@ -21,14 +21,7 @@ passos_NLLS = 0;
 for i = 1:1:exe
     exe_time_ETS = exe_time_ETS + vet_error_ETS_c(10,i);
     exe_time_NLLS = exe_time_NLLS + vet_error_NLLS_c(10,i);
-    
-    if i < 781
-        passos_NLLS = passos_NLLS + vet_error_ETS_c(11,i);
-    else
-        passos_NLLS = passos_NLLS + vet_error_NLLS_c(11,i);
-    end
-
-
+    passos_NLLS = passos_NLLS + vet_error_NLLS_c(11,i);
 end
 
 exe_time_ETS = exe_time_ETS/3000;
