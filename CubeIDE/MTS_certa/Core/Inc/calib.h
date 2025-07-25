@@ -13,11 +13,11 @@
 #define N 9
 #define tam 1112
 
-//extern float Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam];
+//extern double Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam];
 
-void ETS(float *mx, float *my, float *mz, float *p);
-uint8_t NLLS(float *mx, float *my, float *mz, float *p);
+void ETS(double *mx, double *my, double *mz, double *p);
+uint8_t NLLS(double *mx, double *my, double *mz, double *p);
 
-void inverter_matriz(float matriz[N][N], float inversa[N][N]);
+void inverter_matriz(double matriz[N][N], double inversa[N][N]);
 
 #endif /* INC_CALIB_H_ */

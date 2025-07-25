@@ -3,7 +3,7 @@
 #include <math.h>
 #include "calib.h"
 
-void inverter_matriz(float matriz[N][N], float inversa[N][N])
+void inverter_matriz(double matriz[N][N], double inversa[N][N])
 {
     // Inicializando a matriz identidade na matriz inversa
     for (int i = 0; i < N; i++) {
@@ -19,7 +19,7 @@ void inverter_matriz(float matriz[N][N], float inversa[N][N])
     // Aplicando o método de Gauss-Jordan
     for (int i = 0; i < N; i++)
     {
-        float pivot = matriz[i][i];
+        double pivot = matriz[i][i];
         for (int j = 0; j < N; j++)
         {
             matriz[i][j] /= pivot;
@@ -30,7 +30,7 @@ void inverter_matriz(float matriz[N][N], float inversa[N][N])
         {
             if (k != i)
             {
-                float fator = matriz[k][i];
+                double fator = matriz[k][i];
                 for (int j = 0; j < N; j++)
                 {
                     matriz[k][j] -= fator * matriz[i][j];
@@ -42,13 +42,13 @@ void inverter_matriz(float matriz[N][N], float inversa[N][N])
 }
 
 
-uint8_t NLLS(float *mx, float *my, float *mz, float *p)
+uint8_t NLLS(double *mx, double *my, double *mz, double *p)
 {
 	uint8_t passo = 0, loop = 1;
-	float sf = 1;
-	float p0[9] = {1, 1, 1, 0, 0, 0, 0, 0, 0}, Be[tam], e[tam], f[tam], sx, sy, sz, bx, by, bz, rho, phi, lambida, error_ant, J, delta_J, mat_H[N][tam];
-	float sin_phi, sin_rho, sin_lambda, cos_phi, cos_rho, cos_lambda;
-	float Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam];
+	double sf = 1;
+	double p0[9] = {1, 1, 1, 0, 0, 0, 0, 0, 0}, Be[tam], e[tam], f[tam], sx, sy, sz, bx, by, bz, rho, phi, lambida, error_ant, J, delta_J, mat_H[N][tam];
+	double sin_phi, sin_rho, sin_lambda, cos_phi, cos_rho, cos_lambda;
+	double Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam];
 
 	for (int i=0; i < tam; i++)
 	{
@@ -67,12 +67,12 @@ uint8_t NLLS(float *mx, float *my, float *mz, float *p)
 		phi = p0[7];
 		lambida = p0[8];
 
-		sin_phi = sinf(phi);//phi - (phi*phi*phi)/6;// + (phi*phi*phi*phi*phi)/120;
-		sin_rho = sinf(rho);//rho - (rho*rho*rho)/6;// + (rho*rho*rho*rho*rho)/120;
-		sin_lambda = sinf(lambida);//lambida - (lambida*lambida*lambida)/6;// + (lambida*lambida*lambida*lambida*lambida)/120;
-		cos_phi = cosf(phi);//1 - (phi*phi)/2;// + (phi*phi*phi*phi)/24;
-		cos_rho = cosf(rho);///1 - (rho*rho)/2;// + (rho*rho*rho*rho)/24;
-		cos_lambda = cosf(lambida);//1 - (lambida*lambida)/2;// + (lambida*lambida*lambida*lambida)/24;
+		sin_phi = sin(phi);//phi - (phi*phi*phi)/6;// + (phi*phi*phi*phi*phi)/120;
+		sin_rho = sin(rho);//rho - (rho*rho*rho)/6;// + (rho*rho*rho*rho*rho)/120;
+		sin_lambda = sin(lambida);//lambida - (lambida*lambida*lambida)/6;// + (lambida*lambida*lambida*lambida*lambida)/120;
+		cos_phi = cos(phi);//1 - (phi*phi)/2;// + (phi*phi*phi*phi)/24;
+		cos_rho = cos(rho);///1 - (rho*rho)/2;// + (rho*rho*rho*rho)/24;
+		cos_lambda = cos(lambida);//1 - (lambida*lambida)/2;// + (lambida*lambida*lambida*lambida)/24;
 
 		for(int i=0; i < tam; i++)
 		{
@@ -175,15 +175,15 @@ uint8_t NLLS(float *mx, float *my, float *mz, float *p)
     return passo;
 }
 
-void ETS(float *mx, float *my, float *mz, float *p)
+void ETS(double *mx, double *my, double *mz, double *p)
 {
     //Cria a matriz H
-    float mat_H[N][tam], my_2[tam];
-    float H_Ht[N][N], inv[N][N];
-    float mul_mat[N][tam];
-    float X[N];
-    float psi7 = 0, psi8 = 0, divs = 0, n1 = 0, n2 = 0, n3 = 0, n4 = 0, n5 = 0, n6 = 0, bx = 0, by = 0, bz = 0, sx = 0, sy = 0, sz = 0, rho = 0, phi = 0, lambida = 0;
-    float X1_2 = 0, X2_2 = 0, X3_2 = 0, X4_2 = 0, X5_2 = 0, X6_2 = 0, X7_2 = 0;
+    double mat_H[N][tam], my_2[tam];
+    double H_Ht[N][N], inv[N][N];
+    double mul_mat[N][tam];
+    double X[N];
+    double psi7 = 0, psi8 = 0, divs = 0, n1 = 0, n2 = 0, n3 = 0, n4 = 0, n5 = 0, n6 = 0, bx = 0, by = 0, bz = 0, sx = 0, sy = 0, sz = 0, rho = 0, phi = 0, lambida = 0;
+    double X1_2 = 0, X2_2 = 0, X3_2 = 0, X4_2 = 0, X5_2 = 0, X6_2 = 0, X7_2 = 0;
     for(int i=0; i < tam; i++)
     {
         mat_H[0][i] = mx[i]*mx[i];
@@ -253,15 +253,15 @@ void ETS(float *mx, float *my, float *mz, float *p)
 
     psi8 = -X1_2*X7_2 + 4*X[4]*X[8]*X1_2 - 4*X[8]*X[1]*X[2]*X[3] + 2*X[1]*X[2]*X[6]*X[7] + 2*X[1]*X[3]*X[5]*X[7] - 4*X[4]*X[1]*X[5]*X[6] - X2_2*X6_2 + 4*X[8]*X2_2 + 2*X[2]*X[3]*X[5]*X[6] - 4*X[2]*X[5]*X[7] - X3_2*X5_2 + 4*X[0]*X[8]*X3_2 + 4*X[4]*X5_2 + 4*X[0]*X[4]*X6_2 + 4*X[0]*X7_2 - 16*X[0]*X[4]*X[8] - 4*X[0]*X[3]*X[6]*X[7];
 
-    divs =  2 * fabsf(X[4])*fabsf(X[4])*fabsf(X[4]) * (X[4] * X1_2 - X[1] * X[2] * X[3] + X2_2 + X[0] * X3_2 - 4 * X[0] * X[4]);
+    divs =  2 * fabs(X[4])*fabs(X[4])*fabs(X[4]) * (X[4] * X1_2 - X[1] * X[2] * X[3] + X2_2 + X[0] * X3_2 - 4 * X[0] * X[4]);
 
-    sx = -X4_2*X[4] * sqrtf(psi8 * (-X3_2 + 4*X[4])) / (divs);
-    sy = -X4_2*X[4] * sqrtf(psi8 * (-X2_2 + 4*X[0]*X[4])) / (divs);
-    sz = -X4_2*X[4] * sqrtf(psi8 * (-X1_2 + 4*X[0])) / (divs);
+    sx = -X4_2*X[4] * sqrt(psi8 * (-X3_2 + 4*X[4])) / (divs);
+    sy = -X4_2*X[4] * sqrt(psi8 * (-X2_2 + 4*X[0]*X[4])) / (divs);
+    sz = -X4_2*X[4] * sqrt(psi8 * (-X1_2 + 4*X[0])) / (divs);
 
-    rho = (2 * X[1]*X[4] - X[2]*X[3]) / (2*X4_2 * sqrtf(-(X[4]*X1_2 - X[1]*X[2]*X[3] + X2_2 + X[0]*X3_2 - 4*X[0]*X[4]) / (X4_2*X[4])));
-    rho = -atanf(rho);
-    lambida = -atanf((X[3] / X[4]) * sqrtf(-(X4_2 * (X[4]*X1_2 - X[1]*X[2]*X[3] + X2_2 - 4*X[0]*X[4]) / (2*X1_2*X3_2*X[4] - 4* X1_2 * X4_2 - 4*X1_2 * X4_2 - X[1]*X[2]*X3_2*X[3] + X2_2 * X3_2 + X[0]* X3_2*X3_2 - 8*X[0]*X3_2*X[4] + 16*X[0]*X4_2))));
+    rho = (2 * X[1]*X[4] - X[2]*X[3]) / (2*X4_2 * sqrt(-(X[4]*X1_2 - X[1]*X[2]*X[3] + X2_2 + X[0]*X3_2 - 4*X[0]*X[4]) / (X4_2*X[4])));
+    rho = -atan(rho);
+    lambida = -atan((X[3] / X[4]) * sqrt(-(X4_2 * (X[4]*X1_2 - X[1]*X[2]*X[3] + X2_2 - 4*X[0]*X[4]) / (2*X1_2*X3_2*X[4] - 4* X1_2 * X4_2 - 4*X1_2 * X4_2 - X[1]*X[2]*X3_2*X[3] + X2_2 * X3_2 + X[0]* X3_2*X3_2 - 8*X[0]*X3_2*X[4] + 16*X[0]*X4_2))));
 
     n1 = -X1_2*X7_2 + 4*X1_2*X[4]*X[8] - 4*X[1]*X[2]*X[3]*X[8] + 2*X[1]*X[2]*X[6]*X[7] + 2*X[1]*X[3]*X[5]*X[7] - 4*X[1]*X[4]*X[5]*X[6] - X2_2*X6_2 + 2*X[2]*X[3]*X[5]*X[6] + 4*X2_2*X[8] - 4*X[2]*X[5]*X[7] - X3_2*X5_2 + 4*X[1]*X3_2*X[8] - 4*X[0]*X[3]*X[6]*X[7] + 4*X[4]*X5_2 + 4*X[0]*X[4]*X6_2 + 4*X[0]*X7_2 - 16*X[0]*X[4]*X[8];
     n2 = X1_2*X[4] - X[1]*X[2]*X[3] + X2_2 + X[0]*X3_2 - 4*X[0]*X[4];
@@ -270,7 +270,7 @@ void ETS(float *mx, float *my, float *mz, float *p)
     n5 = 4*X[0]*X[4] - X2_2;
     n6 = 4*X[0] - X1_2;
 
-    phi = -atanf((fabsf(X[4])*sqrtf(n1*n5) * (2*X[2] - X[1]*X[3]) * sqrtf((X[4]*n4*n6) / n3)) / (X4_2 * sqrtf(-n2 / X[4]) * sqrtf(n1*n6) * sqrtf(-(n2 * n4) / n3) * sqrtf(-(n4*n5) / (X[4]*n2))));
+    phi = -atan((fabs(X[4])*sqrt(n1*n5) * (2*X[2] - X[1]*X[3]) * sqrt((X[4]*n4*n6) / n3)) / (X4_2 * sqrt(-n2 / X[4]) * sqrt(n1*n6) * sqrt(-(n2 * n4) / n3) * sqrt(-(n4*n5) / (X[4]*n2))));
 
     p[0] = sx;
     p[1] = sy;

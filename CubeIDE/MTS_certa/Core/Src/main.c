@@ -55,9 +55,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-float mx[1112] = {0}, my[1112] = {0}, mz[1112] = {0};
+double mx[1112] = {0}, my[1112] = {0}, mz[1112] = {0};
 //union calib_t mx_[1112] = {0}, my_[1112] = {0}, mz_[1112] = {0};
-float p1[9] = {0}, p0[9] = {0};
+double p1[9] = {0}, p0[9] = {0};
 uint8_t passos_NLLS = 0;
 
 /* USER CODE END PV */
@@ -108,7 +108,7 @@ int main(void)
   uint32_t start_time = 0;
   uint16_t file_cont = 1;
   //union calib_t param1[9], param2[9];
-  float p1[9];
+  //float p1[9];
   //uint8_t time1[4], time2[4];
   float NLLS_time = 0, ETS_time = 0;
 
@@ -148,7 +148,7 @@ int main(void)
 	char line[30670];
 	UINT br; // Bytes lidos
 
-	float *linhas[] = {mx, my, mz};  // Vetor de ponteiros para facilitar o acesso
+	double *linhas[] = {mx, my, mz};  // Vetor de ponteiros para facilitar o acesso
 
 	for (int i = 0; i < 3; i++)
 	{

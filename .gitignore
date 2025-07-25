@@ -2,9 +2,3 @@
 .vscode/
 build/
 build/CMakeFiles/
-Dados_f7/
-Matlab/Dados_f7
-Matlab/RES_F7_FPU
-Matlab/RES_F7_NOFPU
-Matlab/RES_F7_double
-Matlab/dados_ATmega
