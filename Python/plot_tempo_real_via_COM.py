@@ -6,25 +6,34 @@ import time
 from collections import deque
 import threading
 import csv
+
 from datetime import datetime
 
 # Configuração da porta serial
 ser = serial.Serial(port='COM1', baudrate=115200, timeout=1)
+print(f"Conectado na porta COM1")
 
-# Configuração do gráfico
-fig = plt.figure(figsize=(12, 8))
-ax = fig.add_subplot(111, projection='3d')
+# Configuração dos gráficos (dois subplots lado a lado)
+fig = plt.figure(figsize=(20, 8))
+ax_accel = fig.add_subplot(121, projection='3d')  # Acelerômetro à esquerda
+ax_mag = fig.add_subplot(122, projection='3d')    # Magnetômetro à direita
 
-# Buffers para armazenar os dados (últimos N pontos)
+# Buffers para armazenar os dados do acelerômetro (últimos N pontos)
 MAX_POINTS = 1112
-x_data = deque(maxlen=MAX_POINTS)
-y_data = deque(maxlen=MAX_POINTS)
-z_data = deque(maxlen=MAX_POINTS)
+x_accel = deque(maxlen=MAX_POINTS)
+y_accel = deque(maxlen=MAX_POINTS)
+z_accel = deque(maxlen=MAX_POINTS)
+
+# Buffers para armazenar os dados do magnetômetro (últimos N pontos)
+x_mag = deque(maxlen=MAX_POINTS)
+y_mag = deque(maxlen=MAX_POINTS)
+z_mag = deque(maxlen=MAX_POINTS)
 
 # Variáveis de controle
 running = True
 data_lock = threading.Lock()
 save_data = False
+save_plots = False
 
 def create_unit_sphere():
     """Cria uma esfera unitária para referência"""
@@ -36,42 +45,77 @@ def create_unit_sphere():
     return x_sphere, y_sphere, z_sphere
 
 def save_buffer_to_file():
-    """Salva o buffer atual em um arquivo CSV"""
+    """Salva os buffers em arquivos CSV separados"""
     global save_data
     
     with data_lock:
-        if len(x_data) > 0:
-            # Cria nome do arquivo com timestamp
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"acelerometro_data_{timestamp}.csv"
-            
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+        # Salva dados do acelerômetro
+        if len(x_accel) > 0:
+            filename_accel = f"acelerometro_data_{timestamp}.csv"
             try:
-                with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
+                with open(filename_accel, 'w', newline='', encoding='utf-8') as csvfile:
                     writer = csv.writer(csvfile)
-                    # Escreve cabeçalho
-                    writer.writerow(['X', 'Y', 'Z'])
+                    writer.writerow(['Timestamp', 'X_Accel_g', 'Y_Accel_g', 'Z_Accel_g'])
                     
-                    # Escreve os dados
-                    for i in range(len(x_data)):
-                        writer.writerow([x_data[i], y_data[i], z_data[i]])
+                    for i in range(len(x_accel)):
+                        writer.writerow([i, x_accel[i], y_accel[i], z_accel[i]])
                 
-                print(f"\nDados salvos em: {filename}")
-                print(f"Total de pontos salvos: {len(x_data)}")
+                print(f"\n✓ Dados do acelerômetro salvos em: {filename_accel}")
+                print(f"  Total de pontos: {len(x_accel)}")
                 
             except Exception as e:
-                print(f"Erro ao salvar arquivo: {e}")
-        else:
-            print("\nNenhum dado para salvar!")
+                print(f"❌ Erro ao salvar arquivo do acelerômetro: {e}")
+        
+        # Salva dados do magnetômetro
+        if len(x_mag) > 0:
+            filename_mag = f"magnetometro_data_{timestamp}.csv"
+            try:
+                with open(filename_mag, 'w', newline='', encoding='utf-8') as csvfile:
+                    writer = csv.writer(csvfile)
+                    writer.writerow(['Timestamp', 'X_Mag_Ga', 'Y_Mag_Ga', 'Z_Mag_Ga'])
+                    
+                    for i in range(len(x_mag)):
+                        writer.writerow([i, x_mag[i], y_mag[i], z_mag[i]])
+                
+                print(f"✓ Dados do magnetômetro salvos em: {filename_mag}")
+                print(f"  Total de pontos: {len(x_mag)}")
+                
+            except Exception as e:
+                print(f"❌ Erro ao salvar arquivo do magnetômetro: {e}")
+        
+        if len(x_accel) == 0 and len(x_mag) == 0:
+            print("\n⚠️ Nenhum dado para salvar!")
     
     save_data = False
 
+def save_plots_to_file():
+    """Salva os gráficos como imagens"""
+    global save_plots
+    
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"plots_sensores_{timestamp}.png"
+    
+    try:
+        plt.savefig(filename, dpi=300, bbox_inches='tight', 
+                   facecolor='white', edgecolor='none')
+        print(f"\n📊 Plots salvos em: {filename}")
+        
+    except Exception as e:
+        print(f"❌ Erro ao salvar plots: {e}")
+    
+    save_plots = False
+
 def keyboard_listener():
     """Thread para escutar comandos do teclado"""
-    global running, save_data
+    global running, save_data, save_plots
     
     print("\nComandos disponíveis:")
     print("- Digite 's' + Enter para salvar os dados atuais")
+    print("- Digite 'p' + Enter para salvar os plots")
     print("- Digite 'q' + Enter para sair")
+    print("- Digite 'c' + Enter para limpar dados")
     
     while running:
         try:
@@ -79,18 +123,24 @@ def keyboard_listener():
             
             if command == 's':
                 save_data = True
-                print("Salvando dados...")
+                print("📁 Salvando dados...")
+            elif command == 'p':
+                save_plots = True
+                print("📊 Salvando plots...")
             elif command == 'q':
                 running = False
-                print("Parando programa...")
+                print("⏹️ Parando programa...")
                 break
             elif command == 'c':
                 # Comando para limpar os dados
                 with data_lock:
-                    x_data.clear()
-                    y_data.clear()
-                    z_data.clear()
-                print("Dados limpos!")
+                    x_accel.clear()
+                    y_accel.clear()
+                    z_accel.clear()
+                    x_mag.clear()
+                    y_mag.clear()
+                    z_mag.clear()
+                print("🧹 Dados limpos!")
                 
         except EOFError:
             break
@@ -101,19 +151,21 @@ def read_serial_data():
     """Thread para ler dados da porta serial"""
     global running
     
+    accel_data = None
+    waiting_for_mag = False
+    
     while running:
         try:
             if ser.in_waiting > 0:
                 # Lê uma linha da porta serial
                 line = ser.readline().decode('utf-8').strip()
                 
-                # Processa a linha (assumindo formato: "x,y,z" ou "x y z")
                 if line:
-                    # Tenta diferentes formatos de separação
+                    # Remove espaços extras e processa a linha
                     if ',' in line:
-                        coords = line.split(',')
+                        coords = [x.strip() for x in line.split(',')]
                     elif ' ' in line:
-                        coords = line.split()
+                        coords = [x.strip() for x in line.split() if x.strip()]
                     else:
                         continue
                     
@@ -123,14 +175,35 @@ def read_serial_data():
                             y = float(coords[1])
                             z = float(coords[2])
                             
-                            # Adiciona os dados aos buffers de forma thread-safe
-                            with data_lock:
-                                x_data.append(x)
-                                y_data.append(y)
-                                z_data.append(z)
+                            if not waiting_for_mag:
+                                # Primeira linha - dados do acelerômetro
+                                accel_data = (x, y, z)
+                                waiting_for_mag = True
+                            else:
+                                # Segunda linha - dados do magnetômetro
+                                mag_data = (x, y, z)
+                                
+                                # Adiciona ambos os dados aos buffers de forma thread-safe
+                                with data_lock:
+                                    # Dados do acelerômetro
+                                    x_accel.append(accel_data[0])
+                                    y_accel.append(accel_data[1])
+                                    z_accel.append(accel_data[2])
+                                    
+                                    # Dados do magnetômetro
+                                    x_mag.append(mag_data[0])
+                                    y_mag.append(mag_data[1])
+                                    z_mag.append(mag_data[2])
+                                
+                                # Reset para próximo par de dados
+                                accel_data = None
+                                waiting_for_mag = False
                                 
                         except ValueError:
                             print(f"Erro ao converter dados: {line}")
+                            # Reset em caso de erro
+                            accel_data = None
+                            waiting_for_mag = False
                             continue
                             
         except Exception as e:
@@ -140,12 +213,12 @@ def read_serial_data():
         time.sleep(0.01)  # Pequeno delay para não sobrecarregar
 
 def update_plot():
-    """Atualiza o gráfico 3D"""
-    global running, save_data
+    """Atualiza os gráficos 3D (acelerômetro e magnetômetro)"""
+    global running, save_data, save_plots
     
     plt.ion()  # Modo interativo
     
-    # Cria a esfera de referência uma vez
+    # Cria as esferas de referência uma vez
     x_sphere, y_sphere, z_sphere = create_unit_sphere()
     
     while running:
@@ -154,54 +227,105 @@ def update_plot():
             if save_data:
                 save_buffer_to_file()
             
+            # Verifica se deve salvar os plots
+            if save_plots:
+                save_plots_to_file()
+            
             with data_lock:
-                # Limpa o gráfico anterior
-                ax.clear()
+                # Limpa os gráficos anteriores
+                ax_accel.clear()
+                ax_mag.clear()
                 
+                # ---- GRÁFICO DO ACELERÔMETRO ----
                 # Desenha a esfera de referência unitária
-                ax.plot_surface(x_sphere, y_sphere, z_sphere, 
-                              alpha=0.2, color='gray', linewidth=0.5)
+                ax_accel.plot_surface(x_sphere, y_sphere, z_sphere, 
+                                    alpha=0.2, color='gray', linewidth=0.5)
                 
-                if len(x_data) > 0:
+                if len(x_accel) > 0:
                     # Converte para arrays numpy
-                    x_array = np.array(x_data)
-                    y_array = np.array(y_data)
-                    z_array = np.array(z_data)
+                    x_accel_array = np.array(x_accel)
+                    y_accel_array = np.array(y_accel)
+                    z_accel_array = np.array(z_accel)
                     
-                    # Plota os pontos
-                    scatter = ax.scatter(x_array, y_array, z_array, 
-                                       c=range(len(x_array)), cmap='viridis', 
-                                       s=20, alpha=0.7)
+                    # Plota os pontos do acelerômetro
+                    scatter_accel = ax_accel.scatter(x_accel_array, y_accel_array, z_accel_array, 
+                                                   c=range(len(x_accel_array)), cmap='viridis', 
+                                                   s=20, alpha=0.7)
                     
                     # Plota a trajetória (linha conectando os pontos)
-                    if len(x_array) > 1:
-                        ax.plot(x_array, y_array, z_array, 'b-', alpha=0.3, linewidth=1)
+                    if len(x_accel_array) > 1:
+                        ax_accel.plot(x_accel_array, y_accel_array, z_accel_array, 'b-', alpha=0.3, linewidth=1)
                     
                     # Destaca o ponto mais recente
-                    if len(x_array) > 0:
-                        ax.scatter([x_array[-1]], [y_array[-1]], [z_array[-1]], 
-                                 c='red', s=100, alpha=1.0)
+                    if len(x_accel_array) > 0:
+                        ax_accel.scatter([x_accel_array[-1]], [y_accel_array[-1]], [z_accel_array[-1]], 
+                                       c='red', s=100, alpha=1.0)
                     
-                    # Adiciona informações na tela
-                    info_text = f'Último ponto: X={x_array[-1]:.2f}, Y={y_array[-1]:.2f}, Z={z_array[-1]:.2f}\nTotal de pontos: {len(x_array)}\n\nComandos: "s" = salvar, "q" = sair'
-                    ax.text2D(0.02, 0.98, info_text, transform=ax.transAxes, 
-                            fontsize=10, verticalalignment='top',
-                            bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.8))
+                    # Adiciona informações na tela do acelerômetro
+                    info_text_accel = f'Último: X={x_accel_array[-1]:.2f}, Y={y_accel_array[-1]:.2f}, Z={z_accel_array[-1]:.2f}\nPontos: {len(x_accel_array)}'
+                    ax_accel.text2D(0.02, 0.98, info_text_accel, transform=ax_accel.transAxes, 
+                                  fontsize=9, verticalalignment='top',
+                                  bbox=dict(boxstyle='round', facecolor='lightblue', alpha=0.8))
                 
-                # Configurações do gráfico
-                ax.set_xlabel('X (g)')
-                ax.set_ylabel('Y (g)')
-                ax.set_zlabel('Z (g)')
-                ax.set_title('Dados do Acelerômetro em Tempo Real - Esfera de Referência (r=1)')
+                # Configurações do gráfico do acelerômetro
+                ax_accel.set_xlabel('X (g)')
+                ax_accel.set_ylabel('Y (g)')
+                ax_accel.set_zlabel('Z (g)')
+                ax_accel.set_title('Acelerômetro - Esfera de Referência (r=1g)')
+                ax_accel.set_xlim([-1.5, 1.5])
+                ax_accel.set_ylim([-1.5, 1.5])
+                ax_accel.set_zlim([-1.5, 1.5])
+                ax_accel.set_box_aspect([1,1,1])
                 
-                # Define limites fixos para mostrar a esfera unitária
-                ax.set_xlim([-1.5, 1.5])
-                ax.set_ylim([-1.5, 1.5])
-                ax.set_zlim([-1.5, 1.5])
+                # ---- GRÁFICO DO MAGNETÔMETRO ----
+                # Define escala apropriada para magnetômetro em Gauss
+                # Campo magnético terrestre típico: ~0.5 Ga
+                mag_scale = 0.23  # Assumindo dados em Gauss
+                x_sphere_mag = x_sphere * mag_scale
+                y_sphere_mag = y_sphere * mag_scale
+                z_sphere_mag = z_sphere * mag_scale
                 
-                # Garante que os eixos tenham a mesma escala
-                ax.set_box_aspect([1,1,1])
+                # Desenha a esfera de referência para magnetômetro
+                ax_mag.plot_surface(x_sphere_mag, y_sphere_mag, z_sphere_mag, 
+                                  alpha=0.2, color='gray', linewidth=0.5)
+                
+                if len(x_mag) > 0:
+                    # Converte para arrays numpy
+                    x_mag_array = np.array(x_mag)
+                    y_mag_array = np.array(y_mag)
+                    z_mag_array = np.array(z_mag)
+                    
+                    # Plota os pontos do magnetômetro
+                    scatter_mag = ax_mag.scatter(x_mag_array, y_mag_array, z_mag_array, 
+                                               c=range(len(x_mag_array)), cmap='plasma', 
+                                               s=20, alpha=0.7)
+                    
+                    # Plota a trajetória (linha conectando os pontos)
+                    if len(x_mag_array) > 1:
+                        ax_mag.plot(x_mag_array, y_mag_array, z_mag_array, 'r-', alpha=0.3, linewidth=1)
+                    
+                    # Destaca o ponto mais recente
+                    if len(x_mag_array) > 0:
+                        ax_mag.scatter([x_mag_array[-1]], [y_mag_array[-1]], [z_mag_array[-1]], 
+                                     c='red', s=100, alpha=1.0)
+                    
+                    # Adiciona informações na tela do magnetômetro
+                    info_text_mag = f'Último: X={x_mag_array[-1]:.3f}, Y={y_mag_array[-1]:.3f}, Z={z_mag_array[-1]:.3f}\nPontos: {len(x_mag_array)}'
+                    ax_mag.text2D(0.02, 0.98, info_text_mag, transform=ax_mag.transAxes, 
+                                fontsize=9, verticalalignment='top',
+                                bbox=dict(boxstyle='round', facecolor='lightcoral', alpha=0.8))
+                
+                # Configurações do gráfico do magnetômetro
+                ax_mag.set_xlabel('X (Ga)')
+                ax_mag.set_ylabel('Y (Ga)')
+                ax_mag.set_zlabel('Z (Ga)')
+                ax_mag.set_title('Magnetômetro - Esfera de Referência (r=0.5Ga)')
+                ax_mag.set_xlim([-mag_scale*1.5, mag_scale*1.5])
+                ax_mag.set_ylim([-mag_scale*1.5, mag_scale*1.5])
+                ax_mag.set_zlim([-mag_scale*1.5, mag_scale*1.5])
+                ax_mag.set_box_aspect([1,1,1])
             
+            plt.tight_layout()
             plt.pause(0.05)  # Pausa pequena para atualizar o gráfico
             
         except Exception as e:
@@ -212,8 +336,12 @@ def main():
     """Função principal"""
     global running
     
-    print("Iniciando leitura do acelerômetro...")
-    print("Esfera de referência: raio unitário (1g)")
+    print("Iniciando leitura dos sensores via COM1...")
+    print("Gráfico esquerdo: Acelerômetro (esfera de referência: 1g)")
+    print("Gráfico direito: Magnetômetro (esfera de referência: 0.5Ga)")
+    print("\nFormato esperado dos dados:")
+    print("Linha 1: ax, ay, az")
+    print("Linha 2: mx, my, mz (em Gauss)")
     
     # Inicia a thread de leitura serial
     serial_thread = threading.Thread(target=read_serial_data)

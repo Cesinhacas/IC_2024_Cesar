@@ -55,9 +55,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-double mx[1112] = {0}, my[1112] = {0}, mz[1112] = {0};
+float mx[tam] = {0}, my[tam] = {0}, mz[tam] = {0};
 //union calib_t mx_[1112] = {0}, my_[1112] = {0}, mz_[1112] = {0};
-double p1[9] = {0}, p0[9] = {0};
+float p1[9] = {0};//, p0[9] = {0};
 uint8_t passos_NLLS = 0;
 
 /* USER CODE END PV */
@@ -110,7 +110,7 @@ int main(void)
   //union calib_t param1[9], param2[9];
   //float p1[9];
   //uint8_t time1[4], time2[4];
-  float NLLS_time = 0, ETS_time = 0;
+  float NLLS_time = 0;//, ETS_time = 0;
 
   FATFS fs;
   FRESULT res;
@@ -148,7 +148,7 @@ int main(void)
 	char line[30670];
 	UINT br; // Bytes lidos
 
-	double *linhas[] = {mx, my, mz};  // Vetor de ponteiros para facilitar o acesso
+	float *linhas[] = {mx, my, mz};  // Vetor de ponteiros para facilitar o acesso
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -189,9 +189,9 @@ int main(void)
 		mz_[i].flutuante = mz[i];
 	}*/
 
-	start_time = HAL_GetTick();
+	/*start_time = HAL_GetTick();
 	ETS(mx, my, mz, p0);
-	ETS_time = HAL_GetTick() - start_time;
+	ETS_time = HAL_GetTick() - start_time;*/
 
 	start_time = HAL_GetTick();
 	passos_NLLS = NLLS(mx, my, mz, p1);
@@ -251,21 +251,21 @@ int main(void)
 	UINT bw;
 
 	for (int i = 0; i < 9; i++) {
-		sprintf(out_line, "%f, %f\n", p0[i], p1[i]);
+		sprintf(out_line, "%f\n", p1[i]);
 		f_write(&fil, out_line, strlen(out_line), &bw);
 	}
 
-	sprintf(out_line, "%f, %f\n", ETS_time, NLLS_time);
+	sprintf(out_line, "%f\n", NLLS_time);
 	f_write(&fil, out_line, strlen(out_line), &bw);
 
-	sprintf(out_line, "0, %u\n", passos_NLLS);
+	sprintf(out_line, "%u\n", passos_NLLS);
 	f_write(&fil, out_line, strlen(out_line), &bw);
 
 	f_close(&fil);
 
 	file_cont++;
 	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
-	HAL_Delay(100);
+	HAL_Delay(10);
 	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
 
     /* USER CODE END WHILE */

@@ -1,0 +1,2 @@
+../Core/Src/mpu_6050.c:10:6:config_mpu6050	1
+../Core/Src/mpu_6050.c:24:6:read_mpu6050	1

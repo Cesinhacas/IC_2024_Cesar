@@ -1,0 +1,4 @@
+../Core/Src/atitude.c:10:6:cria_triad	80	static
+../Core/Src/atitude.c:31:6:vet2mat	32	static
+../Core/Src/atitude.c:41:6:atitude_determination	56	static
+../Core/Src/atitude.c:56:6:send_atitude	104	static

@@ -37,9 +37,8 @@ for i=1:exe
 %     ParT.phi = 0;
 %     ParT.lambda = 0;
 %     ParP = ParT;
-
-    p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0];
     [Time,p1] = test1(Dados_Corrompido, 1);
+    p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0];
     H = ones(1, length(Dados_Corrompido(1,:)))';
     [tempo, passo,p] = test2(Dados_Corrompido, p0, H);
     [tiempo, passo_ST, p2] = NLLS_ST(Dados_Corrompido, p0, H);
