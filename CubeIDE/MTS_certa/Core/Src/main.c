@@ -27,18 +27,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "calib.h"
+//#include "calib.h"
 
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-/*union calib_t{
+union calib_t{
 	uint8_t inteiro[4];
 	float flutuante;
-};*/
+};
 
-//#define tam 1112
+#define tam 1112
 
 /* USER CODE END PTD */
 
@@ -56,8 +56,8 @@
 
 /* USER CODE BEGIN PV */
 float mx[tam] = {0}, my[tam] = {0}, mz[tam] = {0};
-//union calib_t mx_[1112] = {0}, my_[1112] = {0}, mz_[1112] = {0};
-float p1[9] = {0};//, p0[9] = {0};
+union calib_t mx_[tam] = {0}, my_[tam] = {0}, mz_[tam] = {0};
+float p1[9] = {0}, p0[9] = {0};
 uint8_t passos_NLLS = 0;
 
 /* USER CODE END PV */
@@ -105,12 +105,11 @@ int main(void)
   MX_FATFS_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-  uint32_t start_time = 0;
+  //uint32_t start_time = 0;
   uint16_t file_cont = 1;
-  //union calib_t param1[9], param2[9];
-  //float p1[9];
-  //uint8_t time1[4], time2[4];
-  float NLLS_time = 0;//, ETS_time = 0;
+  union calib_t param1[9], param2[9];
+  float p1[9];
+  union calib_t NLLS_time, ETS_time;
 
   FATFS fs;
   FRESULT res;
@@ -182,33 +181,34 @@ int main(void)
 
 	f_close(&fil);
 
-	/*for(uint16_t i = 0; i <= 1111; i++)
+	for(uint16_t i = 0; i < tam; i++)
 	{
 		mx_[i].flutuante = mx[i];
 		my_[i].flutuante = my[i];
 		mz_[i].flutuante = mz[i];
-	}*/
+	}
 
 	/*start_time = HAL_GetTick();
 	ETS(mx, my, mz, p0);
-	ETS_time = HAL_GetTick() - start_time;*/
+	ETS_time = HAL_GetTick() - start_time;
 
 	start_time = HAL_GetTick();
 	passos_NLLS = NLLS(mx, my, mz, p1);
-	NLLS_time = HAL_GetTick() - start_time;
+	NLLS_time = HAL_GetTick() - start_time;*/
 
-	/*HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, SET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, SET);
 	while(!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_0));
 	HAL_Delay(5);
-	for(uint16_t i = 0; i <= 1111; i++)
+
+	for(uint16_t i = 0; i < tam; i++)
 	{
 		HAL_SPI_Transmit(&hspi1, mx_[i].inteiro, 4, HAL_MAX_DELAY);
 	}
-	for(uint16_t i = 0; i <= 1111; i++)
+	for(uint16_t i = 0; i < tam; i++)
 	{
 		HAL_SPI_Transmit(&hspi1, my_[i].inteiro, 4, HAL_MAX_DELAY);
 	}
-	for(uint16_t i = 0; i <= 1111; i++)
+	for(uint16_t i = 0; i < tam; i++)
 	{
 		HAL_SPI_Transmit(&hspi1, mz_[i].inteiro, 4, HAL_MAX_DELAY);
 	}
@@ -224,21 +224,15 @@ int main(void)
 	{
 		HAL_SPI_Receive(&hspi1, param2[i].inteiro, 4, HAL_MAX_DELAY);
 	}
-	HAL_SPI_Receive(&hspi1, time1, 4, HAL_MAX_DELAY);
-	HAL_SPI_Receive(&hspi1, time2, 4, HAL_MAX_DELAY);
-	//HAL_SPI_Receive(&hspi1, &passos_NLLS, 1, HAL_MAX_DELAY);
+	HAL_SPI_Receive(&hspi1, ETS_time.inteiro, 4, HAL_MAX_DELAY);
+	HAL_SPI_Receive(&hspi1, NLLS_time.inteiro, 4, HAL_MAX_DELAY);
+	HAL_SPI_Receive(&hspi1, &passos_NLLS, 1, HAL_MAX_DELAY);
 
 	for(uint8_t i = 0; i < 10; i++)
 	{
 		p0[i] = param1[i].flutuante;
 		p1[i] = param2[i].flutuante;
 	}
-	ETS_time = (time1[3] << 24) | (time1[2] << 16) | (time1[1] << 8) | time1[0];
-	NLLS_time = (time2[3] << 24) | (time2[2] << 16) | (time2[1] << 8) | time2[0];*/
-
-
-
-
 
 	sprintf(file_read, "0:/RES/run%d.txt", file_cont);
 	res = f_open(&fil, file_read, FA_WRITE | FA_CREATE_ALWAYS);
@@ -251,14 +245,14 @@ int main(void)
 	UINT bw;
 
 	for (int i = 0; i < 9; i++) {
-		sprintf(out_line, "%f\n", p1[i]);
+		sprintf(out_line, "%f, %f\n", p1[i], p0[i]);
 		f_write(&fil, out_line, strlen(out_line), &bw);
 	}
 
-	sprintf(out_line, "%f\n", NLLS_time);
+	sprintf(out_line, "%f, %f\n", ETS_time.flutuante, NLLS_time.flutuante);
 	f_write(&fil, out_line, strlen(out_line), &bw);
 
-	sprintf(out_line, "%u\n", passos_NLLS);
+	sprintf(out_line, "0, %u\n", passos_NLLS);
 	f_write(&fil, out_line, strlen(out_line), &bw);
 
 	f_close(&fil);

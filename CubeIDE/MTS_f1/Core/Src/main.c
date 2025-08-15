@@ -51,8 +51,8 @@ union calib_t{
 /* USER CODE BEGIN PV */
 float mx[tam] = {0}, my[tam] = {0}, mz[tam] = {0};
 union calib_t mx_[tam] = {0}, my_[tam] = {0}, mz_[tam] = {0};
-float Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam];
-float p1[9] = {0}, p0[9] = {0};
+float Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam], Be[tam], e[tam], f[tam], mat_H[N][tam];
+float p1[9] = {0};//, p0[9] = {0};
 uint8_t passos_NLLS = 0;
 
 /* USER CODE END PV */

@@ -10,10 +10,10 @@
 
 #include "stm32f1xx_hal.h"
 
-#define N 9
-#define tam 278
+#define N 		9
+#define tam 	159
 
-extern float Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam];
+extern float Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam], Be[tam], e[tam], f[tam], mat_H[N][tam];
 
 //void ETS(float *mx, float *my, float *mz, float *p);
 uint8_t NLLS(float *mx, float *my, float *mz, float *p);
