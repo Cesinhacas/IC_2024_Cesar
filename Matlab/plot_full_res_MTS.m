@@ -50,11 +50,21 @@ vet_error_NLLS_ST2_f7 = readmatrix('MTS_NLLS_f7_ST_segundo.csv');
 cd ..\
 cd Matlab\
 
+% num_exe = [278, 556, 1112];
+% ETS_FPU = [mean(vet_error_ETS_f7_short(10, :)), mean(vet_error_ETS_f7_reduzido(10,:)), mean(vet_error_ETS_f7(10,:))];
+% ETS_NOFPU = [mean(vet_error_ETS_f7_short_nofpu(10, :)), mean(vet_error_ETS_f7_reduzido_nofpu(10,:)), mean(vet_error_ETS_f7_nofpu(10,:))];
+% 
+% figure(8)
+% plot(num_exe, ETS_FPU);
+% hold on
+% plot(num_exe, ETS_NOFPU);
+% grid on
+
 
 %%%%%%%%%%%%%%% Plots comparação ETS C Vs. Python Vs. Matlab
 %%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure(1)
-subplot(3,3,1), histogram(vet_error_ETS_c(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,1), histogram(vet_error_ETS_c_64(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_ETS_p(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -64,7 +74,7 @@ ylabel("Distribuição de probabilidade")
 xlabel("Gauss")
 legend("C", "Python", "Matlab")
 
-subplot(3,3,2), histogram(vet_error_ETS_c(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,2), histogram(vet_error_ETS_c_64(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_ETS_p(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -74,7 +84,7 @@ ylabel("Distribuição de probabilidade")
 xlabel("Gauss")
 legend("C", "Python", "Matlab")
 
-subplot(3,3,3), histogram(vet_error_ETS_c(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,3), histogram(vet_error_ETS_c_64(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_ETS_p(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -84,7 +94,7 @@ ylabel("Distribuição de probabilidade")
 xlabel("Gauss")
 legend("C", "Python", "Matlab")
 
-subplot(3,3,4), histogram(vet_error_ETS_c(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,4), histogram(vet_error_ETS_c_64(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_ETS_p(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -94,7 +104,7 @@ ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
 legend("C", "Python", "Matlab")
 
-subplot(3,3,5), histogram(vet_error_ETS_c(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,5), histogram(vet_error_ETS_c_64(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_ETS_p(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -104,7 +114,7 @@ ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
 legend("C", "Python", "Matlab")
 
-subplot(3,3,6), histogram(vet_error_ETS_c(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,6), histogram(vet_error_ETS_c_64(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_ETS_p(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -114,7 +124,7 @@ ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
 legend("C", "Python", "Matlab")
 
-subplot(3,3,7), histogram(vet_error_ETS_c(7,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,7), histogram(vet_error_ETS_c_64(7,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_ETS_p(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -124,7 +134,7 @@ ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
 legend("C", "Python", "Matlab")
 
-subplot(3,3,8), histogram(vet_error_ETS_c(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,8), histogram(vet_error_ETS_c_64(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_ETS_p(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -134,7 +144,7 @@ ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
 legend("C", "Python", "Matlab")
 
-subplot(3,3,9), histogram(vet_error_ETS_c(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,9), histogram(vet_error_ETS_c_64(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_ETS_p(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -148,7 +158,7 @@ legend("C", "Python", "Matlab")
 %%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(2)
-subplot(3,3,1), histogram(vet_error_NLLS_c(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,1), histogram(vet_error_NLLS_c_64(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_NLLS_p(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -158,7 +168,7 @@ ylabel("Distribuição de probabilidade")
 xlabel("Gauss")
 legend("C", "Python", "Matlab")
 
-subplot(3,3,2), histogram(vet_error_NLLS_c(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,2), histogram(vet_error_NLLS_c_64(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_NLLS_p(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -168,7 +178,7 @@ ylabel("Distribuição de probabilidade")
 xlabel("Gauss")
 legend("C", "Python", "Matlab")
 
-subplot(3,3,3), histogram(vet_error_NLLS_c(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,3), histogram(vet_error_NLLS_c_64(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_NLLS_p(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -178,7 +188,7 @@ ylabel("Distribuição de probabilidade")
 xlabel("Gauss")
 legend("C", "Python", "Matlab")
 
-subplot(3,3,4), histogram(vet_error_NLLS_c(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,4), histogram(vet_error_NLLS_c_64(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_NLLS_p(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -188,7 +198,7 @@ ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
 legend("C", "Python", "Matlab")
 
-subplot(3,3,5), histogram(vet_error_NLLS_c(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,5), histogram(vet_error_NLLS_c_64(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_NLLS_p(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -198,7 +208,7 @@ ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
 legend("C", "Python", "Matlab")
 
-subplot(3,3,6), histogram(vet_error_NLLS_c(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,6), histogram(vet_error_NLLS_c_64(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_NLLS_p(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -208,7 +218,7 @@ ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
 legend("C", "Python", "Matlab")
 
-subplot(3,3,7), histogram(vet_error_NLLS_c(7,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,7), histogram(vet_error_NLLS_c_64(7,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_NLLS_p(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -218,7 +228,7 @@ ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
 legend("C", "Python", "Matlab")
 
-subplot(3,3,8), histogram(vet_error_NLLS_c(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,8), histogram(vet_error_NLLS_c_64(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_NLLS_p(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -228,7 +238,7 @@ ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
 legend("C", "Python", "Matlab")
 
-subplot(3,3,9), histogram(vet_error_NLLS_c(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,9), histogram(vet_error_NLLS_c_64(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_NLLS_p(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -250,7 +260,6 @@ histogram(vet_error_ETS_f4(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probabil
 title("Offset - eixo x");
 ylabel("Distribuição de probabilidade")
 xlabel("Gauss")
-legend("Matlab", "F7 - float - FPU on", "F4 - float - FPU on")
 
 subplot(3,3,2), histogram(vet_error_ETS_m(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -260,7 +269,6 @@ histogram(vet_error_ETS_f4(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probabil
 title("Offset - eixo y");
 ylabel("Distribuição de probabilidade")
 xlabel("Gauss")
-legend("Matlab", "F7 - float - FPU on", "F4 - float - FPU on")
 
 subplot(3,3,3), histogram(vet_error_ETS_m(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -280,7 +288,6 @@ histogram(vet_error_ETS_f4(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probabil
 title("Fator de escala X");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-legend("Matlab", "F7 - float - FPU on", "F4 - float - FPU on")
 
 subplot(3,3,5), histogram(vet_error_ETS_m(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -290,7 +297,6 @@ histogram(vet_error_ETS_f4(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probabil
 title("Fator de escala Y");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-legend("Matlab", "F7 - float - FPU on", "F4 - float - FPU on")
 
 subplot(3,3,6), histogram(vet_error_ETS_m(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -310,7 +316,6 @@ histogram(vet_error_ETS_f4(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probabil
 title("Rho");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-legend("Matlab", "F7 - float - FPU on", "F4 - float - FPU on")
 
 subplot(3,3,8), histogram(vet_error_ETS_m(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -320,7 +325,6 @@ histogram(vet_error_ETS_f4(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probabil
 title("Phi");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-legend("Matlab", "F7 - float - FPU on", "F4 - float - FPU on")
 
 subplot(3,3,9), histogram(vet_error_ETS_m(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -344,7 +348,6 @@ histogram(vet_error_NLLS_f4(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probabi
 title("Offset - eixo x");
 ylabel("Distribuição de probabilidade")
 xlabel("Gauss")
-legend("Matlab", "F7 - float - FPU on", "F4 - float - FPU on")
 
 subplot(3,3,2), histogram(vet_error_NLLS_m(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -354,7 +357,6 @@ histogram(vet_error_NLLS_f4(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probabi
 title("Offset - eixo y");
 ylabel("Distribuição de probabilidade")
 xlabel("Gauss")
-legend("Matlab", "F7 - float - FPU on", "F4 - float - FPU on")
 
 subplot(3,3,3), histogram(vet_error_NLLS_m(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -374,7 +376,6 @@ histogram(vet_error_NLLS_f4(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probabi
 title("Fator de escala X");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-legend("Matlab", "F7 - float - FPU on", "F4 - float - FPU on")
 
 subplot(3,3,5), histogram(vet_error_NLLS_m(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -384,7 +385,6 @@ histogram(vet_error_NLLS_f4(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probabi
 title("Fator de escala Y");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-legend("Matlab", "F7 - float - FPU on", "F4 - float - FPU on")
 
 subplot(3,3,6), histogram(vet_error_NLLS_m(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -404,7 +404,6 @@ histogram(vet_error_NLLS_f4(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probabi
 title("Rho");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-legend("Matlab", "F7 - float - FPU on", "F4 - float - FPU on")
 
 subplot(3,3,8), histogram(vet_error_NLLS_m(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -414,7 +413,6 @@ histogram(vet_error_NLLS_f4(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probabi
 title("Phi");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-legend("Matlab", "F7 - float - FPU on", "F4 - float - FPU on")
 
 subplot(3,3,9), histogram(vet_error_NLLS_m(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -438,7 +436,6 @@ histogram(vet_error_ETS_f7_short(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','pr
 title("Offset - eixo x");
 ylabel("Distribuição de probabilidade")
 xlabel("Gauss")
-legend("F7 - 1112 dados", "F7 - 556", "F7 - 278")
 
 subplot(3,3,2), histogram(vet_error_ETS_f7(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -448,7 +445,6 @@ histogram(vet_error_ETS_f7_short(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','pr
 title("Offset - eixo y");
 ylabel("Distribuição de probabilidade")
 xlabel("Gauss")
-legend("F7 - 1112 dados", "F7 - 556", "F7 - 278")
 
 subplot(3,3,3), histogram(vet_error_ETS_f7(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -468,7 +464,6 @@ histogram(vet_error_ETS_f7_short(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','pr
 title("Fator de escala X");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-legend("F7 - 1112 dados", "F7 - 556", "F7 - 278")
 
 subplot(3,3,5), histogram(vet_error_ETS_f7(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -478,7 +473,6 @@ histogram(vet_error_ETS_f7_short(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','pr
 title("Fator de escala Y");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-legend("F7 - 1112 dados", "F7 - 556", "F7 - 278")
 
 subplot(3,3,6), histogram(vet_error_ETS_f7(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -498,7 +492,6 @@ histogram(vet_error_ETS_f7_short(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','pr
 title("Rho");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-legend("F7 - 1112 dados", "F7 - 556", "F7 - 278")
 
 subplot(3,3,8), histogram(vet_error_ETS_f7(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -508,7 +501,6 @@ histogram(vet_error_ETS_f7_short(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','pr
 title("Phi");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-legend("F7 - 1112 dados", "F7 - 556", "F7 - 278")
 
 subplot(3,3,9), histogram(vet_error_ETS_f7(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -532,7 +524,6 @@ histogram(vet_error_NLLS_f7_short(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','p
 title("Offset - eixo x");
 ylabel("Distribuição de probabilidade")
 xlabel("Gauss")
-legend("F7 - 1112 dados", "F7 - 556", "F7 - 278")
 
 subplot(3,3,2), histogram(vet_error_NLLS_f7(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -542,7 +533,6 @@ histogram(vet_error_NLLS_f7_short(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','p
 title("Offset - eixo y");
 ylabel("Distribuição de probabilidade")
 xlabel("Gauss")
-legend("F7 - 1112 dados", "F7 - 556", "F7 - 278")
 
 subplot(3,3,3), histogram(vet_error_NLLS_f7(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -562,7 +552,6 @@ histogram(vet_error_NLLS_f7_short(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','p
 title("Fator de escala X");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-legend("F7 - 1112 dados", "F7 - 556", "F7 - 278")
 
 subplot(3,3,5), histogram(vet_error_NLLS_f7(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -572,7 +561,6 @@ histogram(vet_error_NLLS_f7_short(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','p
 title("Fator de escala Y");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-legend("F7 - 1112 dados", "F7 - 556", "F7 - 278")
 
 subplot(3,3,6), histogram(vet_error_NLLS_f7(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -592,7 +580,6 @@ histogram(vet_error_NLLS_f7_short(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','p
 title("Rho");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-legend("F7 - 1112 dados", "F7 - 556", "F7 - 278")
 
 subplot(3,3,8), histogram(vet_error_NLLS_f7(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -602,7 +589,6 @@ histogram(vet_error_NLLS_f7_short(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','p
 title("Phi");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
-legend("F7 - 1112 dados", "F7 - 556", "F7 - 278")
 
 subplot(3,3,9), histogram(vet_error_NLLS_f7(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -616,26 +602,26 @@ legend("F7 - 1112 dados", "F7 - 556", "F7 - 278")
 
 
 
-% figure(1)
-% subplot(3,3,1), histogram(vet_error_NLLS_c(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
-% hold on
-% histogram(vet_error_NLLS_c(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
-% grid on;
-% title("Offset - eixo x");
-% ylabel("Distribuição de probabilidade")
-% xlabel("Adimensional")
-% subplot(3,3,2), histogram(vet_error_NLLS_c(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
-% hold on
-% histogram(vet_error_NLLS_c(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
-% grid on;
-% title("Offset - eixo y");
-% ylabel("Distribuição de probabilidade")
-% xlabel("Adimensional")
-% subplot(3,3,3), histogram(vet_error_NLLS_c(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
-% hold on
-% histogram(vet_error_NLLS_c(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
-% grid on;
-% title("Offset - eixo z");
-% ylabel("Distribuição de probabilidade")
-% xlabel("Adimensional")
-% legend("ETS", "NLLS")
+figure(7)
+subplot(3,3,1), histogram(vet_error_NLLS_c(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+histogram(vet_error_NLLS_c(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+grid on;
+title("Offset - eixo x");
+ylabel("Distribuição de probabilidade")
+xlabel("Adimensional")
+subplot(3,3,2), histogram(vet_error_NLLS_c(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+histogram(vet_error_NLLS_c(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+grid on;
+title("Offset - eixo y");
+ylabel("Distribuição de probabilidade")
+xlabel("Adimensional")
+subplot(3,3,3), histogram(vet_error_NLLS_c(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+histogram(vet_error_NLLS_c(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+grid on;
+title("Offset - eixo z");
+ylabel("Distribuição de probabilidade")
+xlabel("Adimensional")
+legend("ETS", "NLLS")

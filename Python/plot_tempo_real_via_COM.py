@@ -19,7 +19,7 @@ ax_accel = fig.add_subplot(121, projection='3d')  # Acelerômetro à esquerda
 ax_mag = fig.add_subplot(122, projection='3d')    # Magnetômetro à direita
 
 # Buffers para armazenar os dados do acelerômetro (últimos N pontos)
-MAX_POINTS = 1112
+MAX_POINTS = 2500
 x_accel = deque(maxlen=MAX_POINTS)
 y_accel = deque(maxlen=MAX_POINTS)
 z_accel = deque(maxlen=MAX_POINTS)

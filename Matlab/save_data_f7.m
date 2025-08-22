@@ -8,11 +8,22 @@ NLLS_param = zeros(11,3000);
 cd RES_F7_short_NOFPU\
 
 for i = 1:1:3000
-    strg_save = sprintf("run%d.TXT", i);
+    strg_save = sprintf("run%d.txt", i);
     dados = readmatrix(strg_save);
     ETS_param(:,i) = dados(:,1);  
-    NLLS_param(:,i) = dados(:,1);    
+    NLLS_param(:,i) = dados(:,2);    
 end
+
+tempo_ETS = mean(ETS_param(10,:));
+tempo_NLLS = mean(NLLS_param(10,:));
+passos = mean(NLLS_param(11,:));
+
+disp("Tempo ETS:")
+disp(tempo_ETS)
+disp("Tempo NLLS:")
+disp(tempo_NLLS)
+disp("Passos")
+disp(passos)
 
 cd ..\
 cd Dados_com_ruido\

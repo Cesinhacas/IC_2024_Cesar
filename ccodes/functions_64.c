@@ -3,7 +3,7 @@
 
 #define N 9
 #define N1 3
-#define tam 1111
+#define tam 1112
 
 typedef struct {
     float r1;

@@ -70,65 +70,13 @@ save_data = False
 save_plots = False
 recording_data = True  # Controla se os dados estão sendo gravados nos buffers
 
-# Parâmetros de filtragem inteligente
+# Parâmetros de filtragem
 ACCEL_MAX_MAGNITUDE = 1.2  # Máximo módulo para acelerômetro (em g)
-MIN_DISTANCE_THRESHOLD = 0.05  # Distância mínima para considerar ponto único (ajustável)
 SHOW_REJECTION_LOGS = False  # Controla se mostra logs de pontos rejeitados
 
 def calculate_magnitude(x, y, z):
     """Calcula o módulo de um vetor 3D"""
     return np.sqrt(x**2 + y**2 + z**2)
-
-def calculate_distance(x1, y1, z1, x2, y2, z2):
-    """Calcula a distância euclidiana entre dois pontos 3D"""
-    return np.sqrt((x2-x1)**2 + (y2-y1)**2 + (z2-z1)**2)
-
-def is_point_redundant(new_x, new_y, new_z, buffer_x, buffer_y, buffer_z, threshold=MIN_DISTANCE_THRESHOLD):
-    """
-    Verifica se um novo ponto é redundante comparado aos pontos existentes no buffer
-    Retorna True se o ponto for muito próximo a algum existente (redundante)
-    """
-    if len(buffer_x) == 0:
-        return False  # Buffer vazio, ponto não é redundante
-    
-    # Converte buffers para arrays numpy para cálculo eficiente
-    existing_x = np.array(buffer_x)
-    existing_y = np.array(buffer_y) 
-    existing_z = np.array(buffer_z)
-    
-    # Calcula distâncias para todos os pontos existentes de uma vez
-    distances = np.sqrt((existing_x - new_x)**2 + (existing_y - new_y)**2 + (existing_z - new_z)**2)
-    
-    # Se alguma distância for menor que o threshold, ponto é redundante
-    return np.any(distances < threshold)
-
-def should_accept_accel_point(x, y, z):
-    """
-    Verifica se um ponto do acelerômetro deve ser aceito
-    - Rejeita se módulo > ACCEL_MAX_MAGNITUDE
-    - Rejeita se redundante espacialmente
-    """
-    # Verifica módulo
-    magnitude = calculate_magnitude(x, y, z)
-    if magnitude > ACCEL_MAX_MAGNITUDE:
-        return False, f"Módulo muito alto: {magnitude:.3f}g"
-    
-    # Verifica redundância espacial
-    if is_point_redundant(x, y, z, x_accel, y_accel, z_accel):
-        return False, f"Ponto redundante"
-    
-    return True, "Aceito"
-
-def should_accept_mag_point(x, y, z):
-    """
-    Verifica se um ponto do magnetômetro deve ser aceito
-    - Rejeita apenas se redundante espacialmente
-    """
-    # Verifica redundância espacial
-    if is_point_redundant(x, y, z, x_mag, y_mag, z_mag):
-        return False, "Ponto redundante"
-    
-    return True, "Aceito"
 
 def create_unit_sphere():
     """Cria uma esfera unitária para referência"""
@@ -204,14 +152,14 @@ def save_plots_to_file():
 
 def keyboard_listener():
     """Thread para escutar comandos do teclado"""
-    global running, save_data, save_plots, recording_data, ACCEL_MAX_MAGNITUDE, MIN_DISTANCE_THRESHOLD, SHOW_REJECTION_LOGS
+    global running, save_data, save_plots, recording_data, ACCEL_MAX_MAGNITUDE, SHOW_REJECTION_LOGS
     
     print("\nComandos disponíveis:")
     print("- Digite 's' + Enter para salvar os dados atuais")
     print("- Digite 'p' + Enter para salvar os plots")
     print("- Digite 'b' + Enter para alternar gravação de dados (pausar/retomar)")
-    print("- Digite 'f' + Enter para ajustar filtros de qualidade")
-    print("- Digite 'i' + Enter para mostrar info dos filtros")
+    print("- Digite 'f' + Enter para ajustar filtro do acelerômetro")
+    print("- Digite 'i' + Enter para mostrar status do sistema")
     print("- Digite 'l' + Enter para ativar/desativar logs de rejeição")
     print("- Digite 'q' + Enter para sair")
     print("- Digite 'c' + Enter para limpar dados")
@@ -235,17 +183,12 @@ def keyboard_listener():
             elif command == 'f':
                 print("\n🔧 Ajustar Filtros:")
                 print("1 - Limiar acelerômetro (módulo máximo)")
-                print("2 - Threshold anti-redundância")
                 try:
-                    choice = input("Escolha (1/2): ").strip()
+                    choice = input("Escolha (1): ").strip()
                     if choice == '1':
                         new_val = float(input(f"Atual: {ACCEL_MAX_MAGNITUDE}g. Novo valor: "))
                         ACCEL_MAX_MAGNITUDE = new_val
                         print(f"✓ Limiar acelerômetro alterado para {ACCEL_MAX_MAGNITUDE}g")
-                    elif choice == '2':
-                        new_val = float(input(f"Atual: {MIN_DISTANCE_THRESHOLD}. Novo valor: "))
-                        MIN_DISTANCE_THRESHOLD = new_val
-                        print(f"✓ Threshold anti-redundância alterado para {MIN_DISTANCE_THRESHOLD}")
                 except ValueError:
                     print("❌ Valor inválido!")
             elif command == 'i':
@@ -253,10 +196,9 @@ def keyboard_listener():
                 mag_usage = (len(x_mag) / MAX_POINTS) * 100
                 print(f"\n📊 Status dos Filtros e Buffers:")
                 print(f"   🎯 Acelerômetro: módulo ≤ {ACCEL_MAX_MAGNITUDE}g")
-                print(f"   🔍 Anti-redundância: distância ≥ {MIN_DISTANCE_THRESHOLD}")
-                print(f"   💾 Buffer Acelerômetro: {len(x_accel)}/{MAX_POINTS} ({accel_usage:.1f}%)")
+                print(f"    Buffer Acelerômetro: {len(x_accel)}/{MAX_POINTS} ({accel_usage:.1f}%)")
                 print(f"   💾 Buffer Magnetômetro: {len(x_mag)}/{MAX_POINTS} ({mag_usage:.1f}%)")
-                print(f"   📈 Pontos únicos - Accel: {len(x_accel)}, Mag: {len(x_mag)}")
+                print(f"   📈 Total de pontos - Accel: {len(x_accel)}, Mag: {len(x_mag)}")
                 print(f"   📋 Logs de rejeição: {'ATIVO' if SHOW_REJECTION_LOGS else 'INATIVO'}")
             elif command == 'l':
                 SHOW_REJECTION_LOGS = not SHOW_REJECTION_LOGS
@@ -327,28 +269,23 @@ def read_serial_data():
                                 mag_data = (x, y, z)
                                 
                                 # Adiciona ambos os dados aos buffers de forma thread-safe
-                                # somente se a gravação estiver ativa E se passaram pela filtragem
+                                # somente se a gravação estiver ativa
                                 if recording_data:
                                     with data_lock:
-                                        # Verifica se deve aceitar o ponto do acelerômetro
-                                        accel_accepted, accel_reason = should_accept_accel_point(accel_data[0], accel_data[1], accel_data[2])
+                                        # Verifica módulo do acelerômetro
+                                        accel_magnitude = calculate_magnitude(accel_data[0], accel_data[1], accel_data[2])
                                         
-                                        if accel_accepted:
+                                        if accel_magnitude <= ACCEL_MAX_MAGNITUDE:
                                             x_accel.append(accel_data[0])
                                             y_accel.append(accel_data[1])
                                             z_accel.append(accel_data[2])
                                         elif SHOW_REJECTION_LOGS:
-                                            print(f"🚫 Acelerômetro rejeitado: {accel_reason}")
+                                            print(f"🚫 Acelerômetro rejeitado: módulo {accel_magnitude:.3f}g > {ACCEL_MAX_MAGNITUDE}g")
                                         
-                                        # Verifica se deve aceitar o ponto do magnetômetro  
-                                        mag_accepted, mag_reason = should_accept_mag_point(mag_data[0], mag_data[1], mag_data[2])
-                                        
-                                        if mag_accepted:
-                                            x_mag.append(mag_data[0])
-                                            y_mag.append(mag_data[1])
-                                            z_mag.append(mag_data[2])
-                                        elif SHOW_REJECTION_LOGS:
-                                            print(f"🚫 Magnetômetro rejeitado: {mag_reason}")
+                                        # Magnetômetro aceita todos os pontos
+                                        x_mag.append(mag_data[0])
+                                        y_mag.append(mag_data[1])
+                                        z_mag.append(mag_data[2])
 
                                 # Reset para próximo par de dados
                                 accel_data = None
@@ -420,7 +357,7 @@ def update_plot():
                     record_status = "🔴 GRAVANDO" if recording_data else "⏸️ PAUSADO"
                     magnitude = calculate_magnitude(x_accel_array[-1], y_accel_array[-1], z_accel_array[-1]) if len(x_accel_array) > 0 else 0
                     buffer_size_accel = len(x_accel)  # Tamanho atual do buffer
-                    info_text_accel = f'Último: X={x_accel_array[-1]:.2f}, Y={y_accel_array[-1]:.2f}, Z={z_accel_array[-1]:.2f}\nMódulo: {magnitude:.3f}g\nBuffer: {buffer_size_accel}/{MAX_POINTS} pontos\nPontos únicos: {len(x_accel_array)}\n{record_status}\n🔍 Filtro: |v|≤{ACCEL_MAX_MAGNITUDE}g'
+                    info_text_accel = f'Último: X={x_accel_array[-1]:.2f}, Y={y_accel_array[-1]:.2f}, Z={z_accel_array[-1]:.2f}\nMódulo: {magnitude:.3f}g\nBuffer: {buffer_size_accel}/{MAX_POINTS} pontos\nTotal de pontos: {len(x_accel_array)}\n{record_status}\n🔍 Filtro: |v|≤{ACCEL_MAX_MAGNITUDE}g'
                     ax_accel.text2D(0.02, 0.98, info_text_accel, transform=ax_accel.transAxes, 
                                   fontsize=7, verticalalignment='top',
                                   bbox=dict(boxstyle='round', facecolor='lightblue', alpha=0.8))
@@ -471,7 +408,7 @@ def update_plot():
                     record_status = "🔴 GRAVANDO" if recording_data else "⏸️ PAUSADO"
                     mag_magnitude = calculate_magnitude(x_mag_array[-1], y_mag_array[-1], z_mag_array[-1]) if len(x_mag_array) > 0 else 0
                     buffer_size_mag = len(x_mag)  # Tamanho atual do buffer
-                    info_text_mag = f'Último: X={x_mag_array[-1]:.3f}, Y={y_mag_array[-1]:.3f}, Z={z_mag_array[-1]:.3f}\nMódulo: {mag_magnitude:.3f}Ga\nBuffer: {buffer_size_mag}/{MAX_POINTS} pontos\nPontos únicos: {len(x_mag_array)}\n{record_status}\n🔍 Filtro: Anti-redundância'
+                    info_text_mag = f'Último: X={x_mag_array[-1]:.3f}, Y={y_mag_array[-1]:.3f}, Z={z_mag_array[-1]:.3f}\nMódulo: {mag_magnitude:.3f}Ga\nBuffer: {buffer_size_mag}/{MAX_POINTS} pontos\nTotal de pontos: {len(x_mag_array)}\n{record_status}\n� Filtro: Nenhum'
                     ax_mag.text2D(0.02, 0.98, info_text_mag, transform=ax_mag.transAxes, 
                                 fontsize=7, verticalalignment='top',
                                 bbox=dict(boxstyle='round', facecolor='lightcoral', alpha=0.8))
@@ -503,10 +440,9 @@ def main():
     print("\nFormato esperado dos dados:")
     print("Linha 1: ax, ay, az")
     print("Linha 2: mx, my, mz (em Gauss)")
-    print("\n📋 SISTEMA DE FILTRAGEM INTELIGENTE ATIVO:")
+    print("\n📋 SISTEMA DE PLOTAGEM CONFIGURADO:")
     print(f"   🎯 Acelerômetro: aceita apenas |v| ≤ {ACCEL_MAX_MAGNITUDE}g")
-    print(f"   🔍 Anti-redundância: distância mín. = {MIN_DISTANCE_THRESHOLD}")
-    print("   📊 Buffer armazena apenas pontos únicos espacialmente")
+    print("   � Magnetômetro: aceita todos os pontos")
     print("   ⚙️ Use comando 'f' para ajustar filtros, 'i' para status")
     
     # Inicia a thread de leitura serial
