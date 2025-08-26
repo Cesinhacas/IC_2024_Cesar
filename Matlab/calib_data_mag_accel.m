@@ -3,22 +3,34 @@ clear all
 clc
 
 cd Dados_reais\
-data = readmatrix('magnetometro_data_20250822_160035.csv');
+data = readmatrix('dados_mag_25_08_full.csv');
 cd ..\
-mx = data(:,2);
-my = data(:,3);
-mz = data(:,4);
 
-Dados_Corrompido = [mx,my,mz]';
+mx = [];
+my = [];
+mz = [];
+
+for i=2:1:length(data (:, 1))
+    vet = data(i,:);
+    if norm(vet) ~= 0
+        mx(length(mx)+1) = vet(1);
+        my(length(my)+1) = vet(2);
+        mz(length(mz)+1) = vet(3);
+    end
+end
+% mx = data(:,2);
+% my = data(:,3);
+% mz = data(:,4);
+
+Dados_Corrompido = [mx;my;mz];
 [Time,p] = test1(Dados_Corrompido, 0.224);
 disp(Time)
 disp(p)
-
-% Dados_Corrompido = Dados_Corrompido/0.23;
-% dado = [1,1,1,0,0,0,0,0,0]';
-% H = ones(1, length(Dados_Corrompido(1,:)))';
-
-%[tempo, passo,p0] = test2(Dados_Corrompido, dado, H);
+% p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0];
+% Be = 0.224*ones(1, length(Dados_Corrompido(1,:)))';
+% [Time,paso,p] = test2(Dados_Corrompido, p0, Be);
+% disp(Time)
+% disp(p)
 
 hFig = figure;
 set(hFig, 'Position', [100 100 700*3/2 300])
@@ -84,7 +96,7 @@ ylabel('y axis (G)');
 zlabel('z axis (G)');
 
 cd Dados_reais\
-data = readmatrix('acelerometro_data_20250822_160035.csv');
+data = readmatrix('dados_accel_25_08_full.csv');
 cd ..\
 clear mx
 clear my
@@ -98,11 +110,11 @@ my = [];
 mz = [];
 
 for i=1:1:length(data(:,2))
-    vet = [data(i,2), data(i,3), data(i,4)];
-    if norm(vet) < 1.1
-        mx(i) = data(i,2);
-        my(i) = data(i,3);
-        mz(i) = data(i,4);
+    vet = [data(i,1), data(i,2), data(i,3)];
+    if norm(vet) < 1.05 && norm(vet) ~= 0
+        mx(length(mx) + 1) = vet(1);
+        my(length(my) + 1) = vet(2);
+        mz(length(mz) + 1) = vet(3);
     end
 end
 
