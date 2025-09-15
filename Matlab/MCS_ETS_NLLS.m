@@ -19,6 +19,8 @@ tempo_exe_NLLS_ST = 0;
 tempo_exe_NLLS_ST2 = 0;
 tempo_exe_ETS = 0;
 
+passos_NLLS = 0;
+
 for i=1:exe
     cd Dados_com_ruido\
     strg_save = sprintf("conjunto_dados_corrompidos_%d.csv", i);
@@ -49,7 +51,7 @@ for i=1:exe
     tempo_exe_NLLS_ST = tempo_exe_NLLS_ST + tiempo;
     tempo_exe_NLLS_ST2 = tiempito + tempo_exe_NLLS_ST2;
 
-
+    passos_NLLS = passos_NLLS + passo;
    
     vet_error_ETS_c(:,i) = e-p1;
     vet_error_NLLS_c(:,i) = e-p;
@@ -57,12 +59,15 @@ for i=1:exe
     vet_error_NLLS_ST2(:,i) = e-p3;
 end
 
+passos_NLLS = passos_NLLS/exe;
+
 cd ..\
 cd Dados\
 writematrix(vet_error_ETS_c, "MCS_ETS_Matlab.csv");
 writematrix(vet_error_NLLS_c, "MCS_NLLS_Matlab.csv");
 writematrix(vet_error_NLLS_ST, "MCS_NLLS_ST_Matlab.csv");
 writematrix(vet_error_NLLS_ST2, "MCS_NLLS_ST2_Matlab.csv");
+writematrix(passos_NLLS, "passos_NLLS_Matlab.csv");
 cd ..\
 cd Matlab\
 
@@ -76,6 +81,8 @@ disp(tempo_exe_ETS)
 
 disp('Tempo de execução NLLS em ms:')
 disp(tempo_exe_NLLS)
+disp('Passos NLLS:')
+disp(passos_NLLS)
 
 disp('Tempo de execução NLLS usando expansão de taylor em ms:')
 disp(tempo_exe_NLLS_ST)

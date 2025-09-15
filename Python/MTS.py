@@ -5,6 +5,7 @@ import functions
 exe = 3000
 tempo_exe_ETS = 0
 tempo_exe_NLLS = 0
+passos_NLLS = 0
 error_vet_ETS = np.zeros((exe, 9))
 error_vet_NLLS = np.zeros((exe, 9))
 
@@ -27,10 +28,11 @@ for i in range(0,exe):
     mz = dados_corrompidos[2]
 
     p, Time_ETS = functions.ETS_func(mx, my, mz)
-    p0, Time_NLLS = functions.NLLS_func(mx, my, mz)
+    p0, Time_NLLS, passo = functions.NLLS_func(mx, my, mz)
 
     tempo_exe_ETS += Time_ETS
     tempo_exe_NLLS += Time_NLLS
+    passos_NLLS += passo
 
     error_vet_ETS[i] = e-p
     error_vet_NLLS[i] = e-p0
@@ -38,16 +40,20 @@ for i in range(0,exe):
 tempo_exe_ETS = (tempo_exe_ETS/exe)/1e6
 tempo_exe_NLLS = (tempo_exe_NLLS/exe)/1e6
 ratio = tempo_exe_NLLS/tempo_exe_ETS
+passos_NLLS = passos_NLLS/exe
 
 print('Tempo de execução ETS: ', tempo_exe_ETS)
 print('Tempo de execução NLLS: ', tempo_exe_NLLS)
 print('Razão de tempo (NLLS/ETS): ', ratio)
+print('Passos médios do NLLS: ', passos_NLLS)
 
 error_vet_NLLS = np.array(error_vet_NLLS).transpose()
 error_vet_ETS = np.array(error_vet_ETS).transpose()
 
 error_vet_NLLS = pd.DataFrame(error_vet_NLLS)
 error_vet_ETS = pd.DataFrame(error_vet_ETS)
+passos_NLLS = pd.DataFrame([passos_NLLS])
 
 error_vet_ETS.to_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/MCS_ETS.csv', header=False, index=False)
 error_vet_NLLS.to_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/MCS_NLLS.csv', header=False, index=False)
+passos_NLLS.to_csv('c:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Dados/Passos_NLLS.csv', header=False, index=False)

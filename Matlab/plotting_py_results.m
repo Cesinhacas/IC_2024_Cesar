@@ -111,6 +111,7 @@ grid on;
 title("Offset - eixo x");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
+set(gca,'fontsize', 14)
 subplot(3,3,2), histogram(vet_error_ETS_c(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 histogram(vet_error_NLLS_c(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -118,6 +119,7 @@ grid on;
 title("Offset - eixo y");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
+set(gca,'fontsize', 14)
 subplot(3,3,3), histogram(vet_error_ETS_c(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 histogram(vet_error_NLLS_c(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -126,6 +128,7 @@ title("Offset - eixo z");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
 legend("ETS", "NLLS")
+set(gca,'fontsize', 14)
 
 subplot(3,3,4), histogram(vet_error_ETS_c(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
@@ -134,6 +137,7 @@ grid on;
 title("Fator de escala - x");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
+set(gca,'fontsize', 14)
 subplot(3,3,5), histogram(vet_error_ETS_c(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 histogram(vet_error_NLLS_c(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -141,6 +145,7 @@ grid on;
 title("Fator de escala - y");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
+set(gca,'fontsize', 14)
 subplot(3,3,6), histogram(vet_error_ETS_c(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 histogram(vet_error_NLLS_c(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -149,6 +154,7 @@ title("Fator de escala - z");
 ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
 legend("ETS", "NLLS")
+set(gca,'fontsize', 14)
 
 
 subplot(3,3,7), histogram(vet_error_ETS_c(7,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
@@ -158,6 +164,7 @@ grid on;
 title("Ângulo Rho");
 ylabel("Distribuição de probabilidade")
 xlabel("Graus")
+set(gca,'fontsize', 14)
 subplot(3,3,8), histogram(vet_error_ETS_c(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 histogram(vet_error_NLLS_c(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -165,6 +172,7 @@ grid on;
 title("Ângulo Phi");
 ylabel("Distribuição de probabilidade")
 xlabel("Graus")
+set(gca,'fontsize', 14)
 subplot(3,3,9), histogram(vet_error_ETS_c(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 histogram(vet_error_NLLS_c(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -173,6 +181,7 @@ title("Ângulo Lambda");
 ylabel("Distribuição de probabilidade")
 xlabel("Graus")
 legend("ETS", "NLLS")
+set(gca,'fontsize', 14)
 
 figure(2)
 mean_3std_pos =(ones(4,exe)*mean(vet_error_ETS_c(4,:) + 3*std(vet_error_ETS_c(4,:))));

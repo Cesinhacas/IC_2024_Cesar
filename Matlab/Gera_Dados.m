@@ -154,7 +154,7 @@ cd Matlab\
 
 hFig = figure;
 set(hFig, 'Position', [100 100 700*3/2 300])
-subplot(2,2,1)
+subplot(1,2,1)
 set(gcf,'Units','inches');
 screenposition = get(gcf,'Position');
 set(gcf,...
@@ -183,6 +183,7 @@ title('(a)');
 xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
+set(gca,'fontsize', 17)
 
 subplot(2,2,2)
 set(gcf,'Units','inches');
@@ -213,6 +214,7 @@ title('(b)');
 xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
+set(gca,'fontsize', 17)
 
 % Reconstrução da esfera
 [Time,p] = test1(Dados_Corrompido, r); % ETS
@@ -250,6 +252,7 @@ title('(c)');
 xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
+set(gca,'fontsize', 17)
 
 H = r*ones(length(Dados_Corrompido(1,:)),1);
 p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0;];
@@ -289,6 +292,7 @@ title('(d)');
 xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
+set(gca,'fontsize', 17)
 
 % 
 % noise = .006^2*ones(3,1112);

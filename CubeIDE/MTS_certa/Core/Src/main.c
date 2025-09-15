@@ -57,7 +57,6 @@ union calib_t{
 /* USER CODE BEGIN PV */
 float mx[tam] = {0}, my[tam] = {0}, mz[tam] = {0};
 union calib_t mx_[tam] = {0}, my_[tam] = {0}, mz_[tam] = {0};
-float p1[9] = {0}, p0[9] = {0};
 uint8_t passos_NLLS = 0;
 
 /* USER CODE END PV */
@@ -108,7 +107,7 @@ int main(void)
   //uint32_t start_time = 0;
   uint16_t file_cont = 1;
   union calib_t param1[9], param2[9];
-  float p1[9];
+  float p1[9], p0[9];
   union calib_t NLLS_time, ETS_time;
 
   FATFS fs;

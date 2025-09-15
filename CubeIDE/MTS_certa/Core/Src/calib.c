@@ -46,7 +46,7 @@ uint8_t NLLS(float *mx, float *my, float *mz, float *p)
 {
 	uint8_t passo = 0, loop = 1;
 	float sf = 1;
-	float p0[9] = {1, 1, 1, 0, 0, 0, 0, 0, 0}, Be[tam], e[tam], f[tam], sx, sy, sz, bx, by, bz, rho, phi, lambida, error_ant, J, delta_J, mat_H[N][tam];
+	float p0[9] = {1, 1, 1, 0, 0, 0, 0, 0, 0}, Be[tam], e[tam], f[tam], sx, sy, sz, bx, by, bz, rho, phi, lambida, error_ant = 0, J, delta_J, mat_H[N][tam];
 	float sin_phi, sin_rho, sin_lambda, cos_phi, cos_rho, cos_lambda;
 	float Ht_H[N][N], Ht_e[N], inv[N][N], mul_mat[N][tam];
 
@@ -67,12 +67,12 @@ uint8_t NLLS(float *mx, float *my, float *mz, float *p)
 		phi = p0[7];
 		lambida = p0[8];
 
-		sin_phi = phi - (phi*phi*phi)/6;// + (phi*phi*phi*phi*phi)/120;
-		sin_rho = rho - (rho*rho*rho)/6;// + (rho*rho*rho*rho*rho)/120;
-		sin_lambda = lambida - (lambida*lambida*lambida)/6;// + (lambida*lambida*lambida*lambida*lambida)/120;
-		cos_phi = 1 - (phi*phi)/2;// + (phi*phi*phi*phi)/24;
-		cos_rho = 1 - (rho*rho)/2;// + (rho*rho*rho*rho)/24;
-		cos_lambda = 1 - (lambida*lambida)/2;// + (lambida*lambida*lambida*lambida)/24;
+		sin_phi = sinf(phi);//phi - (phi*phi*phi)/6;// + (phi*phi*phi*phi*phi)/120;
+		sin_rho = sinf(rho);//rho - (rho*rho*rho)/6;// + (rho*rho*rho*rho*rho)/120;
+		sin_lambda = sinf(lambida);//lambida - (lambida*lambida*lambida)/6;// + (lambida*lambida*lambida*lambida*lambida)/120;
+		cos_phi = cosf(phi);//1 - (phi*phi)/2;// + (phi*phi*phi*phi)/24;
+		cos_rho = cosf(rho);//1 - (rho*rho)/2;// + (rho*rho*rho*rho)/24;
+		cos_lambda = cosf(lambida);//1 - (lambida*lambida)/2;// + (lambida*lambida*lambida*lambida)/24;
 
 		for(int i=0; i < tam; i++)
 		{

@@ -81,7 +81,7 @@ def NLLS_func(mx, my, mz):
     Time = time_end - time_start
 
     #P = e_std*np.linalg.inv(H.transpose()@H)
-    return p0, Time
+    return p0, Time, passo
 
 def ETS_func(mx, my , mz):
     time_start = time.perf_counter_ns()

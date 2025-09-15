@@ -11,12 +11,8 @@
 #include "stm32f7xx_hal.h"
 
 #define N 				9
-#define tam 			1152
+#define tam 			1112
 
-extern uint8_t occ_m[1152], m_cont;
-extern uint8_t occ_a[1152], a_cont;
-extern float mx_buf, my_buf, mz_buf;
-extern float ax_buf, ay_buf, az_buf;
 
 void ETS(float *mx, float *my, float *mz, float *p);
 uint8_t NLLS(float *mx, float *my, float *mz, float *p);
