@@ -183,9 +183,9 @@ title('(a)');
 xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
-set(gca,'fontsize', 17)
+set(gca,'fontsize', 20)
 
-subplot(2,2,2)
+subplot(1,2,2)
 set(gcf,'Units','inches');
 screenposition = get(gcf,'Position');
 set(gcf,...
@@ -214,7 +214,7 @@ title('(b)');
 xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
-set(gca,'fontsize', 17)
+set(gca,'fontsize', 20)
 
 % Reconstrução da esfera
 [Time,p] = test1(Dados_Corrompido, r); % ETS

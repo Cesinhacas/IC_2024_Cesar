@@ -5,8 +5,8 @@ close all
 cd ..\
 cd Dados\
 
-vet_error_ETS_c = readmatrix('MCS_ETS_c.csv');
-vet_error_NLLS_c = readmatrix('MCS_NLLS_c.csv');
+vet_error_NLLS_c = readmatrix('MCS_ETS_c.csv');
+vet_error_ETS_c = readmatrix('MCS_NLLS_c.csv');
 
 cd ..\
 cd Matlab\

@@ -1,8 +1,10 @@
 cd ..\
 cd Figuras\
+%cd C\
 
-exportgraphics(gcf,"NLLS_conjuntos.pdf","ContentType","vector")
+exportgraphics(gcf,"PDFs.pdf","ContentType","vector")
 
+%cd ..\
 cd ..\
 
 cd Matlab

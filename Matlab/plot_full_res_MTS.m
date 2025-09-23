@@ -5,14 +5,14 @@ clc
 cd ..\
 cd Dados\
 
-vet_error_ETS_c = readmatrix('MCS_ETS_c.csv');
-vet_error_NLLS_c = readmatrix('MCS_NLLS_c.csv');
+vet_error_NLLS_c = readmatrix('MCS_ETS_c.csv');
+vet_error_ETS_c = readmatrix('MCS_NLLS_c.csv');
 
 vet_error_ETS_p = readmatrix('MCS_ETS.csv');
 vet_error_NLLS_p = readmatrix('MCS_NLLS.csv');
 
-vet_error_ETS_c_64 = readmatrix('MCS_ETS_c_64.csv');
-vet_error_NLLS_c_64 = readmatrix('MCS_NLLS_c_64.csv');
+vet_error_NLLS_c_64 = readmatrix('MCS_ETS_c_64.csv');
+vet_error_ETS_c_64 = readmatrix('MCS_NLLS_c_64.csv');
 
 vet_error_ETS_m = readmatrix('MCS_ETS_Matlab.csv');
 vet_error_NLLS_m = readmatrix('MCS_NLLS_Matlab.csv');
@@ -69,7 +69,7 @@ set(groot, 'DefaultTextFontSize', 13)
 %%%%%%%%%%%%%%% Plots comparação ETS C Vs. Python Vs. Matlab
 %%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure(1)
-subplot(3,3,1), histogram(vet_error_ETS_c_64(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,1), histogram(vet_error_ETS_c(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_ETS_p(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -80,7 +80,7 @@ xlabel("Gauss")
 set(gca,'fontsize', 13)
 %legend("C", "Python", "Matlab")
 
-subplot(3,3,2), histogram(vet_error_ETS_c_64(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,2), histogram(vet_error_ETS_c(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_ETS_p(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -91,7 +91,7 @@ xlabel("Gauss")
 set(gca,'fontsize', 13)
 %legend("C", "Python", "Matlab")
 
-subplot(3,3,3), histogram(vet_error_ETS_c_64(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,3), histogram(vet_error_ETS_c(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_ETS_p(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -102,7 +102,7 @@ xlabel("Gauss")
 legend("C", "Python", "Matlab")
 set(gca,'fontsize', 13)
 
-subplot(3,3,4), histogram(vet_error_ETS_c_64(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,4), histogram(vet_error_ETS_c(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_ETS_p(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -113,7 +113,7 @@ xlabel("Adimensional")
 set(gca,'fontsize', 13)
 %legend("C", "Python", "Matlab")
 
-subplot(3,3,5), histogram(vet_error_ETS_c_64(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,5), histogram(vet_error_ETS_c(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_ETS_p(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -124,7 +124,7 @@ xlabel("Adimensional")
 set(gca,'fontsize', 13)
 %legend("C", "Python", "Matlab")
 
-subplot(3,3,6), histogram(vet_error_ETS_c_64(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,6), histogram(vet_error_ETS_c(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_ETS_p(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -135,7 +135,7 @@ xlabel("Adimensional")
 legend("C", "Python", "Matlab")
 set(gca,'fontsize', 13)
 
-subplot(3,3,7), histogram(vet_error_ETS_c_64(7,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,7), histogram(vet_error_ETS_c(7,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_ETS_p(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -146,7 +146,7 @@ xlabel("Adimensional")
 set(gca,'fontsize', 13)
 %legend("C", "Python", "Matlab")
 
-subplot(3,3,8), histogram(vet_error_ETS_c_64(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,8), histogram(vet_error_ETS_c(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_ETS_p(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -157,7 +157,7 @@ xlabel("Adimensional")
 set(gca,'fontsize', 13)
 %legend("C", "Python", "Matlab")
 
-subplot(3,3,9), histogram(vet_error_ETS_c_64(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,9), histogram(vet_error_ETS_c(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_ETS_p(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -172,7 +172,7 @@ set(gca,'fontsize', 13)
 %%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure(2)
-subplot(3,3,1), histogram(vet_error_NLLS_c_64(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,1), histogram(vet_error_NLLS_c(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_NLLS_p(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -183,7 +183,7 @@ xlabel("Gauss")
 %legend("C", "Python", "Matlab")
 set(gca,'fontsize', 13)
 
-subplot(3,3,2), histogram(vet_error_NLLS_c_64(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,2), histogram(vet_error_NLLS_c(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_NLLS_p(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -194,7 +194,7 @@ xlabel("Gauss")
 %legend("C", "Python", "Matlab")
 set(gca,'fontsize', 13)
 
-subplot(3,3,3), histogram(vet_error_NLLS_c_64(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,3), histogram(vet_error_NLLS_c(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_NLLS_p(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -205,7 +205,7 @@ xlabel("Gauss")
 legend("C", "Python", "Matlab")
 set(gca,'fontsize', 13)
 
-subplot(3,3,4), histogram(vet_error_NLLS_c_64(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,4), histogram(vet_error_NLLS_c(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_NLLS_p(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -216,7 +216,7 @@ xlabel("Adimensional")
 %legend("C", "Python", "Matlab")
 set(gca,'fontsize', 13)
 
-subplot(3,3,5), histogram(vet_error_NLLS_c_64(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,5), histogram(vet_error_NLLS_c(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_NLLS_p(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -227,7 +227,7 @@ xlabel("Adimensional")
 %legend("C", "Python", "Matlab")
 set(gca,'fontsize', 13)
 
-subplot(3,3,6), histogram(vet_error_NLLS_c_64(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,6), histogram(vet_error_NLLS_c(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_NLLS_p(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -238,7 +238,7 @@ xlabel("Adimensional")
 legend("C", "Python", "Matlab")
 set(gca,'fontsize', 13)
 
-subplot(3,3,7), histogram(vet_error_NLLS_c_64(7,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,7), histogram(vet_error_NLLS_c(7,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_NLLS_p(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -249,7 +249,7 @@ xlabel("Adimensional")
 set(gca,'fontsize', 13)
 %legend("C", "Python", "Matlab")
 
-subplot(3,3,8), histogram(vet_error_NLLS_c_64(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,8), histogram(vet_error_NLLS_c(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_NLLS_p(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
@@ -260,7 +260,7 @@ xlabel("Adimensional")
 set(gca,'fontsize', 13)
 %legend("C", "Python", "Matlab")
 
-subplot(3,3,9), histogram(vet_error_NLLS_c_64(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,9), histogram(vet_error_NLLS_c(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 histogram(vet_error_NLLS_p(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
