@@ -27,18 +27,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-//#include "calib.h"
+#include "calib.h"
 
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-union calib_t{
+/*union calib_t{
 	uint8_t inteiro[4];
 	float flutuante;
 };
 
-#define tam 1112
+#define tam 1112*/
 
 /* USER CODE END PTD */
 
@@ -56,7 +56,7 @@ union calib_t{
 
 /* USER CODE BEGIN PV */
 float mx[tam] = {0}, my[tam] = {0}, mz[tam] = {0};
-union calib_t mx_[tam] = {0}, my_[tam] = {0}, mz_[tam] = {0};
+//union calib_t mx_[tam] = {0}, my_[tam] = {0}, mz_[tam] = {0};
 uint8_t passos_NLLS = 0;
 
 /* USER CODE END PV */
@@ -104,11 +104,11 @@ int main(void)
   MX_FATFS_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-  //uint32_t start_time = 0;
+  uint32_t start_time = 0;
   uint16_t file_cont = 1;
-  union calib_t param1[9], param2[9];
+  //union calib_t param1[9], param2[9];
   float p1[9], p0[9];
-  union calib_t NLLS_time, ETS_time;
+  float NLLS_time, ETS_time;
 
   FATFS fs;
   FRESULT res;
@@ -180,22 +180,22 @@ int main(void)
 
 	f_close(&fil);
 
-	for(uint16_t i = 0; i < tam; i++)
+	/*for(uint16_t i = 0; i < tam; i++)
 	{
 		mx_[i].flutuante = mx[i];
 		my_[i].flutuante = my[i];
 		mz_[i].flutuante = mz[i];
-	}
+	}*/
 
-	/*start_time = HAL_GetTick();
+	start_time = HAL_GetTick();
 	ETS(mx, my, mz, p0);
 	ETS_time = HAL_GetTick() - start_time;
 
 	start_time = HAL_GetTick();
 	passos_NLLS = NLLS(mx, my, mz, p1);
-	NLLS_time = HAL_GetTick() - start_time;*/
+	NLLS_time = HAL_GetTick() - start_time;
 
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, SET);
+	/*HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, SET);
 	while(!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_0));
 	HAL_Delay(5);
 
@@ -231,7 +231,7 @@ int main(void)
 	{
 		p0[i] = param1[i].flutuante;
 		p1[i] = param2[i].flutuante;
-	}
+	}*/
 
 	sprintf(file_read, "0:/RES/run%d.txt", file_cont);
 	res = f_open(&fil, file_read, FA_WRITE | FA_CREATE_ALWAYS);
@@ -244,11 +244,11 @@ int main(void)
 	UINT bw;
 
 	for (int i = 0; i < 9; i++) {
-		sprintf(out_line, "%f, %f\n", p1[i], p0[i]);
+		sprintf(out_line, "%f, %f\n", p0[i], p1[i]);
 		f_write(&fil, out_line, strlen(out_line), &bw);
 	}
 
-	sprintf(out_line, "%f, %f\n", ETS_time.flutuante, NLLS_time.flutuante);
+	sprintf(out_line, "%f, %f\n", ETS_time, NLLS_time);
 	f_write(&fil, out_line, strlen(out_line), &bw);
 
 	sprintf(out_line, "0, %u\n", passos_NLLS);
@@ -291,17 +291,10 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 216;
+  RCC_OscInitStruct.PLL.PLLN = 180;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 2;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Activate the Over-Drive mode
-  */
-  if (HAL_PWREx_EnableOverDrive() != HAL_OK)
   {
     Error_Handler();
   }
@@ -315,7 +308,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_7) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
   {
     Error_Handler();
   }
