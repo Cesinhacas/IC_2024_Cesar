@@ -7,7 +7,7 @@
 % Retona-se o parâmetro p, um vetor semelhante a p0.
 
 
-function [Time, passo, p] = test2(Dados_Corrompido, p0, Be)
+function [Time, passo, p, fisher] = test2(Dados_Corrompido, p0, Be)
 passo = 1;
 loop = 1;
 mx = Dados_Corrompido(1,:)';
@@ -39,7 +39,7 @@ while loop == 1
     
     J = (1/2)*(e')*e;
     
-     %e_std = sqrt((1/(length(e)))*(e'*e));
+     e_std = sqrt((1/(length(e)))*(e'*e));
     
     if passo < 3
         error_ant = J;
@@ -71,6 +71,7 @@ p = p0;
 Time = toc;
 passo = passo -1;
 
-% P = e_std*inv(H'*H);
+P = e_std*inv(H'*H);
+fisher = diag(P).^(1/2);
 % disp(P)
 end

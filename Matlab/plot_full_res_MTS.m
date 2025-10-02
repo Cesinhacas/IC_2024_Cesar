@@ -17,6 +17,15 @@ vet_error_ETS_c_64 = readmatrix('MCS_NLLS_c_64.csv');
 vet_error_ETS_m = readmatrix('MCS_ETS_Matlab.csv');
 vet_error_NLLS_m = readmatrix('MCS_NLLS_Matlab.csv');
 
+vet_error_ETS_m_dist = readmatrix('MCS_ETS_Matlab_dist.csv');
+vet_error_NLLS_m_dist = readmatrix('MCS_NLLS_Matlab_dist.csv');
+
+vet_error_ETS_m_dist2 = readmatrix('MCS_ETS_Matlab_dist2.csv');
+vet_error_NLLS_m_dist2 = readmatrix('MCS_NLLS_Matlab_dist2.csv');
+
+vet_error_ETS_m_dist3 = readmatrix('MCS_ETS_Matlab_dist3.csv');
+vet_error_NLLS_m_dist3 = readmatrix('MCS_NLLS_Matlab_dist3.csv');
+
 vet_error_NLLS_ST = readmatrix('MCS_NLLS_ST_Matlab.csv');
 vet_error_NLLS_ST2 = readmatrix('MCS_NLLS_ST2_Matlab.csv');
 
@@ -917,3 +926,228 @@ subplot(3,3,9), boxplot([vet_error_ETS_f7(9,:)', vet_error_ETS_f7_short(9,:)', v
 hold on
 grid on
 title("Lambda");
+
+%%%%%%%%%%%%%%%%%%%%%%%% COMB %%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%% Plots comparação ETS C Vs. Python Vs. Matlab
+%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+figure(11)
+subplot(3,3,1), histogram(vet_error_ETS_m(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+grid on
+histogram(vet_error_ETS_m_dist(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_ETS_m_dist2(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_ETS_m_dist3(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "auto");
+title("Offset - eixo x");
+ylabel("Distribuição de probabilidade")
+xlabel("Gauss")
+set(gca,'fontsize', 13)
+%legend("C", "Python", "Matlab")
+
+subplot(3,3,2), histogram(vet_error_ETS_m(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+grid on
+histogram(vet_error_ETS_m_dist(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_ETS_m_dist2(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_ETS_m_dist3(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "auto");
+title("Offset - eixo y");
+ylabel("Distribuição de probabilidade")
+xlabel("Gauss")
+set(gca,'fontsize', 13)
+%legend("C", "Python", "Matlab")
+
+subplot(3,3,3), histogram(vet_error_ETS_m(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+grid on
+histogram(vet_error_ETS_m_dist(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_ETS_m_dist2(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_ETS_m_dist3(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "auto");
+title("Offset - eixo z");
+ylabel("Distribuição de probabilidade")
+xlabel("Gauss")
+legend("Dist. Eixo x", "Dist. 3 Eixos (556)", "Dist. 3 Eixos (1112)", "Dist. 3 Eixos (332)")
+set(gca,'fontsize', 13)
+
+subplot(3,3,4), histogram(vet_error_ETS_m(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+grid on
+histogram(vet_error_ETS_m_dist(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_ETS_m_dist2(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_ETS_m_dist3(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "auto");
+title("Fator de escala X");
+ylabel("Distribuição de probabilidade")
+xlabel("Adimensional")
+set(gca,'fontsize', 13)
+%legend("C", "Python", "Matlab")
+
+subplot(3,3,5), histogram(vet_error_ETS_m(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+grid on
+histogram(vet_error_ETS_m_dist(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_ETS_m_dist2(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_ETS_m_dist3(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "auto");
+title("Fator de escala Y");
+ylabel("Distribuição de probabilidade")
+xlabel("Adimensional")
+set(gca,'fontsize', 13)
+%legend("C", "Python", "Matlab")
+
+subplot(3,3,6), histogram(vet_error_ETS_m(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+grid on
+histogram(vet_error_ETS_m_dist(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_ETS_m_dist2(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_ETS_m_dist3(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "auto");
+title("Fator de escala Z");
+ylabel("Distribuição de probabilidade")
+xlabel("Adimensional")
+legend("Dist. Eixo x", "Dist. 3 Eixos (556)", "Dist. 3 eixos (1112)", "Dist. 3 eixos (332)")
+set(gca,'fontsize', 13)
+
+subplot(3,3,7), histogram(vet_error_ETS_m(7,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+grid on
+histogram(vet_error_ETS_m_dist(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_ETS_m_dist2(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_ETS_m_dist3(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "auto");
+title("Rho");
+ylabel("Distribuição de probabilidade")
+xlabel("Adimensional")
+set(gca,'fontsize', 13)
+%legend("C", "Python", "Matlab")
+
+subplot(3,3,8), histogram(vet_error_ETS_m(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+grid on
+histogram(vet_error_ETS_m_dist(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_ETS_m_dist2(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_ETS_m_dist3(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "auto");
+title("Phi");
+ylabel("Distribuição de probabilidade")
+xlabel("Adimensional")
+set(gca,'fontsize', 13)
+%legend("C", "Python", "Matlab")
+
+subplot(3,3,9), histogram(vet_error_ETS_m(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+grid on
+histogram(vet_error_ETS_m_dist(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_ETS_m_dist2(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_ETS_m_dist3(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "auto");
+title("Lambda");
+ylabel("Distribuição de probabilidade")
+xlabel("Adimensional")
+legend("Dist. Eixo x", "Dist. 3 Eixos (556)", "Dist. 3 Eixos (1112)", "Dist. 3 Eixos (332)")
+set(gca,'fontsize', 13)
+
+%%%%%%%%%%%%%%% Plots comparação NLLS C Vs. Python Vs. Matlab
+%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+figure(12)
+subplot(3,3,1), histogram(vet_error_NLLS_m(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+grid on
+histogram(vet_error_NLLS_m_dist(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_m_dist2(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_NLLS_m_dist3(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "auto");
+title("Offset - eixo x");
+ylabel("Distribuição de probabilidade")
+xlabel("Gauss")
+%legend("C", "Python", "Matlab")
+set(gca,'fontsize', 13)
+
+subplot(3,3,2), histogram(vet_error_NLLS_m(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+grid on
+histogram(vet_error_NLLS_m_dist(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_m_dist2(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_NLLS_m_dist3(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "auto");
+title("Offset - eixo y");
+ylabel("Distribuição de probabilidade")
+xlabel("Gauss")
+%legend("C", "Python", "Matlab")
+set(gca,'fontsize', 13)
+
+subplot(3,3,3), histogram(vet_error_NLLS_m(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+grid on
+histogram(vet_error_NLLS_m_dist(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_m_dist2(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_NLLS_m_dist3(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "auto");
+title("Offset - eixo z");
+ylabel("Distribuição de probabilidade")
+xlabel("Gauss")
+legend("Dist. Eixo x", "Dist. 3 Eixos (556)", "Dist. 3 eixos (1112)", "Dist. 3 eixos (332)")
+set(gca,'fontsize', 13)
+
+subplot(3,3,4), histogram(vet_error_NLLS_m(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+grid on
+histogram(vet_error_NLLS_m_dist(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_m_dist2(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_NLLS_m_dist3(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "auto");
+title("Fator de escala X");
+ylabel("Distribuição de probabilidade")
+xlabel("Adimensional")
+%legend("C", "Python", "Matlab")
+set(gca,'fontsize', 13)
+
+subplot(3,3,5), histogram(vet_error_NLLS_m(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+grid on
+histogram(vet_error_NLLS_m_dist(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_m_dist2(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_NLLS_m_dist3(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "auto");
+title("Fator de escala Y");
+ylabel("Distribuição de probabilidade")
+xlabel("Adimensional")
+%legend("C", "Python", "Matlab")
+set(gca,'fontsize', 13)
+
+subplot(3,3,6), histogram(vet_error_NLLS_m(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+grid on
+histogram(vet_error_NLLS_m_dist(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_m_dist2(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_NLLS_m_dist3(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "auto");
+title("Fator de escala Z");
+ylabel("Distribuição de probabilidade")
+xlabel("Adimensional")
+legend("Dist. Eixo x", "Dist. 3 Eixos (556)", "Dist. 3 eixos (1112)", "Dist. 3 eixos (332)")
+set(gca,'fontsize', 13)
+
+subplot(3,3,7), histogram(vet_error_NLLS_m(7,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+grid on
+histogram(vet_error_NLLS_m_dist(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_m_dist2(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_NLLS_m_dist3(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "auto");
+title("Rho");
+ylabel("Distribuição de probabilidade")
+xlabel("Adimensional")
+set(gca,'fontsize', 13)
+%legend("C", "Python", "Matlab")
+
+subplot(3,3,8), histogram(vet_error_NLLS_m(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+grid on
+histogram(vet_error_NLLS_m_dist(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_m_dist2(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_NLLS_m_dist3(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "auto");
+title("Phi");
+ylabel("Distribuição de probabilidade")
+xlabel("Adimensional")
+set(gca,'fontsize', 13)
+%legend("C", "Python", "Matlab")
+
+subplot(3,3,9), histogram(vet_error_NLLS_m(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+hold on
+grid on
+histogram(vet_error_NLLS_m_dist(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+histogram(vet_error_NLLS_m_dist2(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_NLLS_m_dist3(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "auto");
+title("Lambda");
+ylabel("Distribuição de probabilidade")
+xlabel("Adimensional")
+legend("Dist. Eixo x", "Dist. 3 Eixos (556)", "Dist. 3 eixos (1112)", "Dist. 3 Eixos (332)")
+set(gca,'fontsize', 13)

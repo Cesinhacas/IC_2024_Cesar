@@ -256,7 +256,7 @@ set(gca,'fontsize', 17)
 
 H = r*ones(length(Dados_Corrompido(1,:)),1);
 p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0;];
-[Tempo,passo,p1] = test2(Dados_Corrompido, p0, H); %NLLS
+[Tempo,passo,p1,P] = test2(Dados_Corrompido, p0, H); %NLLS
 
 Dados_rest1(1,:) =  (Dados_Corrompido(1,:) - p1(4))/p1(1);
 Dados_rest1(2,:) = ((Dados_Corrompido(2,:) - p1(5))/p1(2) - Dados_rest1(1,:)*sin(p1(7)))/cos(p1(7));

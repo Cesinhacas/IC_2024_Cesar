@@ -11,20 +11,24 @@ cd Matlab\
 
 exe = 3000;
 vet_error_NLLS_c = zeros(9,exe);
-vet_error_NLLS_ST = zeros(9,exe);
-vet_error_NLLS_ST2 = zeros(9,exe);
+% vet_error_NLLS_ST = zeros(9,exe);
+% vet_error_NLLS_ST2 = zeros(9,exe);
 vet_error_ETS_c = zeros(9,exe);
+vet_fisher = zeros(9,exe);
 tempo_exe_NLLS = 0;
-tempo_exe_NLLS_ST = 0;
-tempo_exe_NLLS_ST2 = 0;
+% tempo_exe_NLLS_ST = 0;
+% tempo_exe_NLLS_ST2 = 0;
 tempo_exe_ETS = 0;
-
 passos_NLLS = 0;
 
 for i=1:exe
-    cd Dados_com_ruido\
+    cd Dados_dist3\
+    %cd Dados_com_ruido\
     strg_save = sprintf("conjunto_dados_corrompidos_%d.csv", i);
     Dados_Corrompido = readmatrix(strg_save);
+    cd ..\
+    
+    cd Dados_com_ruido\
     strg_save = sprintf("param_%d.csv", i);
     e = readmatrix(strg_save);
     cd ..\
@@ -42,37 +46,40 @@ for i=1:exe
     [Time,p1] = test1(Dados_Corrompido, 1);
     p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0];
     H = ones(1, length(Dados_Corrompido(1,:)))';
-    [tempo, passo,p] = test2(Dados_Corrompido, p0, H);
-    [tiempo, passo_ST, p2] = NLLS_ST(Dados_Corrompido, p0, H);
-    [tiempito, passo_ST2, p3] = NLLS_ST2(Dados_Corrompido, p0, H);
+    [tempo, passo,p, fisher] = test2(Dados_Corrompido, p0, H);
+%     [tiempo, passo_ST, p2] = NLLS_ST(Dados_Corrompido, p0, H);
+%     [tiempito, passo_ST2, p3] = NLLS_ST2(Dados_Corrompido, p0, H);
 
     tempo_exe_ETS = tempo_exe_ETS + Time;
     tempo_exe_NLLS = tempo_exe_NLLS + tempo;
-    tempo_exe_NLLS_ST = tempo_exe_NLLS_ST + tiempo;
-    tempo_exe_NLLS_ST2 = tiempito + tempo_exe_NLLS_ST2;
+%     tempo_exe_NLLS_ST = tempo_exe_NLLS_ST + tiempo;
+%     tempo_exe_NLLS_ST2 = tiempito + tempo_exe_NLLS_ST2;
 
     passos_NLLS = passos_NLLS + passo;
    
     vet_error_ETS_c(:,i) = e-p1;
     vet_error_NLLS_c(:,i) = e-p;
-    vet_error_NLLS_ST(:,i) = e-p2;
-    vet_error_NLLS_ST2(:,i) = e-p3;
+%     vet_error_NLLS_ST(:,i) = e-p2;
+%     vet_error_NLLS_ST2(:,i) = e-p3;
+
+    vet_fisher(:,i) = fisher;
 end
 
 passos_NLLS = passos_NLLS/exe;
 
 cd ..\
 cd Dados\
-writematrix(vet_error_ETS_c, "MCS_ETS_Matlab.csv");
-writematrix(vet_error_NLLS_c, "MCS_NLLS_Matlab.csv");
-writematrix(vet_error_NLLS_ST, "MCS_NLLS_ST_Matlab.csv");
-writematrix(vet_error_NLLS_ST2, "MCS_NLLS_ST2_Matlab.csv");
-writematrix(passos_NLLS, "passos_NLLS_Matlab.csv");
+writematrix(vet_error_ETS_c, "MCS_ETS_Matlab_dist3.csv");
+writematrix(vet_error_NLLS_c, "MCS_NLLS_Matlab_dist3.csv");
+% writematrix(vet_error_NLLS_ST, "MCS_NLLS_ST_Matlab_dist3.csv");
+% writematrix(vet_error_NLLS_ST2, "MCS_NLLS_ST2_Matlab_dist3.csv");
+writematrix(passos_NLLS, "passos_NLLS_Matlab_dist3.csv");
+writematrix(vet_fisher, "fisher_Matlab_dist3.csv");
 cd ..\
 cd Matlab\
 
 tempo_exe_NLLS = (tempo_exe_NLLS / exe)*1000;
-tempo_exe_NLLS_ST = (tempo_exe_NLLS_ST/exe)*1000;
+%tempo_exe_NLLS_ST = (tempo_exe_NLLS_ST/exe)*1000;
 tempo_exe_ETS = (tempo_exe_ETS / exe)*1000;
 ratio_time = tempo_exe_NLLS/tempo_exe_ETS;
 
@@ -84,8 +91,8 @@ disp(tempo_exe_NLLS)
 disp('Passos NLLS:')
 disp(passos_NLLS)
 
-disp('Tempo de execução NLLS usando expansão de taylor em ms:')
-disp(tempo_exe_NLLS_ST)
+% disp('Tempo de execução NLLS usando expansão de taylor em ms:')
+% disp(tempo_exe_NLLS_ST)
 
 disp('Razão entre ETS e NLLS (NLLS/ETS):')
 disp(ratio_time)
@@ -138,25 +145,25 @@ disp(error_mean_NLLS(8))
 disp("Ângulo Lambda:")
 disp(error_mean_NLLS(9))
 
-disp("NLLS com expansão da série de Taylor:" )
-disp("Offset - x:")
-disp(error_mean_NLLS_ST(4))
-disp("Offset - y:")
-disp(error_mean_NLLS_ST(5))
-disp("Offset - z:")
-disp(error_mean_NLLS_ST(6))
-disp("Fator de escala - x:")
-disp(error_mean_NLLS_ST(1))
-disp("Fator de escala - y:")
-disp(error_mean_NLLS_ST(2))
-disp("Fator de escala - z:")
-disp(error_mean_NLLS_ST(3))
-disp("Ângulo Rho:")
-disp(error_mean_NLLS_ST(7))
-disp("Ângulo Phi:")
-disp(error_mean_NLLS_ST(8))
-disp("Ângulo Lambda:")
-disp(error_mean_NLLS_ST(9))
+% disp("NLLS com expansão da série de Taylor:" )
+% disp("Offset - x:")
+% disp(error_mean_NLLS_ST(4))
+% disp("Offset - y:")
+% disp(error_mean_NLLS_ST(5))
+% disp("Offset - z:")
+% disp(error_mean_NLLS_ST(6))
+% disp("Fator de escala - x:")
+% disp(error_mean_NLLS_ST(1))
+% disp("Fator de escala - y:")
+% disp(error_mean_NLLS_ST(2))
+% disp("Fator de escala - z:")
+% disp(error_mean_NLLS_ST(3))
+% disp("Ângulo Rho:")
+% disp(error_mean_NLLS_ST(7))
+% disp("Ângulo Phi:")
+% disp(error_mean_NLLS_ST(8))
+% disp("Ângulo Lambda:")
+% disp(error_mean_NLLS_ST(9))
 
 figure(1)
 subplot(3,3,1), histogram(vet_error_ETS_c(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
