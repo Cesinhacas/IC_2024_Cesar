@@ -9,6 +9,9 @@
 #define INC_HMC5883_H_
 
 #include "stm32f7xx_hal.h"
+#include <math.h>
+
+extern float p[9];
 
 #define hmc_addr		0x3C
 
@@ -32,6 +35,10 @@ typedef struct
 	double mag_x;
 	double mag_y;
 	double mag_z;
+
+	double mag_x_calib;
+	double mag_y_calib;
+	double mag_z_calib;
 }HMC_t;
 
 void config_hmc(I2C_HandleTypeDef *h);

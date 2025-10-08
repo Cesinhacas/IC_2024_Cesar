@@ -30,10 +30,14 @@ void read_hmc(I2C_HandleTypeDef *h, HMC_t *Data)
 
 
 	Data->mag_x_nude = (int16_t)((Data->mag_data_nude[0] << 8) | Data->mag_data_nude[1]);
-	Data->mag_z_nude = (int16_t)((Data->mag_data_nude[2] << 8) | Data->mag_data_nude[2]);
+	Data->mag_z_nude = (int16_t)((Data->mag_data_nude[2] << 8) | Data->mag_data_nude[3]);
 	Data->mag_y_nude = (int16_t)((Data->mag_data_nude[4] << 8) | Data->mag_data_nude[5]);
 
 	Data->mag_x = ((double)Data->mag_x_nude)/1370;
 	Data->mag_y = ((double)Data->mag_y_nude)/1370;
 	Data->mag_z = ((double)Data->mag_z_nude)/1370;
+
+	Data->mag_x_calib = (Data->mag_x - p[3])/p[0];
+	Data->mag_y_calib = ((Data->mag_y - p[4])/p[1] - Data->mag_x_calib * sin(p[6]))/cos(p[6]);
+	Data->mag_z_calib = (Data->mag_z - p[5])/p[2] - Data->mag_x_calib * sin(p[7]) * cos(p[9]) - Data->mag_y_calib * sin(p[8])/(cos(p[7]) * cos(p[8]));
 }

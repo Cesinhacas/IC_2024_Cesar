@@ -2,3 +2,4 @@
 ../Core/Src/atitude.c:31:6:vet2mat	2
 ../Core/Src/atitude.c:41:6:atitude_determination	4
 ../Core/Src/atitude.c:56:6:send_atitude	1
+../Core/Src/atitude.c:73:6:mat2quaternion	2

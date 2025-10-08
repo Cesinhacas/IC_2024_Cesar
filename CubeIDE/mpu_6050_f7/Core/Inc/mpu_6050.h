@@ -10,6 +10,7 @@
 
 #include "stm32f7xx_hal.h"
 
+extern float q[9];
 
 #define mpu_6050_add 0xD0 //write = 0
 #define who_am_i_mpu 0x75
@@ -37,6 +38,10 @@ typedef struct
 	double accel_x;
 	double accel_y;
 	double accel_z;
+
+	double accel_x_calib;
+	double accel_y_calib;
+	double accel_z_calib;
 
 	/*uint8_t gyro_data_nude[6];
 

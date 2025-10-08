@@ -5,7 +5,7 @@
  *      Author: labt5
  */
 #include "mpu_6050.h"
-
+#include <math.h>
 
 void config_mpu6050(I2C_HandleTypeDef *h)
 {
@@ -40,6 +40,10 @@ void read_mpu6050(I2C_HandleTypeDef *h, MPU_t *Data)
 	Data->accel_x = ((double)Data->accel_x_nude)/2048;
 	Data->accel_y = ((double)Data->accel_y_nude)/2048;
 	Data->accel_z = ((double)Data->accel_z_nude)/2048;
+
+	Data->accel_x_calib = (Data->accel_x - q[3])/q[0];
+	Data->accel_y_calib = ((Data->accel_y - q[4])/q[1] - Data->accel_x_calib * sin(q[6]))/cos(q[6]);
+	Data->accel_z_calib = (Data->accel_z - q[5])/q[2] - Data->accel_x_calib * sin(q[7]) * cos(q[9]) - Data->accel_y_calib * sin(q[8])/(cos(q[7]) * cos(q[8]));
 
 	//Data->gyro_z = ((double)Data->gyro_z_nude)/65.5;
 }
