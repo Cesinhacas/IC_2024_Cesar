@@ -1,31 +1,72 @@
 #include <math.h>
+#include <stdio.h>
 
-double GT[6][6], QT[6][6];
+double GT[6][6] = {0}, QT[6][6] = {0};
+#define N 3
 
-void FK_prop(float *u_gyro, double Dt, double PT_est[6][6], double *x_est, double Q[6][6], int i_in, double *x_prop, double PT_prop[6][6], int *i_out)
+void inverter_matriz(double matriz[3][3], double inversa[3][3]) {
+    // Inicializando a matriz identidade na matriz inversa
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            if (i == j) {
+                inversa[i][j] = 1;
+            } else {
+                inversa[i][j] = 0;
+            }
+        }
+    }
+
+    // Aplicando o método de Gauss-Jordan
+    for (int i = 0; i < N; i++)
+    {
+        double pivot = matriz[i][i];
+        for (int j = 0; j < N; j++)
+        {
+            matriz[i][j] /= pivot;
+            inversa[i][j] /= pivot;
+        }
+
+        for (int k = 0; k < N; k++)
+        {
+            if (k != i)
+            {
+                double fator = matriz[k][i];
+                for (int j = 0; j < N; j++)
+                {
+                    matriz[k][j] -= fator * matriz[i][j];
+                    inversa[k][j] -= fator * inversa[i][j];
+                }
+            }
+        }
+    }
+}
+
+void FK_prop(double *u_gyro, double Dt, double PT_est[6][6], double *x_est, double *x_prop, double PT_prop[6][6], int *i)
 {
-    double q_est[4], b_est[3], Th[3], Omega4[4][4], M[4][4], q_prop[4], Omega3_prop[3][3], A_prop[3][3], q_q_2t[3][3], q_sqrd_norm;
-    double Omega3_est[3][3], A_est[3][3], L[3][3], KK[3][3], PhiT[6][6], SiG[6][6];
+    double q_est[4], b_est[3], Th[3], Omega4[4][4], M[4][4] = {0}, q_prop[4], Omega3_prop[3][3], A_prop[3][3] = {0}, q_q_2t[3][3], q_sqrd_norm;
+    double Omega3_est[3][3], A_est[3][3] = {0}, L[3][3], KK[3][3], PhiT[6][6], SiG[6][6] = {0};
     double cosTh, sinTh, normTh;
 
     // contagem de iteração
-    i_out = i_in + 1;
+    (*i) += 1;
 
     // Propagação de estado
+    //printf("Estado propagado:\n");
     for (int i = 0; i < 4; i++)
     {
         q_est[i] = x_est[i];
+        //printf("%f ", q_est[i]);
     }
+    //printf("\n");
 
+    //printf("Th:\n");
     for (int i = 0; i < 3; i++)
     {
         b_est[i] = x_est[i + 4];
-    }
-
-    for (int i = 0; i < 3; i++)
-    {
         Th[i] = u_gyro[i] * Dt;
+        //printf("%f ", Th[i]);
     }
+    //printf("\n");
 
     // Omega4
     Omega4[0][0] = 0;
@@ -46,22 +87,14 @@ void FK_prop(float *u_gyro, double Dt, double PT_est[6][6], double *x_est, doubl
     Omega4[3][3] = 0;
 
     // Preparação para a matriz M
-    normTh = sqrt(Th[0] * Th[0] + Th[1] * Th[1] + Th[2] * Th[2]);
+    normTh = sqrt((Th[0] * Th[0]) + (Th[1] * Th[1]) + (Th[2] * Th[2]));
     cosTh = cos(normTh / 2);
     sinTh = sin(normTh / 2) / normTh;
 
-   
+    //printf("Matriz M:\n");
     for (int i = 0; i < 4; i++)
     {
-        q_prop[i] = q_est[i];
         for (int j = 0; j < 4; j++)
-        {
-            M[i][j] = 0;
-        }
-    }
-    for (int i = 0; i < 4; i++)
-    {
-        for (size_t j = 0; j < 4; j++)
         {
             if (i == j)
             {
@@ -69,10 +102,16 @@ void FK_prop(float *u_gyro, double Dt, double PT_est[6][6], double *x_est, doubl
             }
             else
             {
-                M[i][j] += sinTh * Omega4[i][j];
+                M[i][j] = sinTh * Omega4[i][j];
             }
-        }        
+            /*printf("%f ", M[i][j]);
+            if (j == 3)
+            {
+                printf("\n");
+            }*/
+        }
     }
+    //printf("\n");
 
 
     // calculo do estado propagado
@@ -81,14 +120,18 @@ void FK_prop(float *u_gyro, double Dt, double PT_est[6][6], double *x_est, doubl
         q_prop[i] = M[i][0] * q_est[0] + M[i][1] * q_est[1] + M[i][2] * q_est[2] + M[i][3] * q_est[3];
     }
 
+    //printf("Vetor de estado propagado x_prop:\n");
     for (int i = 0; i < 4; i++)
     {
         x_prop[i] = q_prop[i];
+        //printf("%f ", x_prop[i]);
     }
     for (int i = 0; i < 3; i++)
     {
         x_prop[i + 4] = b_est[i];
-    }    
+        //printf("%f ", x_prop[i + 4]);
+    }
+    //printf("\n");
 
     // Propagação da covariância de erro
     Omega3_prop[0][0] = 0;
@@ -109,26 +152,26 @@ void FK_prop(float *u_gyro, double Dt, double PT_est[6][6], double *x_est, doubl
         }
     }
 
-    for (int i = 0; i < 3; i++)
-    {
-        q_sqrd_norm -= q_prop[i] * q_prop[i];
-    }
-    q_sqrd_norm += q_prop[3] * q_prop[3];
+    q_sqrd_norm = q_prop[3] * q_prop[3] - (sqrt((q_prop[0] * q_prop[0]) + (q_prop[1] * q_prop[1]) + (q_prop[2] * q_prop[2]))) * (sqrt((q_prop[0] * q_prop[0]) + (q_prop[1] * q_prop[1]) + (q_prop[2] * q_prop[2])));
 
+    //printf("Matriz A_prop:\n");
     for(int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
         {
+            A_prop[i][j] = q_q_2t[i][j] + 2*q_prop[3]*Omega3_prop[i][j];
             if(i == j)
             {
-                A_prop[i][j] += q_sqrd_norm + q_q_2t[i][j];
+                A_prop[i][j] += q_sqrd_norm;
             }
-            else
+            /*printf("%f ", A_prop[i][j]);
+            if (j == 2)
             {
-                A_prop[i][j] += q_q_2t[i][j] + 2*q_prop[4]*Omega3_prop[i][j];
-            }
+                printf("\n");
+            }*/
         }
     }
+    //printf("\n");
 
     Omega3_est[0][0] = 0;
     Omega3_est[0][1] = q_est[2];
@@ -148,53 +191,69 @@ void FK_prop(float *u_gyro, double Dt, double PT_est[6][6], double *x_est, doubl
         }
     }
 
+    q_sqrd_norm = q_est[3] * q_est[3] - (sqrt((q_est[0] * q_est[0]) + (q_est[1] * q_est[1]) + (q_est[2] * q_est[2]))) * (sqrt((q_est[0] * q_est[0]) + (q_est[1] * q_est[1]) + (q_est[2] * q_est[2])));
+
+    //printf("Matriz A_est:\n");
+    for(int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            A_est[i][j] = q_q_2t[i][j] + 2*q_est[3]*Omega3_est[i][j];
+            if(i == j)
+            {
+                A_est[i][j] += q_sqrd_norm;
+            }
+            /*printf("%f ", A_est[i][j]);
+            if (j == 2)
+            {
+                printf("\n");
+            }*/
+        }
+    }
+    //printf("\n");
+
+    // L = A_prop * A_est^T
+    //printf("Matriz L:\n");  
     for (int i = 0; i < 3; i++)
     {
-        q_sqrd_norm -= q_est[i] * q_est[i];
+        for (int j = 0; j < 3; j++)
+        {
+            L[i][j] = 0;
+            for (int k = 0; k < 3; k++)
+            {
+                L[i][j] += A_prop[i][k] * A_est[j][k];
+            }
+            /*printf("%f ", L[i][j]);
+            if (j == 2)
+            {
+                printf("\n");
+            }*/
+        }
     }
-    q_sqrd_norm += q_est[3] * q_est[3];
+    
 
-    for(int i = 0; i < 3; i++)
+    //printf("Matriz KK:\n");
+    for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
         {
             if(i == j)
             {
-                A_est[i][j] += q_sqrd_norm + q_q_2t[i][j];
+                KK[i][j] = -0.25 * (L[i][j] + 1) * Dt;
             }
             else
             {
-                A_est[i][j] += q_q_2t[i][j] + 2*q_est[4]*Omega3_est[i][j];
+                KK[i][j] = -0.25 * L[i][j] * Dt;
             }
-        }
-    }
-
-    // L = A_prop * A_est^T
-    for (int i = 0; i < count; i++)
-    {
-        for (int j = 0; j < count; j++)
-        {
-            L[i][j] = 0;
-            for (int k = 0; k < count; k++)
+            /*printf("%f ", KK[i][j]);
+            if (j == 2)
             {
-                L[i][j] += A_prop[i][k] * A_est[j][k];
-            }
-        }
-    }
-    for(int i = 0; i < 3; i++)
-    {
-        L[i][i] = L[i][i] + 1;
-    }
-    
-
-    for (int i = 0; i < 3; i++)
-    {
-        for (int j = 0; j < 3; j++)
-        {
-            KK[i][j] = -0.25 * L[i][j] * Dt;
+                printf("\n");
+            }*/
         }
     }
 
+    //printf("Matriz PhiT:\n");
     for (int i = 0; i < 6; i++)
     {
         for (int j = 0; j < 6; j++)
@@ -213,7 +272,7 @@ void FK_prop(float *u_gyro, double Dt, double PT_est[6][6], double *x_est, doubl
             }
             else if(i > 2 && j > 2)
             {
-                if((i - 3) == j)
+                if((i - 3) == (j - 3))
                 {
                     PhiT[i][j] = 1;
                 }
@@ -222,13 +281,18 @@ void FK_prop(float *u_gyro, double Dt, double PT_est[6][6], double *x_est, doubl
                     PhiT[i][j] = 0;
                 }
             }
+            /*printf("%f ", PhiT[i][j]);
+            if(j == 5)
+            {
+                printf("\n");
+            }*/
         }
     }
+    //printf("\n");
 
     // Cálculo ed SiG = (PhiT*QT*PhiT^T + QT)*Dt/2
 
     // Multiplicação PhiT*QT
-
     double temp[6][6] = {0};
     for (int i = 0; i < 6; i++)
     {
@@ -240,12 +304,13 @@ void FK_prop(float *u_gyro, double Dt, double PT_est[6][6], double *x_est, doubl
             }
         }
     }
+
     // Multiplicação (PhiT*QT)*PhiT^T
+    //printf("Matriz SiG:\n");
     for (int i = 0; i < 6; i++)
     {
         for (int j = 0; j < 6; j++)
         {
-            SiG[i][j] = 0;
             for (int k = 0; k < 6; k++)
             {
                 SiG[i][j] += temp[i][k] * PhiT[j][k];
@@ -260,8 +325,15 @@ void FK_prop(float *u_gyro, double Dt, double PT_est[6][6], double *x_est, doubl
         {
             SiG[i][j] += QT[i][j];
             SiG[i][j] *= Dt/2; // Multiplicar por Dt/2
+            /*double sig_value = SiG[i][j]*10000;
+            printf("%f ", sig_value);
+            if (j == 5)
+            {
+                printf("\n");
+            }*/
         }
     }
+    //printf("\n");
 
     // Cálculo da covariância propagada PT_prop = PhiT*PT_est*PhiT^T + SiG
     for (int i = 0; i < 6; i++)
@@ -288,21 +360,55 @@ void FK_prop(float *u_gyro, double Dt, double PT_est[6][6], double *x_est, doubl
     }
 
     // Adicionar SiG
+    //printf("Matriz PT_prop:\n");
     for (int i = 0; i < 6; i++)
     {
         for (int j = 0; j < 6; j++)
         {
             PT_prop[i][j] += SiG[i][j];
+            /*printf("%f ", PT_prop[i][j]);
+            if (j == 5)
+            {
+                printf("\n");
+            }*/
         }
-    } 
+    }
+    //printf("\n");
 }
 
-void FK_estimador(double *x_prop, double PT_prop[6][6], double *q_obs, double R[3][3], int iteracao, double *x_est, double PT_est[6][6], double P_est[6][6])
+void FK_estimador(double *x_prop, double PT_prop[6][6], double *q_obs, double R[3][3], int iteracao, double *x_est, double PT_est[6][6], double P_est[7][7])
 {
     // Declaração de variáveis
-    double q[4] = {q_obs[1], q_obs[2], q_obs[3], q_obs[0]};
-    double q_prop[4] = {x_prop[0], x_prop[1], x_prop[2], x_prop[3]};
+    double q_prop[4] = {x_prop[0], x_prop[1], x_prop[2], x_prop[3]}, q[4] = {q_obs[1], q_obs[2], q_obs[3], q_obs[0]};
     double E[4][3] = {0}, S[7][6] = {0};
+
+    printf("q_prop:\n");
+    for(int i = 0; i < 4; i++)
+    {
+        printf("%f ", q_prop[i]);
+    }
+    printf("\n");
+
+    printf("q_obs:\n");
+    for(int i = 0; i < 4; i++)
+    {
+        printf("%f ", q_obs[i]);
+    }
+    printf("\n");
+
+    printf("R:\n");
+    for(int i = 0; i < 3; i++)
+    {
+        for(int j = 0; j < 3; j++)
+        {
+            printf("%f ", R[i][j]);
+            if(j == 2)
+            {
+                printf("\n");
+            }
+        }
+    }
+    printf("\n");
 
     // Cálculo da matriz E
     E[0][0] = q_prop[3];
@@ -342,6 +448,20 @@ void FK_estimador(double *x_prop, double PT_prop[6][6], double *q_obs, double R[
         }
     }
 
+    printf("Matriz S:\n");
+    for (int i = 0; i < 7; i++)
+    {
+        for (int j = 0; j < 6; j++)
+        {
+            printf("%f ", S[i][j]);
+            if (j == 5)
+            {
+                printf("\n");
+            }
+        }
+    }
+    printf("\n");
+
     if((iteracao % 2) != 0)
     {
         for(int i = 0; i < 6; i++)
@@ -367,7 +487,7 @@ void FK_estimador(double *x_prop, double PT_prop[6][6], double *q_obs, double R[
         }
         for (int i = 0; i < 7; i++)
         {
-            for (int j = 0; j < 6; j++)
+            for (int j = 0; j < 7; j++)
             {
                 P_est[i][j] = 0;
                 for (int k = 0; k < 6; k++)
@@ -379,11 +499,12 @@ void FK_estimador(double *x_prop, double PT_prop[6][6], double *q_obs, double R[
     }
     else
     {
-        double HT[4][7], Ptt_prop[3][3], Pbt_prop[3][3], KT[6][6], K[6][6];
+        double HT[4][6], Ptt_prop[3][3], Pbt_prop[3][3], KT[6][4], K[6][4];
         // Cálculo da matriz HT = [E 0]
+        //printf("Matriz HT:\n");
         for (int i = 0; i < 4; i++)
         {
-            for (int j = 0; j < 7; j++)
+            for (int j = 0; j < 6; j++)
             {
                 if (j < 3)
                 {
@@ -393,29 +514,27 @@ void FK_estimador(double *x_prop, double PT_prop[6][6], double *q_obs, double R[
                 {
                     HT[i][j] = 0;
                 }
+                /*printf("%f ", HT[i][j]);
+                if (j == 5)
+                {
+                    printf("\n");
+                }*/
             }
         }
 
         // Cálculo da matriz Ptt_prop = PT_prop(1:3,1:3)
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                Ptt_prop[i][j] = PT_prop[i][j];
-            }
-        }
-
         // Cálculo da matriz Pbt_prop = PT_prop(4:6,1:3)
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
             {
+                Ptt_prop[i][j] = PT_prop[i][j];
                 Pbt_prop[i][j] = PT_prop[i + 3][j];
             }
         }
 
         // Cálculo KT = [Ptt_prop; Pbt_prop] * (Ptt_prop + R)^-1 * E^T
-        double Ptt_R[3][3], Ptt_R_inv[3][3], temp1[6][3] = {0}, temp2[6][6] = {0};
+        double Ptt_R[3][3], Ptt_R_inv[3][3], temp1[6][3] = {0}, temp2[6][4] = {0};
         // Ptt_prop + R
         for (int i = 0; i < 3; i++)
         {
@@ -425,17 +544,7 @@ void FK_estimador(double *x_prop, double PT_prop[6][6], double *q_obs, double R[
             }
         }
         // (Ptt_prop + R)^-1
-        double det = Ptt_R[0][0] * (Ptt_R[1][1] * Ptt_R[2][2] - Ptt_R[1][2] * Ptt_R[2][1]) - Ptt_R[0][1] * (Ptt_R[1][0] * Ptt_R[2][2] - Ptt_R[1][2] * Ptt_R[2][0]) + Ptt_R[0][2] * (Ptt_R[1][0] * Ptt_R[2][1] - Ptt_R[1][1] * Ptt_R[2][0]);
-        
-        Ptt_R_inv[0][0] = (Ptt_R[1][1] * Ptt_R[2][2] - Ptt_R[1][2] * Ptt_R[2][1]) / det;
-        Ptt_R_inv[0][1] = (Ptt_R[0][2] * Ptt_R[2][1] - Ptt_R[0][1] * Ptt_R[2][2]) / det;
-        Ptt_R_inv[0][2] = (Ptt_R[0][1] * Ptt_R[1][2] - Ptt_R[0][2] * Ptt_R[1][1]) / det;
-        Ptt_R_inv[1][0] = (Ptt_R[1][2] * Ptt_R[2][0] - Ptt_R[1][0] * Ptt_R[2][2]) / det;
-        Ptt_R_inv[1][1] = (Ptt_R[0][0] * Ptt_R[2][2] - Ptt_R[0][2] * Ptt_R[2][0]) / det;
-        Ptt_R_inv[1][2] = (Ptt_R[0][2] * Ptt_R[1][0] - Ptt_R[0][0] * Ptt_R[1][2]) / det;
-        Ptt_R_inv[2][0] = (Ptt_R[1][0] * Ptt_R[2][1] - Ptt_R[1][1] * Ptt_R[2][0]) / det;
-        Ptt_R_inv[2][1] = (Ptt_R[0][1] * Ptt_R[2][0] - Ptt_R[0][0] * Ptt_R[2][1]) / det;
-        Ptt_R_inv[2][2] = (Ptt_R[0][0] * Ptt_R[1][1] - Ptt_R[0][1] * Ptt_R[1][0]) / det;
+        inverter_matriz(Ptt_R, Ptt_R_inv);
 
         // [Ptt_prop; Pbt_prop] * (Ptt_prop + R)^-1
         for (int i = 0; i < 6; i++)
@@ -458,33 +567,26 @@ void FK_estimador(double *x_prop, double PT_prop[6][6], double *q_obs, double R[
        // Multiplicação por E^T
         for (int i = 0; i < 6; i++)
         {
-            for (int j = 0; j < 6; j++)
+            for (int j = 0; j < 4; j++)
             {
                 for (int k = 0; k < 3; k++)
                 {
                     temp2[i][j] += temp1[i][k] * E[j][k];
                 }
-            }
-        }
-
-        for (int i = 0; i < 6; i++)
-        {
-            for (int j = 0; j < 6; j++)
-            {
                 KT[i][j] = temp2[i][j];
             }
         }
 
         // PT_est = PT_prop - KT*HT*PT_prop
-        double temp3[6][6] = {0}, temp4[6][6] = {0};
+        double temp3[6][6] = {0}, temp_KH[6][6] = {0};
         // KT*HT
         for (int i = 0; i < 6; i++)
         {
             for (int j = 0; j < 6; j++)
             {
-                for (int k = 0; k < 7; k++)
+                for (int k = 0; k < 4; k++)
                 {
-                    temp3[i][j] += KT[i][k] * HT[j][k];
+                    temp_KH[i][j] += KT[i][k] * HT[k][j];
                 }
             }
         }
@@ -495,7 +597,7 @@ void FK_estimador(double *x_prop, double PT_prop[6][6], double *q_obs, double R[
             {
                 for (int k = 0; k < 6; k++)
                 {
-                    temp4[i][j] += temp3[i][k] * PT_prop[k][j];
+                    temp3[i][j] += temp_KH[i][k] * PT_prop[k][j];
                 }
             }
         }
@@ -503,7 +605,7 @@ void FK_estimador(double *x_prop, double PT_prop[6][6], double *q_obs, double R[
         {
             for (int j = 0; j < 6; j++)
             {
-                PT_est[i][j] = PT_prop[i][j] - temp4[i][j];
+                PT_est[i][j] = PT_prop[i][j] - temp3[i][j];
             }
         }
 
@@ -525,7 +627,7 @@ void FK_estimador(double *x_prop, double PT_prop[6][6], double *q_obs, double R[
         // (S*PT_est)*S^T
         for (int i = 0; i < 7; i++)
         {
-            for (int j = 0; j < 6; j++)
+            for (int j = 0; j < 7; j++)
             {
                 P_est[i][j] = 0;
                 for (int k = 0; k < 6; k++)
@@ -536,9 +638,9 @@ void FK_estimador(double *x_prop, double PT_prop[6][6], double *q_obs, double R[
         }
 
         // Cálculo do ganho estendido K = S*KT
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 6; i++)
         {
-            for (int j = 0; j < 6; j++)
+            for (int j = 0; j < 4; j++)
             {
                 K[i][j] = 0;
                 for (int k = 0; k < 6; k++)
@@ -550,30 +652,27 @@ void FK_estimador(double *x_prop, double PT_prop[6][6], double *q_obs, double R[
 
         // Atualização do estado x_est = x_prop + K*(q_obs - q_prop)
         double norm = 0;
-        for(int i = 0; i < 7; i++)
+        for(int i = 0; i < 4; i++)
         {
-            norm += q_prop[i] * q_obs[i];
+            norm += q_prop[i] * q[i];
         }
         if(norm < 0)
         {
             for(int i = 0; i < 4; i++)
             {
-                q_obs[i] = -q_obs[i];
+                q[i] = -q[i];
             }
         }
 
         // Estimação do estado x_est = x_prop + K*(q_obs - q_prop)
 
         // K*(q_obs - q_prop)
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 6; i++)
         {
-            for (int j = 0; j < 6; j++)
+            x_est[i] = x_prop[i];
+            for (int j = 0; j < 4; j++)
             {
-                x_est[i] = x_prop[i];
-                if (j < 4)
-                {
-                    x_est[i] += K[i][j] * (q_obs[j] - q_prop[j]);
-                }
+                x_est[i] += K[i][j] * (q[j] - q_prop[j]);
             }
         }
 
@@ -591,7 +690,56 @@ void FK_estimador(double *x_prop, double PT_prop[6][6], double *q_obs, double R[
     }
 }
 
-int main(void)
+int main()
 {
+    double Q[6][6] = {0}, GT_T[6][6] = {0}, temp[6][6] = {0};
+    double val1 = 0.005 * 0.005; // 0.000025
+    double val2 = 0.1 * 0.1;     // 0.01
+
+    Q[0][0] = val1;
+    Q[1][1] = val1;
+    Q[2][2] = val1;
+    Q[3][3] = val2;
+    Q[4][4] = val2;
+    Q[5][5] = val2;
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 6; j++) {
+            // Bloco superior esquerdo: -0.5 * eye(3)
+            if (i < 3 && j < 3) {
+                GT[i][j] = (i == j) ? -0.5 : 0.0;
+            }
+            // Bloco inferior direito: eye(3)
+            else if (i >= 3 && j >= 3) {
+                GT[i][j] = (i == j) ? 1.0 : 0.0;
+            }
+            // Blocos de zeros
+            else {
+                GT[i][j] = 0.0;
+            }
+        }
+    }
+
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 6; j++) {
+            GT_T[i][j] = GT[j][i];
+        }
+    }
+
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 6; j++) {
+            temp[i][j] = 0.0;
+            for (int k = 0; k < 6; k++) {
+                temp[i][j] += GT[i][k] * Q[k][j];
+            }
+        }
+    }
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 6; j++) {
+            QT[i][j] = 0.0;
+            for (int k = 0; k < 6; k++) {
+                QT[i][j] += temp[i][k] * GT_T[k][j];
+            }
+        }
+    }
     return 0;
 }
