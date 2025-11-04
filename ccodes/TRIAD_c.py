@@ -34,6 +34,7 @@ v2 = np.array([1/np.sqrt(2), 0, 1/np.sqrt(2)])
 v1_ptr = v1.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
 v2_ptr = v2.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
 
+#  VETORES DE SAÍDA E ARMAZENAMENTO DOS DADOS DA SIMULAÇÃO
 quaternion = np.zeros((num_exe, 4))
 matrizes_c = np.zeros((num_exe, 3, 3))  # Matrizes calculadas pelo código C
 estados_propagados = np.zeros((num_exe, 7))  # Estados propagados pelo filtro de Kalman
@@ -50,9 +51,6 @@ PT_est = 1e6*np.eye(6, dtype=np.float64)
 P_est = np.zeros((7, 7), dtype=np.float64)
 x_est = np.array([0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], dtype=np.float64)
 
-Dt = 0.05
-Dt = ctypes.c_double(Dt)
-
 my_FK.main()
 x_prop_ptr = x_prop.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
 
@@ -68,30 +66,27 @@ for i in range(0, num_exe):
     ax = dados_accel[0][i]
     ay = dados_accel[1][i]
     az = dados_accel[2][i]
-
-    w1 = np.array([ax, ay, az])
-
+    
     mx = dados_mag[0][i]
     my = dados_mag[1][i]
     mz = dados_mag[2][i]
-
-    w2 = np.array([mx, my, mz])
-
-    w1_ptr = w1.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
-    w2_ptr = w2.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
-
-    q = np.array([0.0, 0.0, 0.0, 0.0])
-    
-    q_ptr = q.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
-
-    R = np.zeros((3, 3), dtype=np.float64)
-    R_ptr = R.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
 
     gx = dados_gyro[0][i]
     gy = dados_gyro[1][i]
     gz = dados_gyro[2][i]
 
-    g = np.array([gx, gy, gz])
+    w1 = np.array([ax, ay, az])
+    w2 = np.array([mx, my, mz])
+    q = np.array([0.0, 0.0, 0.0, 0.0])
+    R = np.zeros((3, 3), dtype=np.float64)
+    g = np.array([gx, gy, gz])    
+
+    w1_ptr = w1.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
+    w2_ptr = w2.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
+    
+    q_ptr = q.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
+
+    R_ptr = R.ctypes.data_as(ctypes.POINTER(ctypes.c_double))    
 
     g_ptr = g.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
 
@@ -99,7 +94,7 @@ for i in range(0, num_exe):
 
     my_atitude.TRIAD(v1_ptr, v2_ptr, w1_ptr, w2_ptr, q_ptr, 0.01, 0.01, R_ptr)
     #(double *u_gyro, double Dt, double PT_est[6][6], double *x_est, double *x_prop, double PT_prop[6][6], int *i)
-    my_FK.FK_prop(g_ptr, Dt, PT_est_ptr, x_est_ptr, x_prop_ptr, PT_prop_ptr, cont)
+    my_FK.FK_prop(g_ptr, 0.05, PT_est_ptr, x_est_ptr, x_prop_ptr, PT_prop_ptr, cont)
     #(double *x_prop, double PT_prop[6][6], double *q_obs, double R[3][3], int iteracao, double *x_est, double PT_est[6][6], double P_est[7][7])
     my_FK.FK_estimador(x_prop_ptr, PT_prop_ptr, q_ptr, R_ptr, cont.contents.value, x_est_ptr, PT_est_ptr, P_est_ptr)
 
@@ -119,10 +114,10 @@ for i in range(0, num_exe):
     estados_estimados[i] = np.ctypeslib.as_array(x_est_ptr, shape=(7,)).copy()
     covariancias_estimadas[i] = np.ctypeslib.as_array(P_est_ptr, shape=(7, 7)).copy()
     covarianciasT_estimadas[i] = np.ctypeslib.as_array(PT_est_ptr, shape=(6, 6)).copy()
-    if i == 2:
-        break
+    #if i == 5:
+    #    break
 
-'''quaternion = pd.DataFrame(quaternion)
+quaternion = pd.DataFrame(quaternion)
 quaternion.to_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/quaternion.csv', header=False, index=False)
 
 matrizes_c = pd.DataFrame(matrizes_c.reshape(num_exe, 9))
@@ -141,4 +136,4 @@ covariancias_estimadas = pd.DataFrame(covariancias_estimadas.reshape(num_exe, 49
 covariancias_estimadas.to_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/cov_triad_est_c.csv', header=False, index=False)
 
 covarianciasT_estimadas = pd.DataFrame(covarianciasT_estimadas.reshape(num_exe, 36))
-covarianciasT_estimadas.to_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/covT_triad_est_c.csv', header=False, index=False)'''
+covarianciasT_estimadas.to_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/covT_triad_est_c.csv', header=False, index=False)

@@ -104,3 +104,17 @@ disp(mean(erro_x_prop(6)))
 
 disp('Erro médio b_z prop')
 disp(mean(erro_x_prop(7)))
+
+exe = 1:1:i;
+
+figure(1)
+plot(exe, estados_prop_c),
+
+figure(2)
+plot(exe, estados_prop_mat)
+
+figure(3)
+plot(exe, estados_est_c),
+
+figure(4)
+plot(exe, estados_est_mat)

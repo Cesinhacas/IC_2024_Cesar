@@ -59,8 +59,8 @@ for i in range(0, num_exe):
     estados_propagados[i] = np.ctypeslib.as_array(x_prop_ptr, shape=(7,)).copy()
     matrizes_cov_prop[i] = np.ctypeslib.as_array(PT_prop_ptr, shape=(6, 6)).copy()
 
-    #if i == 2:
-     #   break
+    if i == 3:
+        break
 
 estados_propagados = pd.DataFrame(estados_propagados)
 estados_propagados.to_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/estados_propagados_noest_c.csv', header=False, index=False)

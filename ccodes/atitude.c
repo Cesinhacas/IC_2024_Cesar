@@ -26,9 +26,9 @@ void vet2mat(double *r1, double *r2, double *r3, double M[3][3])
 {
 	for(int i = 0; i < 3; i++)
 	  {
-		  M[0][i] = r1[i];
-		  M[1][i] = r2[i];
-		  M[2][i] = r3[i];
+		  M[i][0] = r1[i];
+		  M[i][1] = r2[i];
+		  M[i][2] = r3[i];
 	  }
 }
 
@@ -142,6 +142,47 @@ void TRIAD(double *v1_ref, double *v2_ref, double *v1_obs, double *v2_obs, doubl
 	vet2mat(r1_obs, r2_obs, r3_obs, Mobs);
 	atitude_estimation(Mref, Mobs, atitude);
 	mat2quaternion(atitude, q);
+
+	/*printf("Matriz de Referência:\n");
+	for(int i = 0; i < 3; i++)
+	{
+		for(int j = 0; j < 3; j++)
+		{
+			printf("%f ", Mref[i][j]);
+			if (j == 2)
+			{
+				printf("\n");
+			}
+		}
+	}
+	printf("\n");
+
+	printf("Matriz de Observação:\n");
+	for(int i = 0; i < 3; i++)
+	{
+		for(int j = 0; j < 3; j++)
+		{
+			printf("%f ", Mobs[i][j]);
+			if (j == 2)
+			{
+				printf("\n");
+			}
+		}
+	}
+	printf("\n");
+
+	printf("Atitude calculada:\n");
+	for(int i = 0; i < 3; i++)
+	{
+		for(int j = 0; j < 3; j++)
+		{
+			printf("%f ", atitude[i][j]);
+			if (j == 2)
+			{
+				printf("\n");
+			}
+		}
+	}*/
 
 	matcov(sig1, sig2, w1, w2, R_);
 	for(int i = 0; i < 3; i++)
