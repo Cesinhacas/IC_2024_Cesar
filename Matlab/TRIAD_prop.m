@@ -14,7 +14,7 @@ cov_triad_prop_shape = zeros(6,6, 201);
 PT_prop_error = zeros(6,6);
 for i=1:1:201
     cov_triad_prop_shape(:,:,i) = reshape(cov_triad_prop_c(i,:), 6, 6);
-    PT_prop_error(:,:) = cov_triad_prop_mat(:,:,i) - cov_triad_prop_shape(:,:,i);
+    PT_prop_error(:,:) = PT_prop_error + (cov_triad_prop_mat(:,:,i) - cov_triad_prop_shape(:,:,i));
 end
 
 PT_prop_error = PT_prop_error/201;

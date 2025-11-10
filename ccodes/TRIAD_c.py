@@ -8,7 +8,7 @@ my_FK = ctypes.CDLL('./FK.so')
 my_atitude.TRIAD.argtypes = [ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.c_double, ctypes.c_double, ctypes.POINTER(ctypes.c_double)]
 my_atitude.TRIAD.restype = ctypes.c_void_p
 
-my_FK.FK_prop.argtypes = [ctypes.POINTER(ctypes.c_double), ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_int)]
+my_FK.FK_prop.argtypes = [ctypes.POINTER(ctypes.c_double), ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)]
 my_FK.FK_prop.restype = ctypes.c_void_p
 my_FK.main.argtypes = []
 my_FK.main.restype = ctypes.c_int
@@ -90,11 +90,12 @@ for i in range(0, num_exe):
 
     g_ptr = g.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
 
-    cont = np.array([i]).ctypes.data_as(ctypes.POINTER(ctypes.c_int))
+    cont = 1 + i
+    cont = np.array([cont]).ctypes.data_as(ctypes.POINTER(ctypes.c_int))
 
     my_atitude.TRIAD(v1_ptr, v2_ptr, w1_ptr, w2_ptr, q_ptr, 0.01, 0.01, R_ptr)
     #(double *u_gyro, double Dt, double PT_est[6][6], double *x_est, double *x_prop, double PT_prop[6][6], int *i)
-    my_FK.FK_prop(g_ptr, 0.05, PT_est_ptr, x_est_ptr, x_prop_ptr, PT_prop_ptr, cont)
+    my_FK.FK_prop(g_ptr, 0.05, PT_est_ptr, x_est_ptr, x_prop_ptr, PT_prop_ptr)
     #(double *x_prop, double PT_prop[6][6], double *q_obs, double R[3][3], int iteracao, double *x_est, double PT_est[6][6], double P_est[7][7])
     my_FK.FK_estimador(x_prop_ptr, PT_prop_ptr, q_ptr, R_ptr, cont.contents.value, x_est_ptr, PT_est_ptr, P_est_ptr)
 

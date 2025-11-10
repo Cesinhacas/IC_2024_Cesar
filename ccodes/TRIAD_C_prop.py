@@ -4,7 +4,7 @@ import ctypes
 
 my_FK = ctypes.CDLL('./FK.so')
 
-my_FK.FK_prop.argtypes = [ctypes.POINTER(ctypes.c_double), ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_int)]
+my_FK.FK_prop.argtypes = [ctypes.POINTER(ctypes.c_double), ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)]
 my_FK.FK_prop.restype = ctypes.c_void_p
 my_FK.main.argtypes = []
 my_FK.main.restype = ctypes.c_int
@@ -46,21 +46,20 @@ for i in range(0, num_exe):
 
     g_ptr = g.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
 
-    cont = np.array([i]).ctypes.data_as(ctypes.POINTER(ctypes.c_int))
-    #(double *u_gyro, double Dt, double PT_est[6][6], double *x_est, double *x_prop, double PT_prop[6][6], int *i)
-    my_FK.FK_prop(g_ptr, Dt, PT_est_ptr, x_est_ptr, x_prop_ptr, PT_prop_ptr, cont)
+    #(double *u_gyro, double Dt, double PT_est[6][6], double *x_est, double *x_prop, double PT_prop[6][6])
+    my_FK.FK_prop(g_ptr, Dt, PT_est_ptr, x_est_ptr, x_prop_ptr, PT_prop_ptr)
 
     # Atualiza IN-PLACE os estados para a próxima iteração (não recrie arrays)
     PT_est[:, :] = np.ctypeslib.as_array(PT_prop_ptr, shape=(6, 6))
     x_est[:] = np.ctypeslib.as_array(x_prop_ptr, shape=(7,))
 
-    print(cont.contents.value)
+    print(i)
 
     estados_propagados[i] = np.ctypeslib.as_array(x_prop_ptr, shape=(7,)).copy()
     matrizes_cov_prop[i] = np.ctypeslib.as_array(PT_prop_ptr, shape=(6, 6)).copy()
 
-    if i == 3:
-        break
+    #if i == 2:
+    #    break
 
 estados_propagados = pd.DataFrame(estados_propagados)
 estados_propagados.to_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/estados_propagados_noest_c.csv', header=False, index=False)
