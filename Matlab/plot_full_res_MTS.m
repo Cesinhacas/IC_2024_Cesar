@@ -883,19 +883,16 @@ subplot(3,3,1), boxplot([vet_error_ETS_f7(4,:)', vet_error_ETS_f7_short(4,:)', v
 hold on
 grid on
 title("Offset - eixo x");
-ylabel("Distribuição de probabilidade")
 
 subplot(3,3,2), boxplot([vet_error_ETS_f7(5,:)', vet_error_ETS_f7_short(5,:)', vet_error_ETS_f7_reduzido(5,:)'], 'Labels', {'Full', 'Short', 'Reduzido'});
 hold on
 grid on
 title("Offset - eixo y");
-ylabel("Distribuição de probabilidade")
 
 subplot(3,3,3), boxplot([vet_error_ETS_f7(6,:)', vet_error_ETS_f7_short(6,:)', vet_error_ETS_f7_reduzido(6,:)'], 'Labels', {'Full', 'Short', 'Reduzido'});
 hold on
 grid on
 title("Offset - eixo z");
-ylabel("Distribuição de probabilidade")
 
 subplot(3,3,4), boxplot([vet_error_ETS_f7(1,:)', vet_error_ETS_f7_short(1,:)', vet_error_ETS_f7_reduzido(1,:)'], 'Labels', {'Full', 'Short', 'Reduzido'});
 hold on
@@ -1151,3 +1148,53 @@ ylabel("Distribuição de probabilidade")
 xlabel("Adimensional")
 legend("Dist. Eixo x", "Dist. 3 Eixos (556)", "Dist. 3 eixos (1112)", "Dist. 3 Eixos (332)")
 set(gca,'fontsize', 13)
+
+
+%%%%%%%%%%%%%%%%%%% Boxplots F7 - conjuntos - NLLS %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+figure(13)
+subplot(3,3,1), boxplot([vet_error_NLLS_f7(4,:)', vet_error_NLLS_f7_short(4,:)', vet_error_NLLS_f7_reduzido(4,:)'], 'Labels', {'Full', 'Short', 'Reduzido'});
+hold on
+grid on
+title("Offset - eixo x");
+
+subplot(3,3,2), boxplot([vet_error_NLLS_f7(5,:)', vet_error_NLLS_f7_short(5,:)', vet_error_NLLS_f7_reduzido(5,:)'], 'Labels', {'Full', 'Short', 'Reduzido'});
+hold on
+grid on
+title("Offset - eixo y");
+
+subplot(3,3,3), boxplot([vet_error_NLLS_f7(6,:)', vet_error_NLLS_f7_short(6,:)', vet_error_NLLS_f7_reduzido(6,:)'], 'Labels', {'Full', 'Short', 'Reduzido'});
+hold on
+grid on
+title("Offset - eixo z");
+
+subplot(3,3,4), boxplot([vet_error_NLLS_f7(1,:)', vet_error_NLLS_f7_short(1,:)', vet_error_NLLS_f7_reduzido(1,:)'], 'Labels', {'Full', 'Short', 'Reduzido'});
+hold on
+grid on
+title("Fator de escala - eixo x");
+
+subplot(3,3,5), boxplot([vet_error_NLLS_f7(2,:)', vet_error_NLLS_f7_short(2,:)', vet_error_NLLS_f7_reduzido(2,:)'], 'Labels', {'Full', 'Short', 'Reduzido'});
+hold on
+grid on
+title("Fator de escala - eixo y");
+
+subplot(3,3,6), boxplot([vet_error_NLLS_f7(3,:)', vet_error_NLLS_f7_short(3,:)', vet_error_NLLS_f7_reduzido(3,:)'], 'Labels', {'Full', 'Short', 'Reduzido'});
+hold on
+grid on
+title("Fator de escala - eixo z");
+
+subplot(3,3,7), boxplot([vet_error_NLLS_f7(7,:)', vet_error_NLLS_f7_short(7,:)', vet_error_NLLS_f7_reduzido(7,:)'], 'Labels', {'Full', 'Short', 'Reduzido'});
+hold on
+grid on
+title("Rho");
+
+subplot(3,3,8), boxplot([vet_error_NLLS_f7(8,:)', vet_error_NLLS_f7_short(8,:)', vet_error_NLLS_f7_reduzido(8,:)'], 'Labels', {'Full', 'Short', 'Reduzido'});
+hold on
+grid on
+title("Phi");
+
+subplot(3,3,9), boxplot([vet_error_NLLS_f7(9,:)', vet_error_NLLS_f7_short(9,:)', vet_error_NLLS_f7_reduzido(9,:)'], 'Labels', {'Full', 'Short', 'Reduzido'});
+hold on
+grid on
+title("Lambda");

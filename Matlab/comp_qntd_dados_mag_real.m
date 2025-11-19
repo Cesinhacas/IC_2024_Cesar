@@ -107,6 +107,7 @@ title('(a)');
 xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
+set(gca,'FontSize',17)
 
 subplot(2,2,2)
 set(gcf,'Units','inches');
@@ -137,6 +138,7 @@ title('(b)');
 xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
+set(gca,'FontSize',17)
 
 subplot(2,2,3)
 set(gcf,'Units','inches');
@@ -163,10 +165,11 @@ mx = Dados_Corrompido1(1,:);
 my = Dados_Corrompido1(2,:);
 mz = Dados_Corrompido1(3,:);
 plot3(mx,my,mz,'r.','linewidth',1.5)
-title('(b)'); 
+title('(c)'); 
 xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
+set(gca,'FontSize',17)
 
 subplot(2,2,4)
 set(gcf,'Units','inches');
@@ -193,10 +196,11 @@ mx = Dados_Corrompido2(1,:);
 my = Dados_Corrompido2(2,:);
 mz = Dados_Corrompido2(3,:);
 plot3(mx,my,mz,'r.','linewidth',1.5)
-title('(b)'); 
+title('(d)'); 
 xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
+set(gca,'FontSize',17)
 
 [Time_full,p_full] = test1(Dados_Corrompido_full, 0.224);
 [Time_full_filtred,p_full_filtred] = test1(Dados_Corrompido_full_filtred, 0.224);
@@ -237,6 +241,7 @@ title('(a)');
 xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
+set(gca,'FontSize',17)
 
 Dados_rest_full(1,:) =  (Dados_Corrompido_ref(1,:) - p_full(4))/p_full(1);
 Dados_rest_full(2,:) = ((Dados_Corrompido_ref(2,:) - p_full(5))/p_full(2) - Dados_rest_full(1,:)*sin(p_full(7)))/cos(p_full(7));

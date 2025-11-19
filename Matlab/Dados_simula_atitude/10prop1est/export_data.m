@@ -1,0 +1,15 @@
+writematrix(qTrue, 'qTrue.csv');
+writematrix(q_Triad, 'q_Triad.csv');
+writematrix(gyro_out, 'gyro_out.csv');
+writematrix(accel_cinematica, 'accel.csv');
+writematrix(mag_cinematica, 'mag.csv');
+writematrix(q_Triad_sr, 'q_Triad_sr.csv');
+writematrix(q_prop_sr, 'q_prop_sr.csv');
+writematrix(q_est_sr, 'q_est_sr.csv');
+writematrix(x_est, 'x_est.csv');
+writematrix(x_prop, 'x_prop.csv');
+writematrix(P_est, 'P_est.csv');
+writematrix(PT_est, 'PT_est.csv');
+writematrix(x_prop, 'x_prop.csv');
+writematrix(PT_prop, 'PT_prop.csv');
+writematrix(gyro_true, 'gyro_true.csv');

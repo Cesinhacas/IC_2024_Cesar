@@ -16,12 +16,12 @@ my_FK.FK_estimador.restype = ctypes.c_void_p
 PT_prop_mat = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/PT_prop.csv', header=None)
 x_prop_mat = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/x_prop.csv', header=None)
 
-PT_prop_mat = PT_prop_mat.to_numpy().reshape(6, 6, 201, order='F')
+PT_prop_mat = PT_prop_mat.to_numpy().reshape(6, 6, 1201, order='F')
 x_prop_mat = x_prop_mat.to_numpy()  # shape: (201, 7)
 
-dados_accel = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/Accel_cinematica.csv', header=None)
-dados_mag = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/Mag_cinematica.csv', header=None)
-dados_gyro = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/gyro_cinematica.csv', header=None)
+dados_accel = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/accel.csv', header=None)
+dados_mag = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/mag.csv', header=None)
+dados_gyro = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/gyro_out.csv', header=None)
 
 dados_accel = dados_accel.to_numpy().transpose()
 dados_mag = dados_mag.to_numpy().transpose()
