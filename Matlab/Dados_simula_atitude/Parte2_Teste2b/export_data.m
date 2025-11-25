@@ -14,5 +14,5 @@ writematrix(x_prop, 'x_prop.csv');
 writematrix(PT_prop, 'PT_prop.csv');
 writematrix(accel_cinematica_ruido, 'accel_ruido.csv');
 writematrix(mag_cinematica_ruido, 'mag_ruido.csv');
-writematrix(accel_cinematica_ruido, 'accel_corrigido.csv');
-writematrix(mag_cinematica_ruido, 'mag_corrigido.csv');
+writematrix(accel_corrigido, 'accel_corrigido.csv');
+writematrix(mag_corrigido, 'mag_corrigido.csv');

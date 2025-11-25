@@ -347,7 +347,7 @@ mx = Dados_rest_half1(1,:);
 my = Dados_rest_half1(2,:);
 mz = Dados_rest_half1(3,:);
 plot3(mx,my,mz,'r.','linewidth',1.5)
-title('(b)'); 
+title('(c)'); 
 xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
@@ -377,7 +377,7 @@ mx = Dados_rest_half2(1,:);
 my = Dados_rest_half2(2,:);
 mz = Dados_rest_half2(3,:);
 plot3(mx,my,mz,'r.','linewidth',1.5)
-title('(b)'); 
+title('(d)'); 
 xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');

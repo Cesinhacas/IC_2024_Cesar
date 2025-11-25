@@ -109,16 +109,29 @@ p_mag_df.to_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/
 
 
 for i in range(0, num_exe):
-    #Dados_rest(1,:) =  (Dados_Corrompido(1,:) - p(4))/p(1); EIXO X
-    #Dados_rest(2,:) = ((Dados_Corrompido(2,:) - p(5))/p(2) - Dados_rest(1,:)*sin(p(7)))/cos(p(7)); EIXO Y
-    #Dados_rest(3,:) = ((Dados_Corrompido(3,:) - p(6))/p(3) - Dados_rest(1,:)*sin(p(8))*cos(p(9)) - Dados_rest(2,:)*sin(p(9)))/(cos(p(8))*cos(p(9))); EIXO Z
+    #Dados_rest1(1,:) =  (Dados_Corrompido(1,:) - p1(4))/p1(1);
+    #Dados_rest1(2,:) = ((Dados_Corrompido(2,:) - p1(5))/p1(2) - Dados_rest1(1,:)*sin(p1(7)))/cos(p1(7));
+    #Dados_rest1(3,:) = ((Dados_Corrompido(3,:) - p1(6))/p1(3) - Dados_rest1(1,:)*sin(p1(8))*cos(p1(9)) - Dados_rest1(2,:)*sin(p1(9)))/(cos(p1(8))*cos(p1(9)));
+
+    #Dados_rest1[0, :] = (Dados_Corrompido[0, :] - p1[3]) / p1[0]
+
+    #Dados_rest1[1, :] = ((Dados_Corrompido[1, :] - p1[4]) / p1[1]
+    #                 - Dados_rest1[0, :] * np.sin(p1[6])) / np.cos(p1[6])
+
+    #Dados_rest1[2, :] = ((Dados_Corrompido[2, :] - p1[5]) / p1[2]
+    #                 - Dados_rest1[0, :] * np.sin(p1[7]) * np.cos(p1[8])
+    #                 - Dados_rest1[1, :] * np.sin(p1[8])) / (np.cos(p1[7]) * np.cos(p1[8]))
     ax = (dados_accel[0][i] - p_accel[3]) / p_accel[0]
-    ay = ((dados_accel[1][i] - p_accel[4]) / p_accel[1] - ax*np.sin(p_accel[6])) / np.cos(p_accel[6])
-    az = ((dados_accel[2][i] - p_accel[5]) / p_accel[2] - ax*np.sin(p_accel[7])*np.cos(p_accel[8]) - ay*np.sin(p_accel[8])) / (np.cos(p_accel[7])*np.cos(p_accel[8]))
+    ay = ((dados_accel[1][i] - p_accel[4]) / p_accel[1] - ax * np.sin(p_accel[6])) / np.cos(p_accel[6])
+    az = ((dados_accel[2][i] - p_accel[5]) / p_accel[2] - ax * np.sin(p_accel[7]) * np.cos(p_accel[8]) - ay * np.sin(p_accel[8])) / (np.cos(p_accel[7]) * np.cos(p_accel[8]))
     
     mx = (dados_mag[0][i] - p_mag[3]) / p_mag[0]
-    my = ((dados_mag[1][i] - p_mag[4]) / p_mag[1] - mx*np.sin(p_mag[6])) / np.cos(p_mag[6])
-    mz = ((dados_mag[2][i] - p_mag[5]) / p_mag[2] - mx*np.sin(p_mag[7])*np.cos(p_mag[8]) - my*np.sin(p_mag[8])) / (np.cos(p_mag[7])*np.cos(p_mag[8]))
+    my = ((dados_mag[1][i] - p_mag[4]) / p_mag[1] - mx * np.sin(p_mag[6])) / np.cos(p_mag[6])
+    mz = ((dados_mag[2][i] - p_mag[5]) / p_mag[2] - mx * np.sin(p_mag[7]) * np.cos(p_mag[8]) - my * np.sin(p_mag[8])) / (np.cos(p_mag[7]) * np.cos(p_mag[8]))
+    
+    #mx = (dados_mag[0][i] - p_mag[3]) / p_mag[0]
+    #my = ((dados_mag[1][i] - p_mag[4]) / p_mag[1] - mx*np.sin(p_mag[6])) / np.cos(p_mag[6])
+    #mz = ((dados_mag[2][i] - p_mag[5]) / p_mag[2] - mx*np.cos(p_mag[7])*np.sin(p_mag[7]) - my*np.sin(p_mag[8])) / (np.cos(p_mag[7])*np.cos(p_mag[8]))
 
     gx = dados_gyro[0][i]
     gy = dados_gyro[1][i]

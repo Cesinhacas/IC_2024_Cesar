@@ -1,5 +1,6 @@
 writematrix(qTrue, 'qTrue.csv');
 writematrix(q_Triad, 'q_Triad.csv');
+writematrix(R_triad, 'R_Triad.csv')
 writematrix(gyro_out, 'gyro_out.csv');
 writematrix(accel_cinematica, 'accel.csv');
 writematrix(mag_cinematica, 'mag.csv');

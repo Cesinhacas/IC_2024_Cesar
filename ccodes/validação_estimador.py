@@ -9,10 +9,10 @@ my_FK.main.restype = ctypes.c_int
 my_FK.FK_estimador.argtypes = [ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)]
 my_FK.FK_estimador.restype = ctypes.c_void_p
 
-PT_prop_mat = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/PT_prop.csv', header=None)
-x_prop_mat = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/x_prop.csv', header=None)
-q_obs_mat = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/TRIAD_out.csv', header=None)
-cov_matlab = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/R_triad_matlab.csv', header=None)
+PT_prop_mat = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/PT_prop.csv', header=None)
+x_prop_mat = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/x_prop.csv', header=None)
+q_obs_mat = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/q_Triad.csv', header=None)
+cov_matlab = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/R_Triad.csv', header=None)
 
 # TRIAD_out.csv: 201x4 (201 linhas de quatérnions)
 q_obs = q_obs_mat.to_numpy()  # shape: (201, 4)
@@ -23,14 +23,14 @@ x_prop = x_prop_mat.to_numpy()  # shape: (201, 7)
 # PT_prop.csv: 6x1206 (201 matrizes 6x6 concatenadas horizontalmente)
 # Reshape mantendo ordem por colunas (Fortran) para agrupar blocos 6x6 corretamente
 # (6, 1206) -> (6, 6, 201)
-PT_prop_mat = PT_prop_mat.to_numpy().reshape(6, 6, 201, order='F')
+PT_prop_mat = PT_prop_mat.to_numpy().reshape(6, 6, 1201, order='F')
 
 # R_triad_matlab.csv: 3x603 (201 matrizes 3x3 concatenadas horizontalmente)
 # Reshape mantendo ordem por colunas (Fortran) para agrupar blocos 3x3 corretamente
 # (3, 603) -> (3, 3, 201)
-R_mat = cov_matlab.to_numpy().reshape(3, 3, 201, order='F')
+R_mat = cov_matlab.to_numpy().reshape(3, 3, 1201, order='F')
 
-num_exe = 201
+num_exe = 1201
 
 #  VETORES DE SAÍDA E ARMAZENAMENTO DOS DADOS DA SIMULAÇÃO
 estados_estimados = np.zeros((num_exe, 7))  # Estados estimados pelo filtro de Kalman
@@ -88,10 +88,4 @@ for i in range(0, num_exe):
         #break
 
 estados_estimados = pd.DataFrame(estados_estimados)
-estados_estimados.to_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/estados_estimados_mat_c.csv', header=False, index=False)
-
-covariancias_estimadas = pd.DataFrame(covariancias_estimadas.reshape(num_exe, 49))
-covariancias_estimadas.to_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/cov_triad_est_mat_c.csv', header=False, index=False)
-
-covarianciasT_estimadas = pd.DataFrame(covarianciasT_estimadas.reshape(num_exe, 36))
-covarianciasT_estimadas.to_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/covT_triad_est_mat_c.csv', header=False, index=False)
+estados_estimados.to_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/validacao_estimador_only.csv', header=False, index=False)
