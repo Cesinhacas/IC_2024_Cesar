@@ -16,9 +16,18 @@ q_est_c = readmatrix("estados_estimados_c.csv");
 q_prop_c = readmatrix("estados_propagados_c.csv");
 q_triad_c = readmatrix("quaternion_c.csv");
 
+
 q_est_c_sr = [q_est_c(:,4), q_est_c(:,1), q_est_c(:,2), q_est_c(:,3)];
 q_prop_c_sr = [q_prop_c(:,4), q_prop_c(:,1), q_prop_c(:,2), q_prop_c(:,3)];
 %q_triad_c_sr = [q_triad_c(:,4), q_triad_c(:,1), q_triad_c(:,2), q_triad_c(:,3)];
+
+euler_True = zeros(length(qTrue(1,:)), 3);
+euler_Triad_sr = zeros(length(qTrue(1,:)), 3);
+euler_prop_sr = zeros(length(qTrue(1,:)), 3);
+euler_est_sr = zeros(length(qTrue(1,:)), 3);
+euler_triad_c = zeros(length(qTrue(1,:)), 3);
+euler_prop_c = zeros(length(qTrue(1,:)), 3);
+euler_est_c = zeros(length(qTrue(1,:)), 3);
 
 for i=1:1:1201
     q = q_est_c_sr(i,:);
@@ -36,11 +45,19 @@ for i=1:1:1201
     end
 
     q = qTrue - q_est_sr;
-     if q(2)>1 || q(3)>1 || q(4)>1
-         q_Triad_sr(i,:) = [q_Triad_sr(i,1), -q_Triad_sr(i,2:4)];
-         q_est_sr(i,:) = [q_est_sr(i,1), -q_est_sr(i,2:4)];
-         q_prop_sr(i,:) = [q_prop_sr(i,1), -q_prop_sr(i,2:4)];
-     end
+    if q(2)>1 || q(3)>1 || q(4)>1
+        q_Triad_sr(i,:) = [q_Triad_sr(i,1), -q_Triad_sr(i,2:4)];
+        q_est_sr(i,:) = [q_est_sr(i,1), -q_est_sr(i,2:4)];
+        q_prop_sr(i,:) = [q_prop_sr(i,1), -q_prop_sr(i,2:4)];
+    end
+
+    euler_True(i,:) = quat2eul(qTrue(i,:));
+    euler_Triad_sr(i,:) = quat2eul(q_Triad_sr(i,:));
+    euler_prop_sr(i,:) = quat2eul(q_prop_sr(i,:));
+    euler_est_sr(i,:) = quat2eul(q_est_sr(i,:));
+    euler_triad_c(i,:) = quat2eul(q_triad_c(i,:));
+    euler_prop_c(i,:) = quat2eul(q_prop_c_sr(i,:));
+    euler_est_c(i,:) = quat2eul(q_est_c_sr(i,:));
 end
 
 tempo = 0:0.05:60;
@@ -369,3 +386,261 @@ xlabel("Segundos");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
 %exportgraphics(gcf,"Comparacao_velocidade_angular.pdf","ContentType","vector")
+
+figure(10)
+sgtitle("Comparação atitude verdadeira e atitude do TRIAD - MATLAB - Ângulos de Euler")
+
+subplot(1,3,1)
+plot(tempo,euler_True)
+hold on
+title("(a) Atitude verdadeira")
+grid on
+xlim([0,60])
+ylabel("Ângulo");
+xlabel("Segundos");
+
+subplot(1,3,2)
+plot(tempo,euler_Triad_sr)
+hold on
+title("(b) Atitude TRIAD - MATLAB")
+grid on
+ylabel("Ângulo");
+xlabel("Segundos");
+xlim([0,60])
+
+subplot(1,3,3)
+ylabel("Ângulo");
+xlabel("Segundos");
+plot(tempo,euler_True-euler_Triad_sr)
+hold on
+grid on
+xlim([0,60])
+ylim([-0.1,0.1])
+title("(c) Diferença")
+legend('Yaw','Pitch','Roll')
+ylabel("Erro angular");
+xlabel("Segundos");
+set(findall(gcf,'-property','FontSize'),'FontSize',20)
+set(gcf, 'WindowState', 'maximized');
+exportgraphics(gcf,"Comparacao_TRIAD_True_m_eul.pdf","ContentType","vector")
+
+figure(11)
+sgtitle("Comparação atitude verdadeira e atitude propagada - MATLAB - Ângulos de Euler")
+
+subplot(1,3,1)
+plot(tempo,euler_True)
+hold on
+title("(a) Atitude verdadeira")
+grid on
+xlim([0,60])
+ylabel("Ângulo");
+xlabel("Segundos");
+
+subplot(1,3,2)
+plot(tempo,euler_prop_sr)
+hold on
+title("(b) Atitude propagada - MATLAB")
+grid on
+ylabel("Ângulo");
+xlabel("Segundos");
+xlim([0,60])
+
+subplot(1,3,3)
+ylabel("Ângulo");
+xlabel("Segundos");
+plot(tempo,euler_True-euler_prop_sr)
+hold on
+grid on
+xlim([0,60])
+ylim([-0.1,0.1])
+title("(c) Diferença")
+legend('Yaw','Pitch','Roll')
+ylabel("Erro angular");
+xlabel("Segundos");
+set(findall(gcf,'-property','FontSize'),'FontSize',20)
+set(gcf, 'WindowState', 'maximized');
+exportgraphics(gcf,"Comparacao_prop_True_m_eul.pdf","ContentType","vector")
+
+figure(12)
+sgtitle("Comparação atitude verdadeira e estimada - MATLAB - Ângulos de Euler")
+
+subplot(1,3,1)
+plot(tempo,euler_True)
+hold on
+title("(a) Atitude verdadeira")
+grid on
+xlim([0,60])
+ylabel("Ângulo");
+xlabel("Segundos");
+
+subplot(1,3,2)
+plot(tempo,euler_est_sr)
+hold on
+title("(b) Atitude estimada - MATLAB")
+grid on
+ylabel("Ângulo");
+xlabel("Segundos");
+xlim([0,60])
+
+subplot(1,3,3)
+ylabel("Ângulo");
+xlabel("Segundos");
+plot(tempo,euler_True-euler_est_sr)
+hold on
+grid on
+xlim([0,60])
+ylim([-0.1,0.1])
+title("(c) Diferença")
+legend('Yaw','Pitch','Roll')
+ylabel("Erro angular");
+xlabel("Segundos");
+set(findall(gcf,'-property','FontSize'),'FontSize',20)
+set(gcf, 'WindowState', 'maximized');
+exportgraphics(gcf,"Comparacao_est_True_m_eul.pdf","ContentType","vector")
+
+figure(13)
+sgtitle("Comparação atitude verdadeira e atitude do TRIAD - C - Ângulos de Euler")
+
+subplot(1,3,1)
+plot(tempo,euler_True)
+hold on
+title("(a) Atitude verdadeira")
+grid on
+xlim([0,60])
+ylabel("Ângulo");
+xlabel("Segundos");
+
+subplot(1,3,2)
+plot(tempo,euler_triad_c)
+hold on
+title("(b) Atitude TRIAD - C")
+grid on
+ylabel("Ângulo");
+xlabel("Segundos");
+xlim([0,60])
+
+subplot(1,3,3)
+ylabel("Ângulo");
+xlabel("Segundos");
+plot(tempo,euler_True-euler_triad_c)
+hold on
+grid on
+xlim([0,60])
+ylim([-0.1,0.1])
+title("(c) Diferença")
+legend('Yaw','Pitch','Roll')
+ylabel("Erro angular");
+xlabel("Segundos");
+set(findall(gcf,'-property','FontSize'),'FontSize',20)
+set(gcf, 'WindowState', 'maximized');
+exportgraphics(gcf,"Comparacao_TRIAD_True_c_eul.pdf","ContentType","vector")
+
+figure(14)
+sgtitle("Comparação atitude verdadeira e atitude propagada - C - Ângulos de Euler")
+
+subplot(1,3,1)
+plot(tempo,euler_True)
+hold on
+title("(a) Atitude verdadeira")
+grid on
+xlim([0,60])
+ylabel("Ângulo");
+xlabel("Segundos");
+
+subplot(1,3,2)
+plot(tempo,euler_prop_c)
+hold on
+title("(b) Atitude propagada - C")
+grid on
+ylabel("Ângulo");
+xlabel("Segundos");
+xlim([0,60])
+
+subplot(1,3,3)
+ylabel("Ângulo");
+xlabel("Segundos");
+plot(tempo,euler_True-euler_prop_c)
+hold on
+grid on
+xlim([0,60])
+ylim([-0.1,0.1])
+title("(c) Diferença")
+legend('Yaw','Pitch','Roll')
+ylabel("Erro angular");
+xlabel("Segundos");
+set(findall(gcf,'-property','FontSize'),'FontSize',20)
+set(gcf, 'WindowState', 'maximized');
+exportgraphics(gcf,"Comparacao_prop_True_c_eul.pdf","ContentType","vector")
+
+figure(15)
+sgtitle("Comparação atitude verdadeira e estimada - C - Ângulos de Euler")
+
+subplot(1,3,1)
+plot(tempo,euler_True)
+hold on
+title("(a) Atitude verdadeira")
+grid on
+xlim([0,60])
+ylabel("Ângulo");
+xlabel("Segundos");
+
+subplot(1,3,2)
+plot(tempo,euler_est_c)
+hold on
+title("(b) Atitude estimada - C")
+grid on
+ylabel("Ângulo");
+xlabel("Segundos");
+xlim([0,60])
+
+subplot(1,3,3)
+ylabel("Ângulo");
+xlabel("Segundos");
+plot(tempo,euler_True-euler_est_c)
+hold on
+grid on
+xlim([0,60])
+ylim([-0.1,0.1])
+title("(c) Diferença")
+legend('Yaw','Pitch','Roll')
+ylabel("Erro angular");
+xlabel("Segundos");
+set(findall(gcf,'-property','FontSize'),'FontSize',20)
+set(gcf, 'WindowState', 'maximized');
+exportgraphics(gcf,"Comparacao_est_True_c_eul.pdf","ContentType","vector")
+
+figure(16)
+sgtitle("Comparação atitude propagada - C Vs. MATLAB - Ângulos de Euler")
+
+subplot(1,3,1)
+plot(tempo,euler_prop_sr)
+hold on
+title("(a) Atitude propagada MATLAB")
+grid on
+xlim([0,60])
+ylabel("Ângulo");
+xlabel("Segundos");
+
+subplot(1,3,2)
+plot(tempo,euler_prop_c)
+hold on
+title("(b) Atitude propagada - C")
+grid on
+ylabel("Ângulo");
+xlabel("Segundos");
+xlim([0,60])
+
+subplot(1,3,3)
+ylabel("Ângulo");
+xlabel("Segundos");
+plot(tempo,euler_prop_sr-euler_prop_c)
+hold on
+grid on
+xlim([0,60])
+title("(c) Diferença")
+legend('Yaw','Pitch','Roll')
+ylabel("Erro angular");
+xlabel("Segundos");
+set(findall(gcf,'-property','FontSize'),'FontSize',20)
+set(gcf, 'WindowState', 'maximized');
+exportgraphics(gcf,"Comparacao_est_m_c_eul.pdf","ContentType","vector")
