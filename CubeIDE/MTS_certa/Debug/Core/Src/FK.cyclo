@@ -1,0 +1,4 @@
+../Core/Src/FK.c:7:6:inverter_matriz	9
+../Core/Src/FK.c:44:6:FK_prop	52
+../Core/Src/FK.c:312:6:FK_estimador	62
+../Core/Src/FK.c:758:6:prepara	17

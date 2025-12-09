@@ -83,7 +83,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Segundos");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_TRIAD_True_m.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_TRIAD_True_m.pdf","ContentType","vector")
 
 figure(2)
 sgtitle("Comparação quatérnion verdadeiro e quatérnion estimado - Matlab")
@@ -117,7 +117,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Segundos");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_est_True_m.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_est_True_m.pdf","ContentType","vector")
 
 figure(3)
 sgtitle("Comparação quatérnion verdadeiro e quatérnion propagado - Matlab")
@@ -152,7 +152,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Segundos");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_prop_True_m.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_prop_True_m.pdf","ContentType","vector")
 
 figure(4)
 sgtitle("Diferença")
@@ -186,7 +186,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Segundos");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_TRIAD_prop_est_True_m.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_TRIAD_prop_est_True_m.pdf","ContentType","vector")
 
 figure(5)
 sgtitle("Comparação quatérnion verdadeiro e quatérnion propagado - C")
@@ -222,7 +222,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Segundos");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_TRIAD_prop_c.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_TRIAD_prop_c.pdf","ContentType","vector")
 
 figure(6)
 sgtitle("Comparação quatérnion propagado - Matlab e quatérnion propagado - C")
@@ -258,7 +258,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Segundos");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_prop_prop.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_prop_prop.pdf","ContentType","vector")
 
 figure(7)
 sgtitle("Comparação quatérnion verdadeiro e quatérnion estimado - C")
@@ -294,7 +294,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Segundos");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_est_True_c.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_est_True_c.pdf","ContentType","vector")
 
 figure(8)
 sgtitle("Comparação quatérnion verdadeiro e quatérnion TRIAD - C")
@@ -330,7 +330,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Segundos");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_TRIAD_True_c.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_TRIAD_True_c.pdf","ContentType","vector")
 
 
 figure(9)
@@ -368,4 +368,4 @@ ylabel("Erro da velocidade angular de cada eixo (Graus)");
 xlabel("Segundos");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_velocidade_angular.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_velocidade_angular.pdf","ContentType","vector")

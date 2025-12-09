@@ -13,3 +13,6 @@ writematrix(PT_est, 'PT_est.csv');
 writematrix(x_prop, 'x_prop.csv');
 writematrix(PT_prop, 'PT_prop.csv');
 writematrix(gyro_true, 'gyro_true.csv');
+writematrix(gyro_out1', 'gyro_out.txt');
+writematrix(accel_cinematica', 'accel.txt');
+writematrix(mag_cinematica', 'mag.txt');

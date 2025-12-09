@@ -27,7 +27,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "calib.h"
+#include <math.h>
+#include "FK.h"
+#include "atitude.h"
 
 /* USER CODE END Includes */
 
@@ -44,7 +46,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define tam 1201
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -55,10 +57,13 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-float mx[tam] = {0}, my[tam] = {0}, mz[tam] = {0};
-//union calib_t mx_[tam] = {0}, my_[tam] = {0}, mz_[tam] = {0};
-uint8_t passos_NLLS = 0;
-
+double mx[tam] = {0}, my[tam] = {0}, mz[tam] = {0}, ax[tam] = {0}, ay[tam] = {0}, az[tam] = {0}, gx[tam] = {0}, gy[tam] = {0}, gz[tam] = {0};
+double quat_res[4][tam] = {0}, x_est_res[7][tam] = {0}, x_prop_res[7][tam] = {0};
+double x_prop[7] = {0}, x_est[7] = {0, 0 ,0, 1, 0, 0, 0}, PT_prop[6][6] = {0}, PT_est[6][6] = {0}, P_est[7][7] = {0}, R[3][3] = {0}, q[4] = {0};
+double v1[3] = {0, 1, 0}, v2[3] = {1/sqrt(2), 0, 1/sqrt(2)};
+uint16_t time = 0;
+uint16_t start_time = 0;
+uint16_t time_res[tam] = {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -80,6 +85,7 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
   char file_read[25] = {0};
+  uint16_t i = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -105,10 +111,8 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   uint32_t start_time = 0;
-  uint16_t file_cont = 1;
   //union calib_t param1[9], param2[9];
-  float p1[9], p0[9];
-  float NLLS_time, ETS_time;
+  prepara();
 
   FATFS fs;
   FRESULT res;
@@ -127,12 +131,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	if(file_cont >= 3001)
-	{
-		return 1;
-	}
-
-	sprintf(file_read, "0:/DATA1/run%d.txt", file_cont);  // Prefixo de volume (0:) é comum no FatFs
+	sprintf(file_read, "0:/DATA1/accel.txt");  // Prefixo de volume (0:) é comum no FatFs
 
 	FIL fil;
 	FRESULT res;
@@ -146,7 +145,7 @@ int main(void)
 	char line[30670];
 	UINT br; // Bytes lidos
 
-	float *linhas[] = {mx, my, mz};  // Vetor de ponteiros para facilitar o acesso
+	double *linhas[] = {ax, ay, az};  // Vetor de ponteiros para facilitar o acesso
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -180,60 +179,127 @@ int main(void)
 
 	f_close(&fil);
 
-	/*for(uint16_t i = 0; i < tam; i++)
-	{
-		mx_[i].flutuante = mx[i];
-		my_[i].flutuante = my[i];
-		mz_[i].flutuante = mz[i];
-	}*/
+	sprintf(file_read, "0:/DATA1/mag.txt");  // Prefixo de volume (0:) é comum no FatFs
 
-	start_time = HAL_GetTick();
-	ETS(mx, my, mz, p0);
-	ETS_time = HAL_GetTick() - start_time;
-
-	start_time = HAL_GetTick();
-	passos_NLLS = NLLS(mx, my, mz, p1);
-	NLLS_time = HAL_GetTick() - start_time;
-
-	/*HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, SET);
-	while(!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_0));
-	HAL_Delay(5);
-
-	for(uint16_t i = 0; i < tam; i++)
+	res = f_open(&fil, file_read, FA_READ);
+	if (res != FR_OK)
 	{
-		HAL_SPI_Transmit(&hspi1, mx_[i].inteiro, 4, HAL_MAX_DELAY);
-	}
-	for(uint16_t i = 0; i < tam; i++)
-	{
-		HAL_SPI_Transmit(&hspi1, my_[i].inteiro, 4, HAL_MAX_DELAY);
-	}
-	for(uint16_t i = 0; i < tam; i++)
-	{
-		HAL_SPI_Transmit(&hspi1, mz_[i].inteiro, 4, HAL_MAX_DELAY);
+		return 1;
 	}
 
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, RESET);
+	double *linhasm[] = {mx, my, mz};  // Vetor de ponteiros para facilitar o acesso
 
-	while(!HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_0));
-	for(uint8_t i = 0; i < 10; i++)
+	for (int i = 0; i < 3; i++)
 	{
-		HAL_SPI_Receive(&hspi1, param1[i].inteiro, 4, HAL_MAX_DELAY);
+		// lê uma linha completa (até '\n' ou fim do buffer)
+		int line_pos = 0;
+		char ch;
+		do {
+			res = f_read(&fil, &ch, 1, &br);
+			if (res != FR_OK || br == 0) {
+				return 1;
+			}
+			line[line_pos++] = ch;
+		} while (ch != '\n' && line_pos < sizeof(line)-1);
+		line[line_pos] = '\0';
+
+		char *token = strtok(line, ",");
+		int j = 0;
+
+		while (token != NULL && j < tam)
+		{
+			linhasm[i][j] = strtof(token, NULL);
+			token = strtok(NULL, ",");
+			j++;
+		}
+
+		if (j != tam)
+		{
+			return 1;
+		}
 	}
-	for(uint8_t i = 0; i < 10; i++)
+
+	f_close(&fil);
+
+	sprintf(file_read, "0:/DATA1/gyro.txt");  // Prefixo de volume (0:) é comum no FatFs
+
+		res = f_open(&fil, file_read, FA_READ);
+		if (res != FR_OK)
+		{
+			return 1;
+		}
+
+		double *linhasg[] = {gx, gy, gz};  // Vetor de ponteiros para facilitar o acesso
+
+		for (int i = 0; i < 3; i++)
+		{
+			// lê uma linha completa (até '\n' ou fim do buffer)
+			int line_pos = 0;
+			char ch;
+			do {
+				res = f_read(&fil, &ch, 1, &br);
+				if (res != FR_OK || br == 0) {
+					return 1;
+				}
+				line[line_pos++] = ch;
+			} while (ch != '\n' && line_pos < sizeof(line)-1);
+			line[line_pos] = '\0';
+
+			char *token = strtok(line, ",");
+			int j = 0;
+
+			while (token != NULL && j < tam)
+			{
+				linhasg[i][j] = strtof(token, NULL);
+				token = strtok(NULL, ",");
+				j++;
+			}
+
+			if (j != tam)
+			{
+				return 1;
+			}
+		}
+
+		f_close(&fil);
+
+		for(uint8_t j = 0; j < 7; j++)
+		{
+			PT_est[j][j] = 1e6;
+		}
+
+	//Implementação
+	while(i < tam)
 	{
-		HAL_SPI_Receive(&hspi1, param2[i].inteiro, 4, HAL_MAX_DELAY);
+
+		double w1[3] = {ax[i], ay[i], az[i]};
+		double w2[3] = {mx[i], my[i], mz[i]};
+		double gyro[3] = {gx[i], gy[i], gz[i]};
+
+		start_time = HAL_GetTick();
+		TRIAD(v1, v2, w1, w2, q, 0.01, 0.01, R);
+		FK_prop(gyro, 0.05, PT_est, x_est, x_prop, PT_prop);
+		FK_estimador(x_prop, PT_prop, q, R, (uint8_t)(i+1), x_est, PT_est, P_est);
+		time = HAL_GetTick() - start_time;
+
+		for(uint8_t ii = 0; ii < 7; ii++)
+		{
+			x_prop_res[ii][i] = x_prop[ii];
+			x_est_res[ii][i] = x_est[ii];
+		}
+		for(uint8_t ii = 0; ii < 4; ii++)
+		{
+			quat_res[ii][i] = q[ii];
+		}
+
+		time_res[i] = time;
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);
+		HAL_Delay(5);
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
+		i++;
 	}
-	HAL_SPI_Receive(&hspi1, ETS_time.inteiro, 4, HAL_MAX_DELAY);
-	HAL_SPI_Receive(&hspi1, NLLS_time.inteiro, 4, HAL_MAX_DELAY);
-	HAL_SPI_Receive(&hspi1, &passos_NLLS, 1, HAL_MAX_DELAY);
 
-	for(uint8_t i = 0; i < 10; i++)
-	{
-		p0[i] = param1[i].flutuante;
-		p1[i] = param2[i].flutuante;
-	}*/
-
-	sprintf(file_read, "0:/RES/run%d.txt", file_cont);
+	sprintf(file_read, "0:/RES/q.txt");
 	res = f_open(&fil, file_read, FA_WRITE | FA_CREATE_ALWAYS);
 	if (res != FR_OK)
 	{
@@ -243,24 +309,54 @@ int main(void)
 	char out_line[128];
 	UINT bw;
 
-	for (int i = 0; i < 9; i++) {
-		sprintf(out_line, "%f, %f\n", p0[i], p1[i]);
+	for (int i = 0; i < 1201; i++) {
+		sprintf(out_line, "%f, %f, %f, %f\n", quat_res[0][i], quat_res[1][i], quat_res[2][i], quat_res[3][i]);
 		f_write(&fil, out_line, strlen(out_line), &bw);
 	}
-
-	sprintf(out_line, "%f, %f\n", ETS_time, NLLS_time);
-	f_write(&fil, out_line, strlen(out_line), &bw);
-
-	sprintf(out_line, "0, %u\n", passos_NLLS);
-	f_write(&fil, out_line, strlen(out_line), &bw);
-
 	f_close(&fil);
 
-	file_cont++;
-	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
-	HAL_Delay(10);
-	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
+	sprintf(file_read, "0:/RES/x_prop.txt");
+	res = f_open(&fil, file_read, FA_WRITE | FA_CREATE_ALWAYS);
+	if (res != FR_OK)
+	{
+		return 1;
+	}
 
+	for (int i = 0; i < 1201; i++) {
+		sprintf(out_line, "%f, %f, %f, %f, %f, %f, %f\n", x_prop_res[0][i], x_prop_res[1][i], x_prop_res[2][i], x_prop_res[3][i], x_prop_res[4][i], x_prop_res[5][i], x_prop_res[6][i]);
+		f_write(&fil, out_line, strlen(out_line), &bw);
+	}
+	f_close(&fil);
+
+	sprintf(file_read, "0:/RES/x_est.txt");
+	res = f_open(&fil, file_read, FA_WRITE | FA_CREATE_ALWAYS);
+	if (res != FR_OK)
+	{
+		return 1;
+	}
+
+	for (int i = 0; i < 1201; i++) {
+		sprintf(out_line, "%f, %f, %f, %f, %f, %f, %f\n", x_est_res[0][i], x_est_res[1][i], x_est_res[2][i], x_est_res[3][i], x_est_res[4][i], x_est_res[5][i], x_est_res[6][i]);
+		f_write(&fil, out_line, strlen(out_line), &bw);
+	}
+	f_close(&fil);
+
+	sprintf(file_read, "0:/RES/time.txt");
+	res = f_open(&fil, file_read, FA_WRITE | FA_CREATE_ALWAYS);
+	if (res != FR_OK)
+	{
+		return 1;
+	}
+
+	for (int i = 0; i < 1201; i++) {
+		sprintf(out_line, "%d\n", time_res[i]);
+		f_write(&fil, out_line, strlen(out_line), &bw);
+	}
+	f_close(&fil);
+
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
+
+	break;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

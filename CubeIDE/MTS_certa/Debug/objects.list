@@ -1,3 +1,5 @@
+"./Core/Src/FK.o"
+"./Core/Src/atitude.o"
 "./Core/Src/calib.o"
 "./Core/Src/gpio.o"
 "./Core/Src/main.o"
