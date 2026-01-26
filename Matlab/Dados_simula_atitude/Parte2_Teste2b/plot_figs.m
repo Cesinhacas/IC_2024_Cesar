@@ -611,7 +611,7 @@ plot(tempo,euler_True-euler_Triad_sr)
 hold on
 grid on
 xlim([0,60])
-ylim([-0.025,0.025])
+ylim([-2e-3,2e-3])
 title("(c) Diferença")
 legend('Yaw','Pitch','Roll')
 ylabel("Ângulo (rad)");
@@ -648,7 +648,7 @@ plot(tempo,euler_True-euler_prop_sr)
 hold on
 grid on
 xlim([0,60])
-ylim([-0.025,0.025])
+ylim([-2e-3,2e-3])
 title("(c) Diferença")
 legend('Yaw','Pitch','Roll')
 ylabel("Ângulo (rad)");
@@ -685,7 +685,7 @@ plot(tempo,euler_True-euler_est_sr)
 hold on
 grid on
 xlim([0,60])
-ylim([-0.025,0.025])
+ylim([-2e-3,2e-3])
 title("(c) Diferença")
 legend('Yaw','Pitch','Roll')
 ylabel("Ângulo (rad)");
@@ -722,7 +722,7 @@ plot(tempo,euler_True-euler_triad_c)
 hold on
 grid on
 xlim([0,60])
-ylim([-0.025,0.025])
+ylim([-2e-3,2e-3])
 title("(c) Diferença")
 legend('Yaw','Pitch','Roll')
 ylabel("Ângulo (rad)");
@@ -759,7 +759,7 @@ plot(tempo,euler_True-euler_prop_c)
 hold on
 grid on
 xlim([0,60])
-ylim([-0.025,0.025])
+ylim([-2e-3,2e-3])
 title("(c) Diferença")
 legend('Yaw','Pitch','Roll')
 ylabel("Ângulo (rad)");
@@ -796,7 +796,7 @@ plot(tempo,euler_True-euler_est_c)
 hold on
 grid on
 xlim([0,60])
-ylim([-0.025,0.025])
+ylim([-2e-3,2e-3])
 title("(c) Diferença")
 legend('Yaw','Pitch','Roll')
 ylabel("Ângulo (rad)");

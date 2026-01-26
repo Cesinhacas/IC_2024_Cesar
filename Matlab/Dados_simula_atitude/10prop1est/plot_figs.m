@@ -107,7 +107,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_TRIAD_True_m.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_TRIAD_True_m.pdf","ContentType","vector")
 
 figure(2)
 sgtitle("Comparação quatérnion verdadeiro e quatérnion estimado - MATLAB")
@@ -143,7 +143,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_est_True_m.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_est_True_m.pdf","ContentType","vector")
 
 figure(3)
 sgtitle("Comparação quatérnion verdadeiro e quatérnion propagado - MATLAB")
@@ -180,7 +180,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_prop_True_m.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_prop_True_m.pdf","ContentType","vector")
 
 figure(4)
 sgtitle("Diferença")
@@ -218,7 +218,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_TRIAD_prop_est_True_m.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_TRIAD_prop_est_True_m.pdf","ContentType","vector")
 
 figure(5)
 sgtitle("Comparação quatérnion verdadeiro e quatérnion propagado - C")
@@ -256,7 +256,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_TRIAD_prop_c.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_TRIAD_prop_c.pdf","ContentType","vector")
 
 figure(6)
 sgtitle("Comparação quatérnion propagado - MATLAB e quatérnion propagado - C")
@@ -292,7 +292,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_prop_prop.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_prop_prop.pdf","ContentType","vector")
 
 figure(7)
 sgtitle("Comparação quatérnion verdadeiro e quatérnion estimado - C")
@@ -330,7 +330,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_est_True_c.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_est_True_c.pdf","ContentType","vector")
 
 figure(8)
 sgtitle("Comparação quatérnion verdadeiro e quatérnion TRIAD - C")
@@ -366,7 +366,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_TRIAD_True_c.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_TRIAD_True_c.pdf","ContentType","vector")
 
 
 figure(9)
@@ -404,7 +404,7 @@ ylabel("Erro da velocidade angular de cada eixo (Graus)");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_velocidade_angular.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_velocidade_angular.pdf","ContentType","vector")
 
 figure(10)
 sgtitle("Comparação atitude verdadeira e atitude do TRIAD - MATLAB - Ângulos de Euler")
@@ -441,7 +441,7 @@ ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_TRIAD_True_m_eul.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_TRIAD_True_m_eul.pdf","ContentType","vector")
 
 figure(11)
 sgtitle("Comparação atitude verdadeira e atitude propagada - MATLAB - Ângulos de Euler")
@@ -478,7 +478,7 @@ ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_prop_True_m_eul.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_prop_True_m_eul.pdf","ContentType","vector")
 
 figure(12)
 sgtitle("Comparação atitude verdadeira e estimada - MATLAB - Ângulos de Euler")
@@ -515,7 +515,7 @@ ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_est_True_m_eul.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_est_True_m_eul.pdf","ContentType","vector")
 
 figure(13)
 sgtitle("Comparação atitude verdadeira e atitude do TRIAD - C - Ângulos de Euler")
@@ -552,7 +552,7 @@ ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_TRIAD_True_c_eul.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_TRIAD_True_c_eul.pdf","ContentType","vector")
 
 figure(14)
 sgtitle("Comparação atitude verdadeira e atitude propagada - C - Ângulos de Euler")
@@ -589,7 +589,7 @@ ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_prop_True_c_eul.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_prop_True_c_eul.pdf","ContentType","vector")
 
 figure(15)
 sgtitle("Comparação atitude verdadeira e estimada - C - Ângulos de Euler")
@@ -626,7 +626,7 @@ ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_est_True_c_eul.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_est_True_c_eul.pdf","ContentType","vector")
 
 figure(16)
 sgtitle("Comparação atitude propagada - C Vs. MATLAB - Ângulos de Euler")
@@ -662,4 +662,4 @@ ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_est_m_c_eul.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_est_m_c_eul.pdf","ContentType","vector")

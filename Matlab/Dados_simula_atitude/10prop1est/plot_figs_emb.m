@@ -23,7 +23,7 @@ exe_minus = -0.02*ones(3601,1);
 tempo = 0:0.05:60;
 
 figure(1)
-sgtitle("Comparação estados propagados - apenas propagador em C")
+sgtitle("Comparação estados propagados - apenas propagador embarcado")
 
 subplot(1,3,1)
 plot(tempo,x_prop)
@@ -60,7 +60,7 @@ set(gcf, 'WindowState', 'maximized');
 %exportgraphics(gcf,"Comparacao_propagador_only.pdf","ContentType","vector")
 
 figure(2)
-sgtitle("Comparação estados estimados - apenas estimador em C")
+sgtitle("Comparação estados estimados - apenas estimador embarcado")
 
 subplot(1,3,1)
 plot(tempo,x_est)
@@ -111,7 +111,7 @@ xlabel("Segundos");
 subplot(1,3,2)
 plot(tempo,q_triad_c)
 hold on
-title("(b) Quatérnion TRIAD - C")
+title("(b) Quatérnion TRIAD - F7")
 grid on
 ylabel("Magnitude de cada componente do estado");
 xlabel("Segundos");
@@ -121,7 +121,7 @@ subplot(1,3,3)
 ylabel("Magnitude de cada componente do estado");
 xlabel("Segundos");
 xlim([0,60])
-plot(tempo,(q_Triad - q_Triad))
+plot(tempo,(q_Triad - q_triad_c))
 hold on
 grid on
 xlim([0,60])

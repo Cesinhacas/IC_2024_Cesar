@@ -1,6 +1,5 @@
 #include <math.h>
 #include <stdio.h>
-#include "atitude.h"
 
 void cria_triad(double *v1, double *v2, double *r1, double *r2, double *r3)
 {
@@ -78,6 +77,17 @@ void matcov(double sig1, double sig2, double *w1, double *w2, double R[3][3])
                      cross_prod[1] * cross_prod[1] + 
                      cross_prod[2] * cross_prod[2];
 
+    // Evitar divisão por zero se os vetores forem paralelos
+    /*if (norm_sq < 1e-12) {
+        // Lidar com o caso singular (por exemplo, zerar a matriz ou retornar um erro)
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                R[i][j] = 0.0;
+            }
+        }
+        return;
+    }*/
+
     // 3. Calcular o coeficiente: coeff = 1 / norm_sq
     double coeff = 1.0 / norm_sq;
 
@@ -109,36 +119,33 @@ void TRIAD(double *v1_ref, double *v2_ref, double *v1_obs, double *v2_obs, doubl
 {
 	double r1_ref[3], r2_ref[3], r3_ref[3];
 	double r1_obs[3], r2_obs[3], r3_obs[3];
-	double Mref[3][3], Mobs[3][3], atitude[3][3], R_[3][3];
-	double norm = sqrt(v1_obs[0]*v1_obs[0] + v1_obs[1]*v1_obs[1] + v1_obs[2]*v1_obs[2]);
-	double v1[3], v2[3], w1[3], w2[3];
+	double Mref[3][3], Mobs[3][3], atitude[3][3];
+	double norm = sqrt(v1_obs[0]*v1_obs[0] + v1_obs[1]*v1_obs[1] + v1_obs[2]*v1_obs[2]), norm2 = sqrt(v2_obs[0]*v2_obs[0] + v2_obs[1]*v2_obs[1] + v2_obs[2]*v2_obs[2]);
+	double v1_t[3], v2_t[3], w1_t[3], w2_t[3];
+	int aaaaa = 4;
 
 	for(int i = 0; i < 3; i++)
 	{
-		v1[i] = v1_ref[i];
-		v2[i] = v2_ref[i];
-		w1[i] = v1_obs[i];
-		w2[i] = v2_obs[i];
+		v1_t[i] = v1_ref[i];
+		v2_t[i] = v2_ref[i];
+		w1_t[i] = v1_obs[i];
+		w2_t[i] = v2_obs[i];
 	}
+
+	aaaaa = aaaaa + 5;
 
 	for(int i = 0; i < 3; i++)
 	{
-		w1[i] /= norm;
+		w1_t[i] /= norm;
+		w2_t[i] /= norm2;
 	}
 
-	cria_triad(v1, v2, r1_ref, r2_ref, r3_ref);
-	cria_triad(w1, w2, r1_obs, r2_obs, r3_obs);
+	cria_triad(v1_t, v2_t, r1_ref, r2_ref, r3_ref);
+	cria_triad(w1_t, w2_t, r1_obs, r2_obs, r3_obs);
 	vet2mat(r1_ref, r2_ref, r3_ref, Mref);
 	vet2mat(r1_obs, r2_obs, r3_obs, Mobs);
 	atitude_estimation(Mref, Mobs, atitude);
 	mat2quaternion(atitude, q);
 
-	matcov(sig1, sig2, w1, w2, R_);
-	for(int i = 0; i < 3; i++)
-	{
-		for(int j = 0; j < 3; j++)
-		{
-			R[i][j] = R_[i][j];
-		}
-	}
+	matcov(sig1, sig2, w1_t, w2_t, R);
 }

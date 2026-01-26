@@ -21,7 +21,10 @@ my_FK.FK_estimador.restype = ctypes.c_void_p
 
 dados_accel = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/Parte2_Teste1a/accel_ruido.csv', header=None)
 dados_mag = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/Parte2_Teste1a/mag_ruido.csv', header=None)
-dados_gyro = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/Parte2_Teste1a/gyro_out.csv', header=None)
+dados_gyro = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/Parte2_Teste1a/gyro_out1.csv', header=None)
+
+dados_accel_corrigidos = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/Parte2_Teste1b/accel_corrigido.csv', header=None)
+dados_mag_corrigidos = pd.read_csv('/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/Parte2_Teste1b/mag_corrigido.csv', header=None)
 
 dados_accel = dados_accel.to_numpy().transpose()
 dados_mag = dados_mag.to_numpy().transpose()
@@ -109,17 +112,25 @@ for i in range(0, num_exe):
     #Dados_rest(1,:) =  (Dados_Corrompido(1,:) - p(4))/p(1); EIXO X
     #Dados_rest(2,:) = ((Dados_Corrompido(2,:) - p(5))/p(2) - Dados_rest(1,:)*sin(p(7)))/cos(p(7)); EIXO Y
     #Dados_rest(3,:) = ((Dados_Corrompido(3,:) - p(6))/p(3) - Dados_rest(1,:)*sin(p(8))*cos(p(9)) - Dados_rest(2,:)*sin(p(9)))/(cos(p(8))*cos(p(9))); EIXO Z
-    ax = (dados_accel[0][i] - p_accel[3]) / p_accel[0]
+    '''ax = (dados_accel[0][i] - p_accel[3]) / p_accel[0]
     ay = ((dados_accel[1][i] - p_accel[4]) / p_accel[1] - ax*np.sin(p_accel[6])) / np.cos(p_accel[6])
     az = ((dados_accel[2][i] - p_accel[5]) / p_accel[2] - ax*np.sin(p_accel[7])*np.cos(p_accel[8]) - ay*np.sin(p_accel[8])) / (np.cos(p_accel[7])*np.cos(p_accel[8]))
     
     mx = (dados_mag[0][i] - p_mag[3]) / p_mag[0]
     my = ((dados_mag[1][i] - p_mag[4]) / p_mag[1] - mx*np.sin(p_mag[6])) / np.cos(p_mag[6])
-    mz = ((dados_mag[2][i] - p_mag[5]) / p_mag[2] - mx*np.sin(p_mag[7])*np.cos(p_mag[8]) - my*np.sin(p_mag[8])) / (np.cos(p_mag[7])*np.cos(p_mag[8]))
+    mz = ((dados_mag[2][i] - p_mag[5]) / p_mag[2] - mx*np.sin(p_mag[7])*np.cos(p_mag[8]) - my*np.sin(p_mag[8])) / (np.cos(p_mag[7])*np.cos(p_mag[8]))'''
 
-    gx = dados_gyro[0][i]
-    gy = dados_gyro[1][i]
-    gz = dados_gyro[2][i]
+    ax = dados_accel_corrigidos[0][i]
+    ay = dados_accel_corrigidos[1][i]
+    az = dados_accel_corrigidos[2][i]
+
+    mx = dados_mag_corrigidos[0][i]
+    my = dados_mag_corrigidos[1][i]
+    mz = dados_mag_corrigidos[2][i]
+
+    gx = dados_gyro[0][i] - x_est[4]
+    gy = dados_gyro[1][i] - x_est[5]
+    gz = dados_gyro[2][i] - x_est[6]
 
     w1 = np.array([ax, ay, az])
     w2 = np.array([mx, my, mz])
