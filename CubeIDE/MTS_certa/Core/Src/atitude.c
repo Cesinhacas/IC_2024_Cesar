@@ -49,16 +49,25 @@ void atitude_estimation(double Mref[3][3], double Mobs[3][3], double atitude[3][
 
 void mat2quaternion(double atitude[3][3], double q[4])
 {
+	q[0] = 0.0;
+	q[1] = 0.0;
+	q[2] = 0.0;
+	q[3] = 0.0;
+
 	for(int i = 0; i < 3; i++)
 	{
 		q[0] += atitude[i][i];
 	}
 
-	q[0] = sqrt(q[0] + 1)/2;
-	q[1] = (atitude[1][2] - atitude[2][1])/(4*q[0]);
-	q[2] = (atitude[2][0] - atitude[0][2])/(4*q[0]);
-	q[3] = (atitude[0][1] - atitude[1][0])/(4*q[0]);
+	q[0] = sqrt(q[0] + 1.0) / 2.0;
+
+	if (q[0] > 1e-12) {
+		q[1] = (atitude[1][2] - atitude[2][1]) / (4.0 * q[0]);
+		q[2] = (atitude[2][0] - atitude[0][2]) / (4.0 * q[0]);
+		q[3] = (atitude[0][1] - atitude[1][0]) / (4.0 * q[0]);
+	}
 }
+
 
 void matcov(double sig1, double sig2, double *w1, double *w2, double R[3][3])
 {
@@ -123,6 +132,7 @@ void TRIAD(double *v1_ref, double *v2_ref, double *v1_obs, double *v2_obs, doubl
 	double norm = sqrt(v1_obs[0]*v1_obs[0] + v1_obs[1]*v1_obs[1] + v1_obs[2]*v1_obs[2]), norm2 = sqrt(v2_obs[0]*v2_obs[0] + v2_obs[1]*v2_obs[1] + v2_obs[2]*v2_obs[2]);
 	double v1_t[3], v2_t[3], w1_t[3], w2_t[3];
 	int aaaaa = 4;
+
 
 	for(int i = 0; i < 3; i++)
 	{

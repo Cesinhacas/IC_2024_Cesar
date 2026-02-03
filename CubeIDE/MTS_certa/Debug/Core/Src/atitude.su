@@ -2,5 +2,5 @@
 ../Core/Src/atitude.c:25:6:vet2mat	32	static
 ../Core/Src/atitude.c:35:6:atitude_estimation	56	static
 ../Core/Src/atitude.c:50:6:mat2quaternion	40	static
-../Core/Src/atitude.c:63:6:matcov	152	static
-../Core/Src/atitude.c:118:6:TRIAD	544	static
+../Core/Src/atitude.c:72:6:matcov	152	static
+../Core/Src/atitude.c:127:6:TRIAD	544	static

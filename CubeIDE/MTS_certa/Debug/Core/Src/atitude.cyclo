@@ -1,6 +1,6 @@
 ../Core/Src/atitude.c:4:6:cria_triad	2
 ../Core/Src/atitude.c:25:6:vet2mat	2
 ../Core/Src/atitude.c:35:6:atitude_estimation	4
-../Core/Src/atitude.c:50:6:mat2quaternion	2
-../Core/Src/atitude.c:63:6:matcov	4
-../Core/Src/atitude.c:118:6:TRIAD	3
+../Core/Src/atitude.c:50:6:mat2quaternion	3
+../Core/Src/atitude.c:72:6:matcov	4
+../Core/Src/atitude.c:127:6:TRIAD	3
