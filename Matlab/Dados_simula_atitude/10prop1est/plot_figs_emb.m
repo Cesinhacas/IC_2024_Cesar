@@ -5,7 +5,7 @@ clc
 x_prop = readmatrix('x_prop.csv');
 x_est = readmatrix('x_est.csv');
 q_Triad = readmatrix('q_Triad.csv');
-qTrue = readmatrix('qTrue.csv');
+qTrue = readmatrix('quaternion_c.csv');
 
 cd RES\
 x_est_completo = readmatrix('x_est.txt');
@@ -13,6 +13,13 @@ x_prop_completo = readmatrix('x_prop.txt');
 q_triad_c = readmatrix('q.txt');
 tempo_exe = readmatrix("time.txt");
 cd ..
+
+for i=1:1:1201
+    q_triad_c(i,:) = q_triad_c(i,:)/norm(q_triad_c(i,:));
+    if q_Triad(i,1) < 0
+        q_Triad(i,:) = -q_Triad(i,:);
+    end
+end
 
 disp("Tempo de execução médio da determinação e estimação de atitude")
 disp(mean(tempo_exe))

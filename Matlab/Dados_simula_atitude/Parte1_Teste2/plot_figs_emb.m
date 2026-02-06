@@ -121,7 +121,7 @@ subplot(1,3,3)
 ylabel("Magnitude de cada componente do estado");
 xlabel("Segundos");
 xlim([0,60])
-plot(tempo,(q_Triad - q_Triad))
+plot(tempo,(q_Triad - q_triad_c))
 hold on
 grid on
 xlim([0,60])
