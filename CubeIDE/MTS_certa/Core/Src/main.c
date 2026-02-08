@@ -61,6 +61,9 @@ double mx[tam] = {0}, my[tam] = {0}, mz[tam] = {0}, ax[tam] = {0}, ay[tam] = {0}
 double quat_res[4][tam] = {0}, x_est_res[7][tam] = {0}, x_prop_res[7][tam] = {0};
 double x_prop[7] = {0}, x_est[7] = {0, 0 ,0, 1, 0, 0, 0}, PT_prop[6][6] = {0}, PT_est[6][6] = {0}, P_est[7][7] = {0}, R[3][3] = {0}, q[4] = {0};
 double v1[3] = {0, 1, 0}, v2[3] = {1/sqrt(2), 0, 1/sqrt(2)};
+double w1[3] = {0};
+double w2[3] = {0};
+double gyro[3] = {0};
 uint16_t time = 0;
 uint16_t start_time = 0;
 uint16_t time_res[tam] = {0};
@@ -118,6 +121,7 @@ int main(void)
   FRESULT res;
 
   // Monta o sistema de arquivos na unidade lógica "0:"
+  HAL_Delay(1000);
   res = f_mount(&fs, "0:", 1);
   if (res != FR_OK) {
       //printf("Falha ao montar o sistema de arquivos: %d\n", res);
@@ -272,9 +276,15 @@ int main(void)
 	while(i < tam)
 	{
 
-		double w1[3] = {ax[i], ay[i], az[i]};
-		double w2[3] = {mx[i], my[i], mz[i]};
-		double gyro[3] = {gx[i], gy[i], gz[i]};
+		w1[0] = ax[i];
+		w1[1] = ay[i];
+		w1[2] = az[i];
+		w2[0] = mx[i];
+		w2[1] = my[i];
+		w2[2] = mz[i];
+		gyro[0] = gx[i];
+		gyro[1] = gy[i];
+		gyro[2] = gz[i];
 
 		start_time = HAL_GetTick();
 		TRIAD(v1, v2, w1, w2, q, 0.01, 0.01, R);

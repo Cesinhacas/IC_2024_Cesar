@@ -120,7 +120,7 @@ void TRIAD(double *v1_ref, double *v2_ref, double *v1_obs, double *v2_obs, doubl
 	double r1_ref[3], r2_ref[3], r3_ref[3];
 	double r1_obs[3], r2_obs[3], r3_obs[3];
 	double Mref[3][3], Mobs[3][3], atitude[3][3], R_[3][3];
-	double norm = sqrt(v1_obs[0]*v1_obs[0] + v1_obs[1]*v1_obs[1] + v1_obs[2]*v1_obs[2]);
+	double norm = sqrt(v1_obs[0]*v1_obs[0] + v1_obs[1]*v1_obs[1] + v1_obs[2]*v1_obs[2]), norm2 = sqrt(v2_obs[0]*v2_obs[0] + v2_obs[1]*v2_obs[1] + v2_obs[2]*v2_obs[2]);
 	double v1[3], v2[3], w1[3], w2[3];
 
 	for(int i = 0; i < 3; i++)
@@ -134,6 +134,7 @@ void TRIAD(double *v1_ref, double *v2_ref, double *v1_obs, double *v2_obs, doubl
 	for(int i = 0; i < 3; i++)
 	{
 		w1[i] /= norm;
+		w2[i] /= norm2;
 	}
 
 	cria_triad(v1, v2, r1_ref, r2_ref, r3_ref);
@@ -143,47 +144,6 @@ void TRIAD(double *v1_ref, double *v2_ref, double *v1_obs, double *v2_obs, doubl
 	atitude_estimation(Mref, Mobs, atitude);
 	mat2quaternion(atitude, q);
 
-	/*printf("Matriz de Referência:\n");
-	for(int i = 0; i < 3; i++)
-	{
-		for(int j = 0; j < 3; j++)
-		{
-			printf("%f ", Mref[i][j]);
-			if (j == 2)
-			{
-				printf("\n");
-			}
-		}
-	}
-	printf("\n");
-
-	printf("Matriz de Observação:\n");
-	for(int i = 0; i < 3; i++)
-	{
-		for(int j = 0; j < 3; j++)
-		{
-			printf("%f ", Mobs[i][j]);
-			if (j == 2)
-			{
-				printf("\n");
-			}
-		}
-	}
-	printf("\n");
-
-	printf("Atitude calculada:\n");
-	for(int i = 0; i < 3; i++)
-	{
-		for(int j = 0; j < 3; j++)
-		{
-			printf("%f ", atitude[i][j]);
-			if (j == 2)
-			{
-				printf("\n");
-			}
-		}
-	}*/
-
 	matcov(sig1, sig2, w1, w2, R_);
 	for(int i = 0; i < 3; i++)
 	{
@@ -192,29 +152,6 @@ void TRIAD(double *v1_ref, double *v2_ref, double *v1_obs, double *v2_obs, doubl
 			R[i*3 + j] = R_[i][j];
 		}
 	}
-
-	// Imprimir o Quaternion
-	/*printf("Quaternion estimado:\n");
-	for(int i = 0; i < 4; i++)
-	{
-		printf("%f ", q[i]);
-	}
-	printf("\n");
-
-	// Imprimir a Matriz de Covariância
-	printf("Matriz de Covariância R:\n");
-	for(int i = 0; i < 3; i++)
-	{
-		for(int j = 0; j < 3; j++)
-		{
-			printf("%f ", R_[i][j]);
-			if (j == 2)
-			{
-				printf("\n");
-			}
-		}
-	}
-	printf("\n");*/
 }
 
 int main(void)

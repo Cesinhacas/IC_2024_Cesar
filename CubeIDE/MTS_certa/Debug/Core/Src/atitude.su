@@ -1,6 +1,6 @@
-../Core/Src/atitude.c:5:6:cria_triad	80	static
-../Core/Src/atitude.c:26:6:vet2mat	32	static
-../Core/Src/atitude.c:36:6:atitude_estimation	56	static
-../Core/Src/atitude.c:51:6:mat2quaternion	40	static
-../Core/Src/atitude.c:64:6:matcov	152	static
-../Core/Src/atitude.c:108:6:TRIAD	608	static
+../Core/Src/atitude.c:4:6:cria_triad	80	static
+../Core/Src/atitude.c:25:6:vet2mat	32	static
+../Core/Src/atitude.c:35:6:atitude_estimation	56	static
+../Core/Src/atitude.c:50:6:mat2quaternion	40	static
+../Core/Src/atitude.c:72:6:matcov	152	static
+../Core/Src/atitude.c:127:6:TRIAD	544	static
