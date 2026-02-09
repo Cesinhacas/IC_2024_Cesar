@@ -1,7 +1,5 @@
 import numpy as np
 
-import numpy as np
-
 def TRIAD(v1, v2, w1, w2, sig1, sig2):
     v1 = np.array(v1, dtype=float)
     v2 = np.array(v2, dtype=float)
