@@ -2,9 +2,9 @@ import numpy as np
 import pandas as pd
 import attitude
 
-dados_accel = pd.read_csv('C:/Users/Cesin/Desktop/IC - 2024/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/accel.csv', header=None) #/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/accel.csv
-dados_mag = pd.read_csv('C:/Users/Cesin/Desktop/IC - 2024/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/mag.csv', header=None) #/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/mag.csv
-dados_gyro = pd.read_csv('C:/Users/Cesin/Desktop/IC - 2024/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/gyro_out.csv', header=None) #/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/gyro_out.csv
+dados_accel = pd.read_csv('C:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/accel.csv', header=None) #/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/accel.csv
+dados_mag = pd.read_csv('C:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/mag.csv', header=None) #/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/mag.csv
+dados_gyro = pd.read_csv('C:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/gyro_out.csv', header=None) #/mnt/c/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/gyro_out.csv
 
 dados_accel = dados_accel.to_numpy().transpose()
 dados_mag = dados_mag.to_numpy().transpose()
@@ -77,10 +77,10 @@ for i in range(0, num_exe):
     #    break
 
 quaternion = pd.DataFrame(quaternion)
-quaternion.to_csv('C:/Users/Cesin/Desktop/IC - 2024/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/quaternion_py.csv', header=False, index=False)
+quaternion.to_csv('C:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/quaternion_py.csv', header=False, index=False)
 
 estados_propagados = pd.DataFrame(estados_propagados)
-estados_propagados.to_csv('C:/Users/Cesin/Desktop/IC - 2024/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/estados_propagados_py.csv', header=False, index=False)
+estados_propagados.to_csv('C:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/estados_propagados_py.csv', header=False, index=False)
 
 estados_estimados = pd.DataFrame(estados_estimados)
-estados_estimados.to_csv('C:/Users/Cesin/Desktop/IC - 2024/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/estados_estimados_py.csv', header=False, index=False)
+estados_estimados.to_csv('C:/Users/labt5/OneDrive/Desktop/Cesar/IC_2024_Cesar/Matlab/Dados_simula_atitude/10prop1est/estados_estimados_py.csv', header=False, index=False)

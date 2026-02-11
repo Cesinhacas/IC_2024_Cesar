@@ -2,10 +2,14 @@ clear all
 close all
 clc
 
+%% Data preparing
 qTrue = readmatrix("qTrue.csv");
 q_Triad_sr = readmatrix("q_Triad_sr.csv");
 q_prop_sr = readmatrix("q_prop_sr.csv");
 q_est_sr = readmatrix("q_est_sr.csv");
+
+gyro_true = readmatrix("gyro_true.csv");
+gyro_out = readmatrix("gyro_out.csv");
 
 %%%%%%%% carregar os dados da simulação em C e plotar o quatérnion e
 %%%%%%%% comparar com o verdadeiro
@@ -25,22 +29,28 @@ euler_triad_c = zeros(length(qTrue(1,:)), 3);
 euler_prop_c = zeros(length(qTrue(1,:)), 3);
 euler_est_c = zeros(length(qTrue(1,:)), 3);
 
-for i=1:1:3601
+for i=1:1:1201
     q = q_est_c_sr(i,:);
-    q_diff = qTrue - q_est_c_sr;
-    if q(1) < 0.0 || q_diff(1) > 0.5
+    if q(1) < 0.0 || i == 862
         q_est_c_sr(i,:) = -q_est_c_sr(i,:);
     end
     q = q_prop_c_sr(i,:);
-    q_diff = qTrue - q_prop_c_sr;
-    if q(1) < 0.0 || q_diff(1) > 0.5
+    if q(1) < 0.0 || i == 862
         q_prop_c_sr(i,:) = -q_prop_c_sr(i,:);
     end
     q = q_triad_c(i,:);
-    q_diff = qTrue - q_triad_c;
-    if q(1) < 0.0 || q_diff(1) >0.5 || i==901
+    if q(1) < 0.0 || i == 613 || i == 1103
         q_triad_c(i,:) = -q_triad_c(i,:);
     end
+
+    if i == 127 || i ==862
+        q_prop_sr(i,:) = -q_prop_sr(i,:);
+        q_est_sr(i,:) = -q_est_sr(i,:);
+    end
+    if  i == 613 || i == 1103
+        q_Triad_sr(i,:) = -q_Triad_sr(i,:);
+    end
+
     euler_True(i,:) = quat2eul(qTrue(i,:));
     euler_Triad_sr(i,:) = quat2eul(q_Triad_sr(i,:));
     euler_prop_sr(i,:) = quat2eul(q_prop_sr(i,:));
@@ -58,21 +68,41 @@ euler_triad_c = deg2rad(euler_triad_c);
 euler_prop_c = deg2rad(euler_prop_c);
 euler_est_c = deg2rad(euler_est_c);
 
-exe_plus = 0.02*ones(3601,1);
-exe_minus = -0.02*ones(3601,1);
+%% Cálculo RMSE
 
-accel_corrom = readmatrix("accel_ruido.csv")';
-accel_rest = readmatrix("accel_corrigido.csv")';
-accel_param = readmatrix("param_accel_c.csv")';
+erro_mat = [rmse(euler_True(:,1)', euler_Triad_sr(:,1)'), rmse(euler_True(:, 2)', euler_Triad_sr(:,2)'), rmse(euler_True(:,3)', euler_Triad_sr(:,3)')];
+disp("Erro RMS de cada ângulo de Euler - TRIAD do Matlab (radianos)")
+disp(erro_mat)
 
-mag_corrom = readmatrix("mag_ruido.csv")';
-mag_rest = readmatrix("mag_corrigido.csv")';
-mag_param = readmatrix("param_mag_c.csv")';
+erro_mat = [rmse(euler_True(:,1)', euler_prop_sr(:,1)'), rmse(euler_True(:, 2)', euler_prop_sr(:,2)'), rmse(euler_True(:,3)', euler_prop_sr(:,3)')];
+disp("Erro RMS de cada ângulo de Euler - propagador do Matlab (radianos)")
+disp(erro_mat)
 
-tempo = 0:0.05:180;
+erro_mat = [rmse(euler_True(:,1)', euler_est_sr(:,1)'), rmse(euler_True(:, 2)', euler_est_sr(:,2)'), rmse(euler_True(:,3)', euler_est_sr(:,3)')];
+disp("Erro RMS de cada ângulo de Euler - estimador do Matlab (radianos)")
+disp(erro_mat)
+
+erro_mat = [rmse(euler_True(:,1)', euler_triad_c(:,1)'), rmse(euler_True(:, 2)', euler_triad_c(:,2)'), rmse(euler_True(:,3)', euler_triad_c(:,3)')];
+disp("Erro RMS de cada ângulo de Euler - TRIAD do C (radianos)")
+disp(erro_mat)
+
+erro_mat = [rmse(euler_True(:,1)', euler_prop_c(:,1)'), rmse(euler_True(:, 2)', euler_prop_c(:,2)'), rmse(euler_True(:,3)', euler_prop_c(:,3)')];
+disp("Erro RMS de cada ângulo de Euler - propagador do C (radianos)")
+disp(erro_mat)
+
+erro_mat = [rmse(euler_True(:,1)', euler_est_c(:,1)'), rmse(euler_True(:, 2)', euler_est_c(:,2)'), rmse(euler_True(:,3)', euler_est_c(:,3)')];
+disp("Erro RMS de cada ângulo de Euler - estimador do C (radianos)")
+disp(erro_mat)
+
+%% Plot das figuras
+
+tempo = 0:0.05:60;
+
+exe_plus = 0.02*ones(1201,1);
+exe_minus = -0.02*ones(1201,1);
 
 figure(1)
-sgtitle("Comparação quatérnion verdadeiro e quatérnion do TRIAD - Matlab")
+sgtitle("Comparação quatérnion verdadeiro e quatérnion do TRIAD - MATLAB")
 
 subplot(1,3,1)
 plot(tempo,qTrue)
@@ -86,7 +116,7 @@ xlabel("Tempo (s)");
 subplot(1,3,2)
 plot(tempo,q_Triad_sr)
 hold on
-title("(b) TRIAD - Matlab")
+title("(b) TRIAD - MATLAB")
 grid on
 ylabel("Magnitude de cada componente do quatérnion");
 xlabel("Tempo (s)");
@@ -106,10 +136,10 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_TRIAD_True_m.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_TRIAD_True_m.pdf","ContentType","vector")
 
 figure(2)
-sgtitle("Comparação quatérnion verdadeiro e quatérnion estimado - Matlab")
+sgtitle("Comparação quatérnion verdadeiro e quatérnion estimado - MATLAB")
 set(gca,'fontsize', 22)
 subplot(1,3,1)
 plot(tempo,qTrue)
@@ -124,7 +154,7 @@ subplot(1,3,2)
 plot(tempo, q_est_sr)
 hold on
 grid on
-title("(b) Quatérnion estimado - Matlab")
+title("(b) Quatérnion estimado - MATLAB")
 xlim([0,60])
 ylabel("Magnitude de cada componente do quatérnion");
 xlabel("Tempo (s)");
@@ -132,8 +162,8 @@ xlabel("Tempo (s)");
 subplot(1,3,3)
 plot(tempo, qTrue-q_est_sr)
 hold on
-plot(tempo, exe_minus, "--r")
-plot(tempo, exe_plus, "--r")
+plot(tempo,exe_minus, "--r")
+plot(tempo,exe_plus, "--r")
 title("(c) Diferença")
 grid on
 xlim([0,60])
@@ -142,10 +172,10 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_est_True_m.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_est_True_m.pdf","ContentType","vector")
 
 figure(3)
-sgtitle("Comparação quatérnion verdadeiro e quatérnion propagado - Matlab")
+sgtitle("Comparação quatérnion verdadeiro e quatérnion propagado - MATLAB")
 
 subplot(1,3,1)
 plot(tempo,qTrue)
@@ -159,7 +189,7 @@ xlabel("Tempo (s)");
 subplot(1,3,2)
 plot(tempo, q_prop_sr)
 hold on
-title("(b) Quatérnion propagado - Matlab")
+title("(b) Quatérnion propagado - MATLAB")
 grid on
 xlim([0,60])
 ylabel("Magnitude de cada componente do quatérnion");
@@ -168,9 +198,9 @@ xlabel("Tempo (s)");
 subplot(1,3,3)
 plot(tempo, qTrue-q_prop_sr)
 hold on
+plot(tempo,exe_minus, "--r")
+plot(tempo,exe_plus, "--r")
 title("(c) Diferença")
-plot(tempo, exe_minus, "--r")
-plot(tempo, exe_plus, "--r")
 grid on
 xlim([0,60])
 legend('q0','q1','q2','q3')
@@ -179,7 +209,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_prop_True_m.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_prop_True_m.pdf","ContentType","vector")
 
 figure(4)
 sgtitle("Diferença")
@@ -188,8 +218,6 @@ subplot(1,3,1)
 plot(tempo, qTrue-q_Triad_sr)
 hold on
 title("(a) TRIAD")
-plot(tempo, exe_minus, "--r")
-plot(tempo, exe_plus, "--r")
 grid on
 xlim([0,60])
 ylabel("Erro de cada componente do quatérnion");
@@ -198,9 +226,9 @@ xlabel("Tempo (s)");
 subplot(1,3,2)
 plot(tempo, qTrue-q_prop_sr)
 hold on
-title("(b) Propagado - Matlab")
-plot(tempo, exe_minus, "--r")
-plot(tempo, exe_plus, "--r")
+title("(b) Propagado - MATLAB")
+plot(tempo,exe_minus, "--r")
+plot(tempo,exe_plus, "--r")
 grid on
 xlim([0,60])
 ylabel("Erro de cada componente do quatérnion");
@@ -209,9 +237,9 @@ xlabel("Tempo (s)");
 subplot(1,3,3)
 plot(tempo, qTrue-q_est_sr)
 hold on
-title("(c) Estimado - Matlab")
-plot(tempo, exe_minus, "--r")
-plot(tempo, exe_plus, "--r")
+title("(c) Estimado - MATLAB")
+plot(tempo,exe_minus, "--r")
+plot(tempo,exe_plus, "--r")
 grid on
 xlim([0,60])
 legend('q0','q1','q2','q3')
@@ -219,7 +247,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_TRIAD_prop_est_True_m.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_TRIAD_prop_est_True_m.pdf","ContentType","vector")
 
 figure(5)
 sgtitle("Comparação quatérnion verdadeiro e quatérnion propagado - C")
@@ -247,25 +275,25 @@ xlabel("Tempo (s)");
 subplot(1,3,3)
 plot(tempo, qTrue-q_prop_c_sr)
 hold on
-plot(tempo, exe_minus, "--r")
-plot(tempo, exe_plus, "--r")
 title("(c) Diferença")
 grid on
+plot(tempo,exe_minus, "--r")
+plot(tempo,exe_plus, "--r")
 xlim([0,60])
 legend('q0','q1','q2','q3')
 ylabel("Erro de cada componente do quatérnion");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_TRIAD_prop_c.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_TRIAD_prop_c.pdf","ContentType","vector")
 
 figure(6)
-sgtitle("Comparação quatérnion propagado - Matlab e quatérnion propagado - C")
+sgtitle("Comparação quatérnion propagado - MATLAB e quatérnion propagado - C")
 
 subplot(1,3,1)
 plot(tempo, q_prop_sr)
 hold on
-title("(a) Propagado - Matlab")
+title("(a) Propagado - MATLAB")
 grid on
 xlim([0,60])
 ylabel("Magnitude de cada componente do quatérnion");
@@ -285,8 +313,6 @@ xlabel("Tempo (s)");
 subplot(1,3,3)
 plot(tempo, q_prop_sr-q_prop_c_sr)
 hold on
-plot(tempo, exe_minus, "--r")
-plot(tempo, exe_plus, "--r")
 title("(c) Diferença")
 grid on
 xlim([0,60])
@@ -295,7 +321,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_prop_prop.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_prop_prop.pdf","ContentType","vector")
 
 figure(7)
 sgtitle("Comparação quatérnion verdadeiro e quatérnion estimado - C")
@@ -324,8 +350,8 @@ subplot(1,3,3)
 plot(tempo, qTrue-q_est_c_sr)
 hold on
 title("(c) Diferença")
-plot(tempo, exe_minus, "--r")
-plot(tempo, exe_plus, "--r")
+plot(tempo,exe_minus, "--r")
+plot(tempo,exe_plus, "--r")
 grid on
 xlim([0,60])
 legend('q0','q1','q2','q3')
@@ -333,7 +359,7 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_est_True_c.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_est_True_c.pdf","ContentType","vector")
 
 figure(8)
 sgtitle("Comparação quatérnion verdadeiro e quatérnion TRIAD - C")
@@ -369,215 +395,47 @@ ylabel("Erro de cada componente do quatérnion");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_TRIAD_True_c.pdf","ContentType","vector")
-
-hFig = figure;
-sgtitle("Medidas descalibradas")
-set(hFig, 'Position', [100 100 700*3/2 300])
-subplot(1,2,1)
-set(gcf,'Units','inches');
-screenposition = get(gcf,'Position');
-set(gcf,...
-'PaperPosition',[0 0 screenposition(3:4)],...
-'PaperSize',[screenposition(3:4)]);
- e = 1;
- a = 1.1*e;
-[x,y,z] = sphere;
-x = e*x;
-y = e*y;
-z = e*z;
-s2 = surf(x,y,z);
-set(s2,'FaceColor','none')
-set(s2,'EdgeColor',[0.7 0.7 0.7])
-hold on
-axis([-a a -a a -a a])
-axis equal
-set(gca,'PlotBoxAspectRatioMode','manual')
-set(gca,'FontSize',12)
-hold on
-mx = accel_corrom(1,:);
-my = accel_corrom(2,:);
-mz = accel_corrom(3,:);
-plot3(mx,my,mz,'r.','linewidth',1.5)
-title('(a)'); 
-xlabel('x axis (g)');
-ylabel('y axis (g)');
-zlabel('z axis (g)');
+%exportgraphics(gcf,"Comparacao_TRIAD_True_c.pdf","ContentType","vector")
 
 
-subplot(1,2,2)
-set(gcf,'Units','inches');
-screenposition = get(gcf,'Position');
-set(gcf,...
-'PaperPosition',[0 0 screenposition(3:4)],...
-'PaperSize',[screenposition(3:4)]);
- e = 1;
- a = 1.1*e;
-[x,y,z] = sphere;
-x = e*x;
-y = e*y;
-z = e*z;
-s2 = surf(x,y,z);
-set(s2,'FaceColor','none')
-set(s2,'EdgeColor',[0.7 0.7 0.7])
-hold on
-axis([-a a -a a -a a])
-axis equal
-set(gca,'PlotBoxAspectRatioMode','manual')
-set(gca,'FontSize',12)
-hold on
-mx = mag_corrom(1,:);
-my = mag_corrom(2,:);
-mz = mag_corrom(3,:);
-plot3(mx,my,mz,'r.','linewidth',1.5)
-title('(b)'); 
-xlabel('x axis (G)');
-ylabel('y axis (G)');
-zlabel('z axis (G)');
+figure(9)
+sgtitle("Comparação velocidade angular medida e real")
+set(gca,'fontsize', 22)
 
+subplot(1,3,1)
+plot(tempo, gyro_true)
+hold on
+title("(a) Velocidade angular verdadeira")
+grid on
+xlim([0,60])
+ylabel("Velocidade angular de cada eixo (Graus)");
+xlabel("Tempo (s)");
+
+
+subplot(1,3,2)
+plot(tempo, gyro_out)
+hold on
+title("(b) Velocidade angular - FK")
+grid on
+xlim([0,60])
+ylabel("Velocidade angular de cada eixo (Graus)");
+xlabel("Tempo (s)");
+
+
+subplot(1,3,3)
+plot(tempo, gyro_true - gyro_out)
+hold on
+title("(c) Diferença")
+grid on
+xlim([0,60])
+legend('x','y','z')
+ylabel("Erro da velocidade angular de cada eixo (Graus)");
+xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Medidas_corrompidas.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_velocidade_angular.pdf","ContentType","vector")
 
-
-hFig = figure;
-sgtitle("Medidas calibradas - Matlab")
-set(hFig, 'Position', [100 100 700*3/2 300])
-subplot(1,2,1)
-set(gcf,'Units','inches');
-screenposition = get(gcf,'Position');
-set(gcf,...
-'PaperPosition',[0 0 screenposition(3:4)],...
-'PaperSize',[screenposition(3:4)]);
- e = 1;
- a = 1.1*e;
-[x,y,z] = sphere;
-x = e*x;
-y = e*y;
-z = e*z;
-s2 = surf(x,y,z);
-set(s2,'FaceColor','none')
-set(s2,'EdgeColor',[0.7 0.7 0.7])
-hold on
-axis([-a a -a a -a a])
-axis equal
-set(gca,'PlotBoxAspectRatioMode','manual')
-set(gca,'FontSize',12)
-hold on
-mx = accel_rest(1,:);
-my = accel_rest(2,:);
-mz = accel_rest(3,:);
-plot3(mx,my,mz,'r.','linewidth',1.5)
-title('(a)'); 
-xlabel('x axis (g)');
-ylabel('y axis (g)');
-zlabel('z axis (g)');
-
-
-subplot(1,2,2)
-set(gcf,'Units','inches');
-screenposition = get(gcf,'Position');
-set(gcf,...
-'PaperPosition',[0 0 screenposition(3:4)],...
-'PaperSize',[screenposition(3:4)]);
- e = 1;
- a = 1.1*e;
-[x,y,z] = sphere;
-x = e*x;
-y = e*y;
-z = e*z;
-s2 = surf(x,y,z);
-set(s2,'FaceColor','none')
-set(s2,'EdgeColor',[0.7 0.7 0.7])
-hold on
-axis([-a a -a a -a a])
-axis equal
-set(gca,'PlotBoxAspectRatioMode','manual')
-set(gca,'FontSize',12)
-hold on
-mx = mag_rest(1,:);
-my = mag_rest(2,:);
-mz = mag_rest(3,:);
-plot3(mx,my,mz,'r.','linewidth',1.5)
-title('(b)'); 
-xlabel('x axis (G)');
-ylabel('y axis (G)');
-zlabel('z axis (G)');
-
-set(findall(gcf,'-property','FontSize'),'FontSize',20)
-set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Medidas_rest_m.pdf","ContentType","vector")
-
-
-hFig = figure;
-sgtitle("Medidas calibradas - C")
-set(hFig, 'Position', [100 100 700*3/2 300])
-subplot(1,2,1)
-set(gcf,'Units','inches');
-screenposition = get(gcf,'Position');
-set(gcf,...
-'PaperPosition',[0 0 screenposition(3:4)],...
-'PaperSize',[screenposition(3:4)]);
- e = 1;
- a = 1.1*e;
-[x,y,z] = sphere;
-x = e*x;
-y = e*y;
-z = e*z;
-s2 = surf(x,y,z);
-set(s2,'FaceColor','none')
-set(s2,'EdgeColor',[0.7 0.7 0.7])
-hold on
-axis([-a a -a a -a a])
-axis equal
-set(gca,'PlotBoxAspectRatioMode','manual')
-set(gca,'FontSize',12)
-hold on
-mx = (accel_corrom(1,:) - accel_param(4))/accel_param(1);
-my = ((accel_corrom(2,:) - accel_param(5))/accel_param(2) - mx*sin(accel_param(7)))/cos(accel_param(7));
-mz = ((accel_corrom(3,:) - accel_param(6))/accel_param(3) - mx*sin(accel_param(8))*cos(accel_param(9)) - my*sin(accel_param(9)))/(cos(accel_param(8))*cos(accel_param(9)));
-plot3(mx,my,mz,'r.','linewidth',1.5)
-title('(a)'); 
-xlabel('x axis (g)');
-ylabel('y axis (g)');
-zlabel('z axis (g)');
-
-
-subplot(1,2,2)
-set(gcf,'Units','inches');
-screenposition = get(gcf,'Position');
-set(gcf,...
-'PaperPosition',[0 0 screenposition(3:4)],...
-'PaperSize',[screenposition(3:4)]);
- e = 1;
- a = 1.1*e;
-[x,y,z] = sphere;
-x = e*x;
-y = e*y;
-z = e*z;
-s2 = surf(x,y,z);
-set(s2,'FaceColor','none')
-set(s2,'EdgeColor',[0.7 0.7 0.7])
-hold on
-axis([-a a -a a -a a])
-axis equal
-set(gca,'PlotBoxAspectRatioMode','manual')
-set(gca,'FontSize',12)
-hold on
-mx = (mag_corrom(1,:) - mag_param(4))/mag_param(1);
-my = ((mag_corrom(2,:) - mag_param(5))/mag_param(2) - mx*sin(mag_param(7)))/cos(mag_param(7));
-mz = ((mag_corrom(3,:) - mag_param(6))/mag_param(3) - mx*sin(mag_param(8))*cos(mag_param(9)) - my*sin(mag_param(9)))/(cos(mag_param(8))*cos(mag_param(9)));
-plot3(mx,my,mz,'r.','linewidth',1.5)
-title('(b)'); 
-xlabel('x axis (G)');
-ylabel('y axis (G)');
-zlabel('z axis (G)');
-
-set(findall(gcf,'-property','FontSize'),'FontSize',20)
-set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Medidas_rest_c.pdf","ContentType","vector")
-
-figure(12)
+figure(10)
 sgtitle("Comparação atitude verdadeira e atitude do TRIAD - MATLAB - Ângulos de Euler")
 
 subplot(1,3,1)
@@ -605,16 +463,16 @@ plot(tempo,euler_True-euler_Triad_sr)
 hold on
 grid on
 xlim([0,60])
-ylim([-6e-3,6e-3])
+ylim([-1e-3,1e-3])
 title("(c) Diferença")
 legend('Yaw','Pitch','Roll')
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_TRIAD_True_m_eul.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_TRIAD_True_m_eul.pdf","ContentType","vector")
 
-figure(13)
+figure(11)
 sgtitle("Comparação atitude verdadeira e atitude propagada - MATLAB - Ângulos de Euler")
 
 subplot(1,3,1)
@@ -642,16 +500,16 @@ plot(tempo,euler_True-euler_prop_sr)
 hold on
 grid on
 xlim([0,60])
-ylim([-6e-3,6e-3])
+ylim([-1e-3,1e-3])
 title("(c) Diferença")
 legend('Yaw','Pitch','Roll')
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_prop_True_m_eul.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_prop_True_m_eul.pdf","ContentType","vector")
 
-figure(14)
+figure(12)
 sgtitle("Comparação atitude verdadeira e estimada - MATLAB - Ângulos de Euler")
 
 subplot(1,3,1)
@@ -679,16 +537,16 @@ plot(tempo,euler_True-euler_est_sr)
 hold on
 grid on
 xlim([0,60])
-ylim([-6e-3,6e-3])
+ylim([-1e-3,1e-3])
 title("(c) Diferença")
 legend('Yaw','Pitch','Roll')
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_est_True_m_eul.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_est_True_m_eul.pdf","ContentType","vector")
 
-figure(15)
+figure(13)
 sgtitle("Comparação atitude verdadeira e atitude do TRIAD - C - Ângulos de Euler")
 
 subplot(1,3,1)
@@ -716,16 +574,16 @@ plot(tempo,euler_True-euler_triad_c)
 hold on
 grid on
 xlim([0,60])
-ylim([-6e-3,6e-3])
+ylim([-1e-3,1e-3])
 title("(c) Diferença")
 legend('Yaw','Pitch','Roll')
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_TRIAD_True_c_eul.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_TRIAD_True_c_eul.pdf","ContentType","vector")
 
-figure(16)
+figure(14)
 sgtitle("Comparação atitude verdadeira e atitude propagada - C - Ângulos de Euler")
 
 subplot(1,3,1)
@@ -753,16 +611,16 @@ plot(tempo,euler_True-euler_prop_c)
 hold on
 grid on
 xlim([0,60])
-ylim([-6e-3,6e-3])
+ylim([-1e-3,1e-3])
 title("(c) Diferença")
 legend('Yaw','Pitch','Roll')
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_prop_True_c_eul.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_prop_True_c_eul.pdf","ContentType","vector")
 
-figure(17)
+figure(15)
 sgtitle("Comparação atitude verdadeira e estimada - C - Ângulos de Euler")
 
 subplot(1,3,1)
@@ -790,16 +648,16 @@ plot(tempo,euler_True-euler_est_c)
 hold on
 grid on
 xlim([0,60])
-ylim([-6e-3,6e-3])
+ylim([-1e-3,1e-3])
 title("(c) Diferença")
 legend('Yaw','Pitch','Roll')
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_est_True_c_eul.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_est_True_c_eul.pdf","ContentType","vector")
 
-figure(18)
+figure(16)
 sgtitle("Comparação atitude propagada - C Vs. MATLAB - Ângulos de Euler")
 
 subplot(1,3,1)
@@ -827,11 +685,10 @@ plot(tempo,euler_prop_sr-euler_prop_c)
 hold on
 grid on
 xlim([0,60])
-ylim([-6e-3,6e-3])
 title("(c) Diferença")
 legend('Yaw','Pitch','Roll')
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
-exportgraphics(gcf,"Comparacao_est_m_c_eul.pdf","ContentType","vector")
+%exportgraphics(gcf,"Comparacao_est_m_c_eul.pdf","ContentType","vector")

@@ -2,6 +2,7 @@ clear all
 close all
 clc
 
+%% Data preparing
 qTrue = readmatrix("qTrue.csv");
 q_Triad_sr = readmatrix("q_Triad_sr.csv");
 q_prop_sr = readmatrix("q_prop_sr.csv");
@@ -66,6 +67,34 @@ euler_est_sr = deg2rad(euler_est_sr);
 euler_triad_c = deg2rad(euler_triad_c);
 euler_prop_c = deg2rad(euler_prop_c);
 euler_est_c = deg2rad(euler_est_c);
+
+%% Cálculo RMSE
+
+erro_mat = [rmse(euler_True(:,1)', euler_Triad_sr(:,1)'), rmse(euler_True(:, 2)', euler_Triad_sr(:,2)'), rmse(euler_True(:,3)', euler_Triad_sr(:,3)')];
+disp("Erro RMS de cada ângulo de Euler - TRIAD do Matlab (radianos)")
+disp(erro_mat)
+
+erro_mat = [rmse(euler_True(:,1)', euler_prop_sr(:,1)'), rmse(euler_True(:, 2)', euler_prop_sr(:,2)'), rmse(euler_True(:,3)', euler_prop_sr(:,3)')];
+disp("Erro RMS de cada ângulo de Euler - propagador do Matlab (radianos)")
+disp(erro_mat)
+
+erro_mat = [rmse(euler_True(:,1)', euler_est_sr(:,1)'), rmse(euler_True(:, 2)', euler_est_sr(:,2)'), rmse(euler_True(:,3)', euler_est_sr(:,3)')];
+disp("Erro RMS de cada ângulo de Euler - estimador do Matlab (radianos)")
+disp(erro_mat)
+
+erro_mat = [rmse(euler_True(:,1)', euler_triad_c(:,1)'), rmse(euler_True(:, 2)', euler_triad_c(:,2)'), rmse(euler_True(:,3)', euler_triad_c(:,3)')];
+disp("Erro RMS de cada ângulo de Euler - TRIAD do C (radianos)")
+disp(erro_mat)
+
+erro_mat = [rmse(euler_True(:,1)', euler_prop_c(:,1)'), rmse(euler_True(:, 2)', euler_prop_c(:,2)'), rmse(euler_True(:,3)', euler_prop_c(:,3)')];
+disp("Erro RMS de cada ângulo de Euler - propagador do C (radianos)")
+disp(erro_mat)
+
+erro_mat = [rmse(euler_True(:,1)', euler_est_c(:,1)'), rmse(euler_True(:, 2)', euler_est_c(:,2)'), rmse(euler_True(:,3)', euler_est_c(:,3)')];
+disp("Erro RMS de cada ângulo de Euler - estimador do C (radianos)")
+disp(erro_mat)
+
+%% Plot das figuras
 
 tempo = 0:0.05:60;
 
