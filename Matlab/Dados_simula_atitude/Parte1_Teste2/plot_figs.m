@@ -17,7 +17,7 @@ q_est_c = readmatrix("estados_estimados_c.csv");
 q_prop_c = readmatrix("estados_propagados_c.csv");
 q_triad_c = readmatrix("quaternion_c.csv");
 
-q_est_c_sr = [q_est_c(:,4), q_est_c(:,1), q_est_c(:,2), q_est_c(:,3)];
+q_est_c_sr = [q_est_c(:,4), q_est_c(:,1), q_est_c(:,2), q_est_c(:,3), q_est_c(:,5), q_est_c(:,6), q_est_c(:,7)];
 q_prop_c_sr = [q_prop_c(:,4), q_prop_c(:,1), q_prop_c(:,2), q_prop_c(:,3)];
 %q_triad_c_sr = [q_triad_c(:,4), q_triad_c(:,1), q_triad_c(:,2), q_triad_c(:,3)];
 
@@ -57,7 +57,7 @@ for i=1:1:1201
     euler_est_sr(i,:) = quat2eul(q_est_sr(i,:));
     euler_triad_c(i,:) = quat2eul(q_triad_c(i,:));
     euler_prop_c(i,:) = quat2eul(q_prop_c_sr(i,:));
-    euler_est_c(i,:) = quat2eul(q_est_c_sr(i,:));
+    euler_est_c(i,:) = quat2eul(q_est_c_sr(i,1:4));
 end
 
 euler_True = deg2rad(euler_True);
@@ -347,7 +347,7 @@ xlabel("Tempo (s)");
 
 
 subplot(1,3,3)
-plot(tempo, qTrue-q_est_c_sr)
+plot(tempo, qTrue-q_est_c_sr(:,1:4))
 hold on
 title("(c) Diferença")
 plot(tempo,exe_minus, "--r")

@@ -24,14 +24,38 @@ euler_triad_c = zeros(length(qTrue(1,:)), 3);
 euler_prop_c = zeros(length(qTrue(1,:)), 3);
 euler_est_c = zeros(length(qTrue(1,:)), 3);
 
+q_prop_sr = [x_prop_completo(:,4), x_prop_completo(:,1), x_prop_completo(:,2), x_prop_completo(:,3)];
+q_prop_c_sr = [x_prop(:,4), x_prop(:,1), x_prop(:,2), x_prop(:,3)];
+q_est_c_sr = [x_est_completo(:,4), x_est_completo(:,1), x_est_completo(:,2), x_est_completo(:,3)];
+q_est_sr = [x_est(:,4), x_est(:,1), x_est(:,2), x_est(:,3)];
+
 for i=1:1:1201
     q_triad_c(i,:) = q_triad_c(i,:)/norm(q_triad_c(i,:));
     if q_Triad(i,1) < 0
         q_Triad(i,:) = -q_Triad(i,:);
     end
 
+    q_prop_sr(i,:) = q_prop_sr(i,:)/norm(q_prop_sr(i,:));
+    if q_prop_sr(i,1) < 0
+        q_prop_sr(i,:) = -q_prop_sr(i,:);
+    end
+
+    q_prop_c_sr(i,:) = q_prop_c_sr(i,:)/norm(q_prop_c_sr(i,:));
+    if q_prop_c_sr(i,1) < 0
+        q_prop_c_sr(i,:) = -q_prop_c_sr(i,:);
+    end
+    
+    q_est_c_sr(i,:) = q_est_sr(i,:)/norm(q_est_sr(i,:));
+    if q_est_c_sr(i,1) < 0
+        q_est_c_sr(i,:) = -q_est_sr(i,:);
+    end
+
+    q_est_sr(i,:) = q_est_sr(i,:)/norm(q_est_sr(i,:));
+    if q_est_sr(i,1) < 0
+        q_est_sr(i,:) = -q_est_sr(i,:);
+    end
+
     euler_True(i,:) = quat2eul(qTrue(i,:));
-    euler_Triad_sr(i,:) = quat2eul(q_Triad_sr(i,:));
     euler_prop_sr(i,:) = quat2eul(q_prop_sr(i,:));
     euler_est_sr(i,:) = quat2eul(q_est_sr(i,:));
     euler_triad_c(i,:) = quat2eul(q_triad_c(i,:));
@@ -40,7 +64,6 @@ for i=1:1:1201
 end
 
 euler_True = deg2rad(euler_True);
-euler_Triad_sr = deg2rad(euler_Triad_sr);
 euler_prop_sr = deg2rad(euler_prop_sr);
 euler_est_sr = deg2rad(euler_est_sr);
 euler_triad_c = deg2rad(euler_triad_c);
@@ -66,12 +89,12 @@ disp(erro_mat)
 
 %% Plot figs
 
-exe_plus = 0.02*ones(3601,1);
-exe_minus = -0.02*ones(3601,1);
+exe_plus = 0.02*ones(1201,1);
+exe_minus = -0.02*ones(1201,1);
 
 tempo = 0:0.05:60;
 
-figure(5)
+figure(1)
 sgtitle("Comparação quatérnion verdadeiro e quatérnion propagado - Embarcado")
 
 subplot(1,3,1)
@@ -109,7 +132,7 @@ set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
 exportgraphics(gcf,"Comparacao_TRIAD_prop_f7.pdf","ContentType","vector")
 
-figure(6)
+figure(2)
 sgtitle("Comparação quatérnion propagado - C e quatérnion propagado - Embarcado")
 
 subplot(1,3,1)
@@ -145,7 +168,7 @@ set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
 exportgraphics(gcf,"Comparacao_prop_prop_c_f7.pdf","ContentType","vector")
 
-figure(7)
+figure(3)
 sgtitle("Comparação quatérnion verdadeiro e quatérnion estimado - Embarcado")
 
 subplot(1,3,1)
@@ -183,7 +206,7 @@ set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
 exportgraphics(gcf,"Comparacao_est_True_f7.pdf","ContentType","vector")
 
-figure(8)
+figure(4)
 sgtitle("Comparação quatérnion verdadeiro e quatérnion TRIAD - Embarcado")
 
 subplot(1,3,1)
@@ -219,7 +242,7 @@ set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
 exportgraphics(gcf,"Comparacao_TRIAD_True_f7.pdf","ContentType","vector")
 
-figure(13)
+figure(5)
 sgtitle("Comparação atitude verdadeira e atitude do TRIAD - Embarcado - Ângulos de Euler")
 
 subplot(1,3,1)
@@ -256,7 +279,7 @@ set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
 exportgraphics(gcf,"Comparacao_TRIAD_True_f7_eul.pdf","ContentType","vector")
 
-figure(14)
+figure(6)
 sgtitle("Comparação atitude verdadeira e atitude propagada - Embarcado - Ângulos de Euler")
 
 subplot(1,3,1)
@@ -293,7 +316,7 @@ set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
 exportgraphics(gcf,"Comparacao_prop_True_f7_eul.pdf","ContentType","vector")
 
-figure(15)
+figure(7)
 sgtitle("Comparação atitude verdadeira e estimada - Embarcada - Ângulos de Euler")
 
 subplot(1,3,1)
@@ -330,7 +353,7 @@ set(findall(gcf,'-property','FontSize'),'FontSize',20)
 set(gcf, 'WindowState', 'maximized');
 exportgraphics(gcf,"Comparacao_est_True_f7_eul.pdf","ContentType","vector")
 
-figure(16)
+figure(8)
 sgtitle("Comparação atitude propagada - Embarcada Vs. C - Ângulos de Euler")
 
 subplot(1,3,1)
