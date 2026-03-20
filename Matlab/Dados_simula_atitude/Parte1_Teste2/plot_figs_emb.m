@@ -9,7 +9,7 @@ x_est = readmatrix('estados_estimados_c.csv');
 q_Triad = readmatrix('quaternion_c.csv');
 qTrue = readmatrix('qTrue.csv');
 
-cd RES\
+cd RES_O2\
 x_est_completo = readmatrix('x_est.txt');
 x_prop_completo = readmatrix('x_prop.txt');
 q_triad_c = readmatrix('q.txt');
@@ -31,21 +31,21 @@ for i=1:1:1201
     end
 
     euler_True(i,:) = quat2eul(qTrue(i,:));
-    euler_Triad_sr(i,:) = quat2eul(q_Triad_sr(i,:));
-    euler_prop_sr(i,:) = quat2eul(q_prop_sr(i,:));
-    euler_est_sr(i,:) = quat2eul(q_est_sr(i,:));
-    euler_triad_c(i,:) = quat2eul(q_triad_c(i,:));
-    euler_prop_c(i,:) = quat2eul(q_prop_c_sr(i,:));
-    euler_est_c(i,:) = quat2eul(q_est_c_sr(i,:));
+    %euler_Triad_sr(i,:) = quat2eul(q_Triad_sr(i,:));
+    %euler_prop_sr(i,:) = quat2eul(q_prop_sr(i,:));
+    %euler_est_sr(i,:) = quat2eul(q_est_sr(i,:));
+    %euler_triad_c(i,:) = quat2eul(q_triad_c(i,:));
+    %euler_prop_c(i,:) = quat2eul(q_prop_c_sr(i,:));
+    %euler_est_c(i,:) = quat2eul(q_est_c_sr(i,:));
 end
 
-euler_True = deg2rad(euler_True);
-euler_Triad_sr = deg2rad(euler_Triad_sr);
-euler_prop_sr = deg2rad(euler_prop_sr);
-euler_est_sr = deg2rad(euler_est_sr);
-euler_triad_c = deg2rad(euler_triad_c);
-euler_prop_c = deg2rad(euler_prop_c);
-euler_est_c = deg2rad(euler_est_c);
+% euler_True = deg2rad(euler_True);
+% euler_Triad_sr = deg2rad(euler_Triad_sr);
+% euler_prop_sr = deg2rad(euler_prop_sr);
+% euler_est_sr = deg2rad(euler_est_sr);
+% euler_triad_c = deg2rad(euler_triad_c);
+% euler_prop_c = deg2rad(euler_prop_c);
+% euler_est_c = deg2rad(euler_est_c);
 
 
 %% Cálculo RMSE

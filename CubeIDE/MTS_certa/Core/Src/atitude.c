@@ -131,7 +131,6 @@ void TRIAD(double *v1_ref, double *v2_ref, double *v1_obs, double *v2_obs, doubl
 	double Mref[3][3], Mobs[3][3], atitude[3][3];
 	double norm = sqrt(v1_obs[0]*v1_obs[0] + v1_obs[1]*v1_obs[1] + v1_obs[2]*v1_obs[2]), norm2 = sqrt(v2_obs[0]*v2_obs[0] + v2_obs[1]*v2_obs[1] + v2_obs[2]*v2_obs[2]);
 	double v1_t[3], v2_t[3], w1_t[3], w2_t[3];
-	int aaaaa = 4;
 
 
 	for(int i = 0; i < 3; i++)
@@ -141,8 +140,6 @@ void TRIAD(double *v1_ref, double *v2_ref, double *v1_obs, double *v2_obs, doubl
 		w1_t[i] = v1_obs[i];
 		w2_t[i] = v2_obs[i];
 	}
-
-	aaaaa = aaaaa + 5;
 
 	for(int i = 0; i < 3; i++)
 	{

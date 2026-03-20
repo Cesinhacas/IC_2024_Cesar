@@ -9,7 +9,7 @@ x_est = readmatrix('estados_estimados_c.csv');
 q_Triad = readmatrix('quaternion_c.csv');
 qTrue = readmatrix('qTrue.csv');
 
-cd RES\
+cd RES_O2\
 x_est_completo = readmatrix('x_est.txt');
 x_prop_completo = readmatrix('x_prop.txt');
 q_triad_c = readmatrix('q.txt');

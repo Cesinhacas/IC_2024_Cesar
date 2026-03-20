@@ -62,18 +62,39 @@ vet_error_NLLS_f7_opt = readmatrix('MTS_NLLS_f7_opt.csv');
 cd ..\
 cd Matlab\
 
+%% Estatísticas dos parâmetros estimados
+
+param_names = ["Sx","Sy","Sz","bx","by","bz","rho","phi","lambda"];
+
+datasets = {
+    "ETS - C", vet_error_ETS_c;
+    "ETS - Python", vet_error_ETS_p;
+    "ETS - Matlab", vet_error_ETS_m;
+    "NLLS - C", vet_error_NLLS_c;
+    "NLLS - Python", vet_error_NLLS_p;
+    "NLLS - Matlab", vet_error_NLLS_m
+};
+
+for d = 1:size(datasets,1)
+
+    nome = datasets{d,1};
+    dados = datasets{d,2};
+
+    fprintf("\n==============================\n");
+    fprintf("%s\n", nome);
+    fprintf("==============================\n");
+
+    media = mean(dados,2);
+    desvio = std(dados,0,2);
+
+    for i = 1:length(param_names)
+        fprintf("%s : média = %.6f | desvio padrão = %.6f\n", ...
+            param_names(i), media(i), desvio(i));
+    end
+
+end
+
 set(groot, 'DefaultTextFontSize', 13)
-
-% num_exe = [278, 556, 1112];
-% ETS_FPU = [mean(vet_error_ETS_f7_short(10, :)), mean(vet_error_ETS_f7_reduzido(10,:)), mean(vet_error_ETS_f7(10,:))];
-% ETS_NOFPU = [mean(vet_error_ETS_f7_short_nofpu(10, :)), mean(vet_error_ETS_f7_reduzido_nofpu(10,:)), mean(vet_error_ETS_f7_nofpu(10,:))];
-% 
-% figure(8)
-% plot(num_exe, ETS_FPU);
-% hold on
-% plot(num_exe, ETS_NOFPU);
-% grid on
-
 
 %%%%%%%%%%%%%%% Plots comparação ETS C Vs. Python Vs. Matlab
 %%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

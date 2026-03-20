@@ -60,7 +60,7 @@
 double mx[tam] = {0}, my[tam] = {0}, mz[tam] = {0}, ax[tam] = {0}, ay[tam] = {0}, az[tam] = {0}, gx[tam] = {0}, gy[tam] = {0}, gz[tam] = {0};
 double quat_res[4][tam] = {0}, x_est_res[7][tam] = {0}, x_prop_res[7][tam] = {0};
 double x_prop[7] = {0}, x_est[7] = {0, 0 ,0, 1, 0, 0, 0}, PT_prop[6][6] = {0}, PT_est[6][6] = {0}, P_est[7][7] = {0}, R[3][3] = {0}, q[4] = {0};
-double v1[3] = {0, 1, 0}, v2[3] = {1/sqrt(2), 0, 1/sqrt(2)};
+double v1[3] = {0, 1, 0}, v2[3] = {0, -0.6, 0.8};
 double w1[3] = {0};
 double w2[3] = {0};
 double gyro[3] = {0};
@@ -325,6 +325,11 @@ int main(void)
 	}
 	f_close(&fil);
 
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
+	HAL_Delay(100);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
+
+
 	sprintf(file_read, "0:/RES/x_prop.txt");
 	res = f_open(&fil, file_read, FA_WRITE | FA_CREATE_ALWAYS);
 	if (res != FR_OK)
@@ -337,6 +342,9 @@ int main(void)
 		f_write(&fil, out_line, strlen(out_line), &bw);
 	}
 	f_close(&fil);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
+	HAL_Delay(100);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
 
 	sprintf(file_read, "0:/RES/x_est.txt");
 	res = f_open(&fil, file_read, FA_WRITE | FA_CREATE_ALWAYS);
@@ -350,6 +358,9 @@ int main(void)
 		f_write(&fil, out_line, strlen(out_line), &bw);
 	}
 	f_close(&fil);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
+	HAL_Delay(100);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
 
 	sprintf(file_read, "0:/RES/time.txt");
 	res = f_open(&fil, file_read, FA_WRITE | FA_CREATE_ALWAYS);
@@ -365,6 +376,8 @@ int main(void)
 	f_close(&fil);
 
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
+	HAL_Delay(500);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
 
 	break;
     /* USER CODE END WHILE */
