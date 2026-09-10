@@ -123,12 +123,12 @@ sf = 1;
 
 Data_Simul = sf*Dados_Teoricos;
 
-offset = [-0.1723; -0.0741; 0.1342];
+offset = [-0.2023; -0.0741; 0.1342];
 % offset = [-0.4723; -0.3741; 0.6342];
 Escala = [0.9213 0.7634 1.1834];
 % Ang = [-13.4532*pi/180; 14.567*pi/180; -12.9674*pi/180];
 % Ang = [-0.02*pi/180; 0.03*pi/180; -0.05*pi/180];
-Ang = [-0.173*pi/180; 0.091*pi/180; -0.201*pi/180];
+Ang = [-0.203*pi/180; 0.091*pi/180; -0.201*pi/180];
 
 rho = Ang(1);
 phi = Ang(2);
@@ -252,7 +252,7 @@ set(gca,'fontsize', 20)
 % xlabel('x axis (G)');
 % ylabel('y axis (G)');
 % zlabel('z axis (G)');
-% set(gca,'fontsize', 17)
+% set(gca,'fontsize', 20)
 
 H = r*ones(length(Dados_Corrompido(1,:)),1);
 p0 = [1; 1; 1; 0; 0; 0; 0; 0; 0;];
@@ -292,7 +292,9 @@ title('(c)');
 xlabel('x axis (G)');
 ylabel('y axis (G)');
 zlabel('z axis (G)');
-set(gca,'fontsize', 17)
+set(gca,'fontsize', 20)
+set(gcf, 'WindowState', 'maximized');
+exportgraphics(gcf,"PDFs.pdf","ContentType","vector")
 
 % 
 % noise = .006^2*ones(3,1112);
