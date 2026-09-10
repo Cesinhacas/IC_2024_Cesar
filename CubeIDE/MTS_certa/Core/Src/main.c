@@ -24,29 +24,23 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "calib.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <math.h>
-#include "FK.h"
-#include "atitude.h"
+
+
 
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-/*union calib_t{
-	uint8_t inteiro[4];
-	float flutuante;
-};
-
-#define tam 1112*/
 
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define tam 1201
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -57,16 +51,10 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-double mx[tam] = {0}, my[tam] = {0}, mz[tam] = {0}, ax[tam] = {0}, ay[tam] = {0}, az[tam] = {0}, gx[tam] = {0}, gy[tam] = {0}, gz[tam] = {0};
-double quat_res[4][tam] = {0}, x_est_res[7][tam] = {0}, x_prop_res[7][tam] = {0};
-double x_prop[7] = {0}, x_est[7] = {0, 0 ,0, 1, 0, 0, 0}, PT_prop[6][6] = {0}, PT_est[6][6] = {0}, P_est[7][7] = {0}, R[3][3] = {0}, q[4] = {0};
-double v1[3] = {0, 1, 0}, v2[3] = {0, -0.6, 0.8};
-double w1[3] = {0};
-double w2[3] = {0};
-double gyro[3] = {0};
-uint16_t time = 0;
-uint16_t start_time = 0;
-uint16_t time_res[tam] = {0};
+float mx[1112] = {0}, my[1112] = {0}, mz[1112] = {0};
+float p1[9] = {0}, p0[9] = {0};
+uint8_t passos_NLLS = 0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -87,8 +75,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  char file_read[25] = {0};
-  uint16_t i = 0;
+  char file_read[30] = {0};
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -109,22 +96,20 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_SPI3_Init();
   MX_FATFS_Init();
-  MX_SPI1_Init();
+  MX_SPI3_Init();
   /* USER CODE BEGIN 2 */
   uint32_t start_time = 0;
-  //union calib_t param1[9], param2[9];
-  prepara();
+  uint16_t file_cont = 1;
+  float ETS_time = 0, NLLS_time = 0;
 
   FATFS fs;
   FRESULT res;
 
   // Monta o sistema de arquivos na unidade lógica "0:"
-  HAL_Delay(1000);
   res = f_mount(&fs, "0:", 1);
   if (res != FR_OK) {
-      //printf("Falha ao montar o sistema de arquivos: %d\n", res);
+      printf("Falha ao montar o sistema de arquivos: %d\n", res);
       Error_Handler(); // ou retorne um erro
   }
 
@@ -135,7 +120,12 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	sprintf(file_read, "0:/DATA1/accel.txt");  // Prefixo de volume (0:) é comum no FatFs
+	if(file_cont >= 3001)
+	{
+		return 1;
+	}
+
+	sprintf(file_read, "0:/DATA1/run%d.txt", file_cont);  // Prefixo de volume (0:) é comum no FatFs
 
 	FIL fil;
 	FRESULT res;
@@ -146,10 +136,10 @@ int main(void)
 		return 1;
 	}
 
-	char line[30670];
+	char line[61340];
 	UINT br; // Bytes lidos
 
-	double *linhas[] = {ax, ay, az};  // Vetor de ponteiros para facilitar o acesso
+	float *linhas[] = {mx, my, mz};  // Vetor de ponteiros para facilitar o acesso
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -168,14 +158,14 @@ int main(void)
 		char *token = strtok(line, ",");
 		int j = 0;
 
-		while (token != NULL && j < tam)
+		while (token != NULL && j < 1112)
 		{
 			linhas[i][j] = strtof(token, NULL);
 			token = strtok(NULL, ",");
 			j++;
 		}
 
-		if (j != tam)
+		if (j != 1112)
 		{
 			return 1;
 		}
@@ -183,133 +173,16 @@ int main(void)
 
 	f_close(&fil);
 
-	sprintf(file_read, "0:/DATA1/mag.txt");  // Prefixo de volume (0:) é comum no FatFs
+	start_time = HAL_GetTick();
+	ETS(mx, my, mz, p1);
+	ETS_time = HAL_GetTick() - start_time;
 
-	res = f_open(&fil, file_read, FA_READ);
-	if (res != FR_OK)
-	{
-		return 1;
-	}
+	start_time = HAL_GetTick();
+	passos_NLLS = NLLS(mx, my, mz, p0);
+	NLLS_time = HAL_GetTick() - start_time;
 
-	double *linhasm[] = {mx, my, mz};  // Vetor de ponteiros para facilitar o acesso
 
-	for (int i = 0; i < 3; i++)
-	{
-		// lê uma linha completa (até '\n' ou fim do buffer)
-		int line_pos = 0;
-		char ch;
-		do {
-			res = f_read(&fil, &ch, 1, &br);
-			if (res != FR_OK || br == 0) {
-				return 1;
-			}
-			line[line_pos++] = ch;
-		} while (ch != '\n' && line_pos < sizeof(line)-1);
-		line[line_pos] = '\0';
-
-		char *token = strtok(line, ",");
-		int j = 0;
-
-		while (token != NULL && j < tam)
-		{
-			linhasm[i][j] = strtof(token, NULL);
-			token = strtok(NULL, ",");
-			j++;
-		}
-
-		if (j != tam)
-		{
-			return 1;
-		}
-	}
-
-	f_close(&fil);
-
-	sprintf(file_read, "0:/DATA1/gyro.txt");  // Prefixo de volume (0:) é comum no FatFs
-
-		res = f_open(&fil, file_read, FA_READ);
-		if (res != FR_OK)
-		{
-			return 1;
-		}
-
-		double *linhasg[] = {gx, gy, gz};  // Vetor de ponteiros para facilitar o acesso
-
-		for (int i = 0; i < 3; i++)
-		{
-			// lê uma linha completa (até '\n' ou fim do buffer)
-			int line_pos = 0;
-			char ch;
-			do {
-				res = f_read(&fil, &ch, 1, &br);
-				if (res != FR_OK || br == 0) {
-					return 1;
-				}
-				line[line_pos++] = ch;
-			} while (ch != '\n' && line_pos < sizeof(line)-1);
-			line[line_pos] = '\0';
-
-			char *token = strtok(line, ",");
-			int j = 0;
-
-			while (token != NULL && j < tam)
-			{
-				linhasg[i][j] = strtof(token, NULL);
-				token = strtok(NULL, ",");
-				j++;
-			}
-
-			if (j != tam)
-			{
-				return 1;
-			}
-		}
-
-		f_close(&fil);
-
-		for(uint8_t j = 0; j < 7; j++)
-		{
-			PT_est[j][j] = 1e6;
-		}
-
-	//Implementação
-	while(i < tam)
-	{
-
-		w1[0] = ax[i];
-		w1[1] = ay[i];
-		w1[2] = az[i];
-		w2[0] = mx[i];
-		w2[1] = my[i];
-		w2[2] = mz[i];
-		gyro[0] = gx[i];
-		gyro[1] = gy[i];
-		gyro[2] = gz[i];
-
-		start_time = HAL_GetTick();
-		TRIAD(v1, v2, w1, w2, q, 0.01, 0.01, R);
-		FK_prop(gyro, 0.05, PT_est, x_est, x_prop, PT_prop);
-		FK_estimador(x_prop, PT_prop, q, R, (uint8_t)(i+1), x_est, PT_est, P_est);
-		time = HAL_GetTick() - start_time;
-
-		for(uint8_t ii = 0; ii < 7; ii++)
-		{
-			x_prop_res[ii][i] = x_prop[ii];
-			x_est_res[ii][i] = x_est[ii];
-		}
-		for(uint8_t ii = 0; ii < 4; ii++)
-		{
-			quat_res[ii][i] = q[ii];
-		}
-
-		time_res[i] = time;
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);
-		HAL_Delay(5);
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
-		i++;
-	}
-
-	sprintf(file_read, "0:/RES/q.txt");
+	sprintf(file_read, "0:/RES/run%d.txt", file_cont);
 	res = f_open(&fil, file_read, FA_WRITE | FA_CREATE_ALWAYS);
 	if (res != FR_OK)
 	{
@@ -319,67 +192,24 @@ int main(void)
 	char out_line[128];
 	UINT bw;
 
-	for (int i = 0; i < 1201; i++) {
-		sprintf(out_line, "%f, %f, %f, %f\n", quat_res[0][i], quat_res[1][i], quat_res[2][i], quat_res[3][i]);
+	for (int i = 0; i < 9; i++) {
+		sprintf(out_line, "%f, %f\n", p1[i], p0[i]);
 		f_write(&fil, out_line, strlen(out_line), &bw);
 	}
+
+	sprintf(out_line, "%f, %f\n", ETS_time, NLLS_time);
+	f_write(&fil, out_line, strlen(out_line), &bw);
+
+	sprintf(out_line, "0, %u\n", passos_NLLS);
+	f_write(&fil, out_line, strlen(out_line), &bw);
+
 	f_close(&fil);
 
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
-	HAL_Delay(100);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
+	file_cont++;
+	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
+	HAL_Delay(10);
+	HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
 
-
-	sprintf(file_read, "0:/RES/x_prop.txt");
-	res = f_open(&fil, file_read, FA_WRITE | FA_CREATE_ALWAYS);
-	if (res != FR_OK)
-	{
-		return 1;
-	}
-
-	for (int i = 0; i < 1201; i++) {
-		sprintf(out_line, "%f, %f, %f, %f, %f, %f, %f\n", x_prop_res[0][i], x_prop_res[1][i], x_prop_res[2][i], x_prop_res[3][i], x_prop_res[4][i], x_prop_res[5][i], x_prop_res[6][i]);
-		f_write(&fil, out_line, strlen(out_line), &bw);
-	}
-	f_close(&fil);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
-	HAL_Delay(100);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
-
-	sprintf(file_read, "0:/RES/x_est.txt");
-	res = f_open(&fil, file_read, FA_WRITE | FA_CREATE_ALWAYS);
-	if (res != FR_OK)
-	{
-		return 1;
-	}
-
-	for (int i = 0; i < 1201; i++) {
-		sprintf(out_line, "%f, %f, %f, %f, %f, %f, %f\n", x_est_res[0][i], x_est_res[1][i], x_est_res[2][i], x_est_res[3][i], x_est_res[4][i], x_est_res[5][i], x_est_res[6][i]);
-		f_write(&fil, out_line, strlen(out_line), &bw);
-	}
-	f_close(&fil);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
-	HAL_Delay(100);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
-
-	sprintf(file_read, "0:/RES/time.txt");
-	res = f_open(&fil, file_read, FA_WRITE | FA_CREATE_ALWAYS);
-	if (res != FR_OK)
-	{
-		return 1;
-	}
-
-	for (int i = 0; i < 1201; i++) {
-		sprintf(out_line, "%d\n", time_res[i]);
-		f_write(&fil, out_line, strlen(out_line), &bw);
-	}
-	f_close(&fil);
-
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
-	HAL_Delay(500);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
-
-	break;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -399,20 +229,19 @@ void SystemClock_Config(void)
   /** Configure the main internal regulator output voltage
   */
   __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
 
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 180;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 4;
+  RCC_OscInitStruct.PLL.PLLN = 72;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 2;
+  RCC_OscInitStruct.PLL.PLLQ = 3;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -424,10 +253,10 @@ void SystemClock_Config(void)
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
   {
     Error_Handler();
   }
@@ -446,7 +275,6 @@ void Error_Handler(void)
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, SET);
   while (1)
   {
   }

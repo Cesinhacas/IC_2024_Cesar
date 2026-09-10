@@ -88,7 +88,6 @@ for i in range(0, num_exe):
     execution_time_ETS += (time_end_ETS - time_start_ETS)
     p0 = np.ctypeslib.as_array(p0_ptr, shape=(9,))
 
-
     time_start_NLLS = time.perf_counter_ns()
     passos_NLLS_c = my_functions.NLLS(mx_ptr, my_ptr, mz_ptr, p1_ptr)
     time_end_NLLS = time.perf_counter_ns()
@@ -96,8 +95,8 @@ for i in range(0, num_exe):
     execution_time_NLLS += (time_end_NLLS - time_start_NLLS)
     p1 = np.ctypeslib.as_array(p1_ptr, shape=(9,))
 
-    error_vet_ETS[i] = e - p1
-    error_vet_NLLS[i] = e - p0
+    error_vet_ETS[i] = e - p0
+    error_vet_NLLS[i] = e - p1
 
     p0_64 = np.zeros(9, dtype=np.double)
     p1_64 = np.zeros(9, dtype=np.double)
@@ -121,6 +120,7 @@ for i in range(0, num_exe):
     
     error_vet_ETS_64[i] = e - p1_64
     error_vet_NLLS_64[i] = e - p0_64
+    print(i)
     '''
     time_start_TWOSTEP = time.perf_counter_ns()
     passos_TWOSTEP_c = my_functions.TWOSTEP(mx_ptr1, my_ptr1, mz_ptr1, p2_ptr)

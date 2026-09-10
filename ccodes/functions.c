@@ -3,7 +3,7 @@
 
 #define N 9
 #define N1 3
-#define tam 3601
+#define tam 1112
 
 typedef struct {
     float r1;
@@ -271,7 +271,7 @@ int NLLS(float *mx, float *my, float *mz, float *p)
 
             mat_H[2][i] = -(2*(bz - mz[i])*(bz*sx*sy*cos_rho - by*sx*sz*sin_lambda - mz[i]*sx*sy*cos_rho + my[i]*sx*sz*sin_lambda + bx*sy*sz*sin_lambda*sin_rho - mx[i]*sy*sz*sin_lambda*sin_rho - bx*sy*sz*cos_lambda*cos_rho*sin_phi + mx[i]*sy*sz*cos_lambda*cos_rho*sin_phi))/(sx*sy*(sz*sz*sz)*cos_lambda*cos_lambda*cos_phi*cos_phi*cos_rho);
 
-            mat_H[3][i] = (2*bx - 2*mx[i])/sx*sx - (2*sin_rho*(sx*(by - my[i]) - sy*sin_rho*(bx - mx[i])))/(sx*sx*sy*cos_rho*cos_rho) + (2*(sin_lambda*sin_rho - cos_lambda*cos_rho*sin_phi)*(sy*sz*(sin_lambda*sin_rho - cos_lambda*cos_rho*sin_phi)*(bx - mx[i]) + sx*sy*cos_rho*(bz - mz[i]) - sx*sz*sin_lambda*(by - my[i])))/(sx*sx*sy*sz*cos_lambda*cos_lambda*2*cos_phi*cos_phi*cos_rho*cos_rho);
+            mat_H[3][i] = (2*bx - 2*mx[i])/(sx*sx) - (2*sin_rho*(sx*(by - my[i]) - sy*sin_rho*(bx - mx[i])))/(sx*sx*sy*cos_rho*cos_rho) + (2*(sin_lambda*sin_rho - cos_lambda*cos_rho*sin_phi)*(sy*sz*(sin_lambda*sin_rho - cos_lambda*cos_rho*sin_phi)*(bx - mx[i]) + sx*sy*cos_rho*(bz - mz[i]) - sx*sz*sin_lambda*(by - my[i])))/(sx*sx*sy*sz*cos_lambda*cos_lambda*cos_phi*cos_phi*cos_rho*cos_rho);
 
             mat_H[4][i] = (2*(sx*(by - my[i]) - sy*sin_rho*(bx - mx[i])))/(sx*sy*sy*cos_rho*cos_rho) - (2*sin_lambda*(sy*sz*(sin_lambda*sin_rho - cos_lambda*cos_rho*sin_phi)*(bx - mx[i]) + sx*sy*cos_rho*(bz - mz[i]) - sx*sz*sin_lambda*(by - my[i])))/(sx*sy*sy*sz*cos_lambda*cos_lambda*cos_phi*cos_phi*cos_rho*cos_rho);
 

@@ -4,7 +4,7 @@
 double GT[6][6] = {0}, QT[6][6] = {0};
 #define N 3
 
-void inverter_matriz(double matriz[3][3], double inversa[3][3]) {
+void inverter_matriz_FK(double matriz[3][3], double inversa[3][3]) {
     // Inicializando a matriz identidade na matriz inversa
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
@@ -521,7 +521,7 @@ void FK_estimador(double *x_prop, double PT_prop[6][6], double *q_obs, double R[
             }
         }
         // (Ptt_prop + R)^-1
-        inverter_matriz(Ptt_R, Ptt_R_inv);
+        inverter_matriz_FK(Ptt_R, Ptt_R_inv);
 
         // [Ptt_prop; Pbt_prop] * (Ptt_prop + R)^-1
         for (int i = 0; i < 6; i++)

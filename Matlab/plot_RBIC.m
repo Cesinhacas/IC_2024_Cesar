@@ -4,7 +4,7 @@ clc
 
 cd ..\
 cd Dados\
-vet_error_NLLS_c = readmatrix('MCS_ETS_c.csv');
+vet_error_NLLS_c = readmatrix('MCS_NLLS_c.csv');
 
 vet_error_NLLS_p = readmatrix('MCS_NLLS.csv');
 
@@ -336,7 +336,7 @@ set(hfig,'Position',[0 0 54.43*20 22.4*20])
 subplot(3,3,1), histogram(vet_error_NLLS_c(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
-histogram(vet_error_NLLS_p(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+%histogram(vet_error_NLLS_p(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 histogram(vet_error_NLLS_m(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 title("Offset - eixo x");
 ylabel("Dist. de prob.")
@@ -346,7 +346,7 @@ set(gca,'fontsize', 8)
 subplot(3,3,2), histogram(vet_error_NLLS_c(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
-histogram(vet_error_NLLS_p(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+%histogram(vet_error_NLLS_p(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 histogram(vet_error_NLLS_m(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 title("Offset - eixo y");
 ylabel("Dist. de prob.")
@@ -357,12 +357,12 @@ set(gca,'fontsize', 8)
 subplot(3,3,3), histogram(vet_error_NLLS_c(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
-histogram(vet_error_NLLS_p(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+%histogram(vet_error_NLLS_p(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 histogram(vet_error_NLLS_m(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 title("Offset - eixo z");
 ylabel("Dist. de prob.")
 xlabel("Gauss")
-lgd = legend("C", "Python", "Matlab");
+lgd = legend("C", "Matlab");
 lgd.FontSize = 6;
 lgd.ItemTokenSize = [10 6];
 set(gca,'fontsize', 8)
@@ -370,7 +370,7 @@ set(gca,'fontsize', 8)
 subplot(3,3,4), histogram(vet_error_NLLS_c(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
-histogram(vet_error_NLLS_p(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+%histogram(vet_error_NLLS_p(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 histogram(vet_error_NLLS_m(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 title("Fator de escala X");
 ylabel("Dist. de prob.")
@@ -381,7 +381,7 @@ set(gca,'fontsize', 8)
 subplot(3,3,5), histogram(vet_error_NLLS_c(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
-histogram(vet_error_NLLS_p(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+%histogram(vet_error_NLLS_p(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 histogram(vet_error_NLLS_m(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 title("Fator de escala Y");
 ylabel("Dist. de prob.")
@@ -392,12 +392,12 @@ set(gca,'fontsize', 8)
 subplot(3,3,6), histogram(vet_error_NLLS_c(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
-histogram(vet_error_NLLS_p(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+%histogram(vet_error_NLLS_p(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 histogram(vet_error_NLLS_m(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 title("Fator de escala Z");
 ylabel("Dist. de prob.")
 xlabel("Adimensional")
-lgd = legend("C", "Python", "Matlab");
+lgd = legend("C", "Matlab");
 lgd.FontSize = 6;
 lgd.ItemTokenSize = [10 6];
 set(gca,'fontsize', 8)
@@ -405,7 +405,7 @@ set(gca,'fontsize', 8)
 subplot(3,3,7), histogram(vet_error_NLLS_c(7,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
-histogram(vet_error_NLLS_p(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+%histogram(vet_error_NLLS_p(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 histogram(vet_error_NLLS_m(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 title("Rho");
 ylabel("Dist. de prob.")
@@ -416,7 +416,7 @@ set(gca,'fontsize', 8)
 subplot(3,3,8), histogram(vet_error_NLLS_c(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
-histogram(vet_error_NLLS_p(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+%histogram(vet_error_NLLS_p(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 histogram(vet_error_NLLS_m(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 title("Phi");
 ylabel("Dist. de prob.")
@@ -427,12 +427,12 @@ set(gca,'fontsize', 8)
 subplot(3,3,9), histogram(vet_error_NLLS_c(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
-histogram(vet_error_NLLS_p(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
+%histogram(vet_error_NLLS_p(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
 histogram(vet_error_NLLS_m(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 title("Lambda");
 ylabel("Dist. de prob.")
 xlabel("Adimensional")
-lgd = legend("C", "Python", "Matlab");
+lgd = legend("C", "Matlab");
 lgd.FontSize = 6;
 lgd.ItemTokenSize = [10 6];
 set(gca,'fontsize', 8)
@@ -546,7 +546,7 @@ exportgraphics(gcf,"Figura5.png","ContentType","vector")
 %%%%%%%%%% Validação TRIAD computador %%%%%%%%%%%%
 hfig = figure;
 set(hfig,'Position',[0 0 54.43*20 22.4*20])
-subplot(3,3,1)
+subplot(2,3,1)
 plot(tempo,euler_True)
 hold on
 title("Atitude verdadeira - MATLAB")
@@ -555,7 +555,7 @@ xlim([0,60])
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 
-subplot(3,3,2)
+subplot(2,3,2)
 plot(tempo,euler_Triad_sr)
 hold on
 title("TRIAD - MATLAB")
@@ -564,7 +564,7 @@ ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 xlim([0,60])
 
-subplot(3,3,3)
+subplot(2,3,3)
 xlim([0,60])
 plot(tempo,(euler_True-euler_Triad_sr))
 hold on
@@ -578,37 +578,7 @@ lgd.ItemTokenSize = [10 6];
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 
-subplot(3,3,4)
-plot(tempo,euler_True)
-hold on
-title("Atitude verdadeira - Python")
-grid on
-xlim([0,60])
-ylabel("Ângulo (rad)");
-xlabel("Tempo (s)");
-
-subplot(3,3,5)
-plot(tempo,euler_triad_py)
-hold on
-title("TRIAD - Python")
-grid on
-ylabel("Ângulo (rad)");
-xlabel("Tempo (s)");
-xlim([0,60])
-
-subplot(3,3,6)
-xlim([0,60])
-plot(tempo,(euler_True-euler_triad_py))
-hold on
-grid on
-xlim([0,60])
-ylim([-2e-3,2e-3])
-title("Erro (Verdadeira - Python)")
-%legend('Roll','Pitch','Yaw','Orientation','horizontal');
-ylabel("Ângulo (rad)");
-xlabel("Tempo (s)");
-
-subplot(3,3,7)
+subplot(2,3,4)
 plot(tempo,euler_True)
 hold on
 title("Atitude verdadeira - C")
@@ -617,7 +587,7 @@ xlim([0,60])
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 
-subplot(3,3,8)
+subplot(2,3,5)
 plot(tempo,euler_triad_c)
 hold on
 title("TRIAD - C")
@@ -626,7 +596,7 @@ ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 xlim([0,60])
 
-subplot(3,3,9)
+subplot(2,3,6)
 plot(tempo,(euler_True-euler_triad_c))
 hold on
 grid on
@@ -644,7 +614,7 @@ exportgraphics(gcf,"Figura6.png","ContentType","vector")
 %%%%%%%%%%%%%%%% Validação propagador Computador %%%%%%%%%%%%%
 hfig = figure;
 set(hfig,'Position',[0 0 54.43*20 22.4*20])
-subplot(3,3,1)
+subplot(2,3,1)
 plot(tempo,euler_True)
 hold on
 title("Atitude verdadeira - MATLAB")
@@ -653,7 +623,7 @@ xlim([0,60])
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 
-subplot(3,3,2)
+subplot(2,3,2)
 plot(tempo,euler_prop_sr)
 hold on
 title("Propagador - MATLAB")
@@ -662,7 +632,7 @@ ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 xlim([0,60])
 
-subplot(3,3,3)
+subplot(2,3,3)
 xlim([0,60])
 plot(tempo,(euler_True-euler_prop_sr))
 hold on
@@ -676,37 +646,7 @@ lgd.ItemTokenSize = [10 6];
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 
-subplot(3,3,4)
-plot(tempo,euler_True)
-hold on
-title("Atitude verdadeira - Python")
-grid on
-xlim([0,60])
-ylabel("Ângulo (rad)");
-xlabel("Tempo (s)");
-
-subplot(3,3,5)
-plot(tempo,euler_prop_py_val)
-hold on
-title("Propagador - Python")
-grid on
-ylabel("Ângulo (rad)");
-xlabel("Tempo (s)");
-xlim([0,60])
-
-subplot(3,3,6)
-xlim([0,60])
-plot(tempo,(euler_True-euler_prop_py_val))
-hold on
-grid on
-xlim([0,60])
-ylim([-2e-3,2e-3])
-title("Erro (Verdadeiro - Python)")
-%legend('Roll','Pitch','Yaw','Orientation','horizontal');
-ylabel("Ângulo (rad)");
-xlabel("Tempo (s)");
-
-subplot(3,3,7)
+subplot(2,3,4)
 plot(tempo,euler_True)
 hold on
 title("Atitude verdadeira - C")
@@ -715,7 +655,7 @@ xlim([0,60])
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 
-subplot(3,3,8)
+subplot(2,3,5)
 plot(tempo,euler_prop_c_val)
 hold on
 title("Propagador - C")
@@ -724,7 +664,7 @@ ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 xlim([0,60])
 
-subplot(3,3,9)
+subplot(2,3,6)
 plot(tempo,(euler_True-euler_prop_c_val))
 hold on
 grid on
@@ -741,7 +681,7 @@ exportgraphics(gcf,"Figura7.png","ContentType","vector")
 %%%%%%%%%%%%%%% Validação Estimador computador %%%%%%%%%%%%%%%%%
 hfig = figure;
 set(hfig,'Position',[0 0 54.43*20 22.4*20])
-subplot(3,3,1)
+subplot(2,3,1)
 plot(tempo,euler_True)
 hold on
 title("Atitude verdadeira - MATLAB")
@@ -750,7 +690,7 @@ xlim([0,60])
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 
-subplot(3,3,2)
+subplot(2,3,2)
 plot(tempo,euler_est_sr)
 hold on
 title("Estimador - MATLAB")
@@ -759,7 +699,7 @@ ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 xlim([0,60])
 
-subplot(3,3,3)
+subplot(2,3,3)
 xlim([0,60])
 plot(tempo,(euler_True-euler_est_sr))
 hold on
@@ -773,37 +713,7 @@ lgd.ItemTokenSize = [10 6];
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 
-subplot(3,3,4)
-plot(tempo,euler_True)
-hold on
-title("Atitude verdadeira - Python")
-grid on
-xlim([0,60])
-ylabel("Ângulo (rad)");
-xlabel("Tempo (s)");
-
-subplot(3,3,5)
-plot(tempo,euler_est_py_val)
-hold on
-title("Estimador - Python")
-grid on
-ylabel("Ângulo (rad)");
-xlabel("Tempo (s)");
-xlim([0,60])
-
-subplot(3,3,6)
-xlim([0,60])
-plot(tempo,(euler_True-euler_est_py_val))
-hold on
-grid on
-xlim([0,60])
-ylim([-2e-3,2e-3])
-title("Erro (Verdadeira - Python)")
-%legend('Roll','Pitch','Yaw','Orientation','horizontal');
-ylabel("Ângulo (rad)");
-xlabel("Tempo (s)");
-
-subplot(3,3,7)
+subplot(2,3,4)
 plot(tempo,euler_True)
 hold on
 title("Atitude verdadeira - C")
@@ -812,7 +722,7 @@ xlim([0,60])
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 
-subplot(3,3,8)
+subplot(2,3,5)
 plot(tempo,euler_est_c_val)
 hold on
 title("Estimador - C")
@@ -821,7 +731,7 @@ ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 xlim([0,60])
 
-subplot(3,3,9)
+subplot(2,3,6)
 plot(tempo,(euler_True-euler_est_c_val))
 hold on
 grid on
@@ -838,7 +748,7 @@ exportgraphics(gcf,"Figura8.png","ContentType","vector")
 %%%%%%%%%%%%%% Validação completa do sistema de atitude %%%%%%
 hfig = figure;
 set(hfig,'Position',[0 0 54.43*20 22.4*20])
-subplot(3,3,1)
+subplot(2,3,1)
 plot(tempo,euler_True)
 hold on
 title("Atitude verdadeira - MATLAB")
@@ -847,7 +757,7 @@ xlim([0,60])
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 
-subplot(3,3,2)
+subplot(2,3,2)
 plot(tempo,euler_est_sr)
 hold on
 title("Estimador - MATLAB")
@@ -856,7 +766,7 @@ ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 xlim([0,60])
 
-subplot(3,3,3)
+subplot(2,3,3)
 xlim([0,60])
 plot(tempo,(euler_True-euler_est_sr))
 hold on
@@ -870,37 +780,7 @@ lgd.ItemTokenSize = [10 6];
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 
-subplot(3,3,4)
-plot(tempo,euler_True)
-hold on
-title("Atitude verdadeira - Python")
-grid on
-xlim([0,60])
-ylabel("Ângulo (rad)");
-xlabel("Tempo (s)");
-
-subplot(3,3,5)
-plot(tempo,euler_est_py)
-hold on
-title("Estimador - Python")
-grid on
-ylabel("Ângulo (rad)");
-xlabel("Tempo (s)");
-xlim([0,60])
-
-subplot(3,3,6)
-xlim([0,60])
-plot(tempo,(euler_True-euler_est_py))
-hold on
-grid on
-xlim([0,60])
-ylim([-2e-3,2e-3])
-title("Erro (Verdadeira - Python)")
-%legend('Roll','Pitch','Yaw','Orientation','horizontal');
-ylabel("Ângulo (rad)");
-xlabel("Tempo (s)");
-
-subplot(3,3,7)
+subplot(2,3,4)
 plot(tempo,euler_True)
 hold on
 title("Atitude verdadeira - C")
@@ -909,7 +789,7 @@ xlim([0,60])
 ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 
-subplot(3,3,8)
+subplot(2,3,5)
 plot(tempo,euler_est_c)
 hold on
 title("Estimador - C")
@@ -918,7 +798,7 @@ ylabel("Ângulo (rad)");
 xlabel("Tempo (s)");
 xlim([0,60])
 
-subplot(3,3,9)
+subplot(2,3,6)
 plot(tempo,(euler_True-euler_est_c))
 hold on
 grid on
@@ -1672,3 +1552,28 @@ set(findall(gcf,'-property','FontSize'),'FontSize',11)
 exportgraphics(gcf,"Figura13.png","ContentType","vector")
 
 cd ..\..\Matlab
+
+disp("======================")
+disp("Resumo NLLS (C):")
+fprintf("Bx mean error 10^(-6) %f\n", 1e6*mean(vet_error_NLLS_c(4,:)))
+fprintf("By mean error 10^(-6) %f\n", 1e6*mean(vet_error_NLLS_c(5,:)))
+fprintf("Bz mean error 10^(-6) %f\n", 1e6*mean(vet_error_NLLS_c(6,:)))
+fprintf("Sx mean error 10^(-4) %f\n", 1e4*mean(vet_error_NLLS_c(1,:)))
+fprintf("Sy mean error 10^(-4) %f\n", 1e4*mean(vet_error_NLLS_c(2,:)))
+fprintf("Sz mean error 10^(-4) %f\n", 1e4*mean(vet_error_NLLS_c(3,:)))
+fprintf("Rho mean error 10^(-5) %f\n", 1e5*mean(vet_error_NLLS_c(7,:)))
+fprintf("Phi mean error 10^(-6) %f\n", 1e6*mean(vet_error_NLLS_c(8,:)))
+fprintf("Lamda mean error 10^(-6) %f\n", 1e6*mean(vet_error_NLLS_c(9,:)))
+
+disp("======================")
+
+disp("Resumo NLLS (embarcado):")
+fprintf("Bx mean error 10^(-6) %f\n", 1e6*mean(vet_error_NLLS_f7(4,:)))
+fprintf("By mean error 10^(-6) %f\n", 1e6*mean(vet_error_NLLS_f7(5,:)))
+fprintf("Bz mean error 10^(-6) %f\n", 1e6*mean(vet_error_NLLS_f7(6,:)))
+fprintf("Sx mean error 10^(-4) %f\n", 1e4*mean(vet_error_NLLS_f7(1,:)))
+fprintf("Sy mean error 10^(-4) %f\n", 1e4*mean(vet_error_NLLS_f7(2,:)))
+fprintf("Sz mean error 10^(-4) %f\n", 1e4*mean(vet_error_NLLS_f7(3,:)))
+fprintf("Rho mean error 10^(-5) %f\n", 1e5*mean(vet_error_NLLS_f7(7,:)))
+fprintf("Phi mean error 10^(-6) %f\n", 1e6*mean(vet_error_NLLS_f7(8,:)))
+fprintf("Lamda mean error 10^(-6) %f\n", 1e6*mean(vet_error_NLLS_f7(9,:)))
