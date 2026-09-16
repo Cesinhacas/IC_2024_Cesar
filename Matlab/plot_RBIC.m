@@ -333,106 +333,115 @@ cd ..\Figuras\RBIC\
 %%%%%%%%%%%% NLLS computador %%%%%%%%%%%%
 hfig = figure;
 set(hfig,'Position',[0 0 54.43*20 22.4*20])
-subplot(3,3,1), histogram(vet_error_NLLS_c(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,1)
+histogram(vet_error_NLLS_m(4,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 %histogram(vet_error_NLLS_p(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
-histogram(vet_error_NLLS_m(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_NLLS_c(4,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 title("Offset - eixo x");
 ylabel("Dist. de prob.")
 xlabel("Gauss")
 set(gca,'fontsize', 8)
 
-subplot(3,3,2), histogram(vet_error_NLLS_c(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,2)
+histogram(vet_error_NLLS_m(5,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 %histogram(vet_error_NLLS_p(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
-histogram(vet_error_NLLS_m(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_NLLS_c(5,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 title("Offset - eixo y");
 ylabel("Dist. de prob.")
 xlabel("Gauss")
 %legend("C", "Python", "Matlab")
 set(gca,'fontsize', 8)
 
-subplot(3,3,3), histogram(vet_error_NLLS_c(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,3)
+histogram(vet_error_NLLS_m(6,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 %histogram(vet_error_NLLS_p(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
-histogram(vet_error_NLLS_m(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_NLLS_c(6,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 title("Offset - eixo z");
 ylabel("Dist. de prob.")
 xlabel("Gauss")
-lgd = legend("C", "Matlab");
+lgd = legend("Matlab", "C");
 lgd.FontSize = 6;
 lgd.ItemTokenSize = [10 6];
 set(gca,'fontsize', 8)
 
-subplot(3,3,4), histogram(vet_error_NLLS_c(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,4)
+histogram(vet_error_NLLS_m(1,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 %histogram(vet_error_NLLS_p(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
-histogram(vet_error_NLLS_m(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_NLLS_c(1,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 title("Fator de escala X");
 ylabel("Dist. de prob.")
 xlabel("Adimensional")
 %legend("C", "Python", "Matlab")
 set(gca,'fontsize', 8)
 
-subplot(3,3,5), histogram(vet_error_NLLS_c(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,5)
+histogram(vet_error_NLLS_m(2,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 %histogram(vet_error_NLLS_p(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
-histogram(vet_error_NLLS_m(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+ histogram(vet_error_NLLS_c(2,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 title("Fator de escala Y");
 ylabel("Dist. de prob.")
 xlabel("Adimensional")
 %legend("C", "Python", "Matlab")
 set(gca,'fontsize', 8)
 
-subplot(3,3,6), histogram(vet_error_NLLS_c(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,6)
+histogram(vet_error_NLLS_m(3,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 %histogram(vet_error_NLLS_p(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
-histogram(vet_error_NLLS_m(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_NLLS_c(3,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 title("Fator de escala Z");
 ylabel("Dist. de prob.")
 xlabel("Adimensional")
-lgd = legend("C", "Matlab");
+lgd = legend("Matlab", "C");
 lgd.FontSize = 6;
 lgd.ItemTokenSize = [10 6];
 set(gca,'fontsize', 8)
 
-subplot(3,3,7), histogram(vet_error_NLLS_c(7,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,7),
+histogram(vet_error_NLLS_m(7,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 %histogram(vet_error_NLLS_p(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
-histogram(vet_error_NLLS_m(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_NLLS_c(7,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 title("Rho");
 ylabel("Dist. de prob.")
 xlabel("Adimensional")
 set(gca,'fontsize', 8)
 %legend("C", "Python", "Matlab")
 
-subplot(3,3,8), histogram(vet_error_NLLS_c(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,8)
+histogram(vet_error_NLLS_m(8,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 %histogram(vet_error_NLLS_p(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
-histogram(vet_error_NLLS_m(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_NLLS_c(8,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 title("Phi");
 ylabel("Dist. de prob.")
 xlabel("Adimensional")
 set(gca,'fontsize', 8)
 %legend("C", "Python", "Matlab")
 
-subplot(3,3,9), histogram(vet_error_NLLS_c(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
+subplot(3,3,9)
+histogram(vet_error_NLLS_m(9,:), 50, 'FaceAlpha', 1, 'Normalization','probability','FaceColor', "b");
 hold on
 grid on
 %histogram(vet_error_NLLS_p(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "g");
-histogram(vet_error_NLLS_m(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
+histogram(vet_error_NLLS_c(9,:), 50, 'FaceAlpha', 0.4, 'Normalization','probability','FaceColor', "r");
 title("Lambda");
 ylabel("Dist. de prob.")
 xlabel("Adimensional")
-lgd = legend("C", "Matlab");
+lgd = legend("Matlab", "C");
 lgd.FontSize = 6;
 lgd.ItemTokenSize = [10 6];
 set(gca,'fontsize', 8)

@@ -65,7 +65,7 @@ main-build: MCS_m7_certo.elf secondary-outputs
 
 # Tool invocations
 MCS_m7_certo.elf MCS_m7_certo.map: $(OBJS) $(USER_OBJS) C:\Users\labt5\OneDrive\Desktop\Cesar\IC_2024_Cesar\CubeIDE\MTS_certa\STM32F746ZGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "MCS_m7_certo.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\labt5\OneDrive\Desktop\Cesar\IC_2024_Cesar\CubeIDE\MTS_certa\STM32F746ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCS_m7_certo.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "MCS_m7_certo.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\labt5\OneDrive\Desktop\Cesar\IC_2024_Cesar\CubeIDE\MTS_certa\STM32F746ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MCS_m7_certo.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
