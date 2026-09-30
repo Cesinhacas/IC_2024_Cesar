@@ -3,7 +3,7 @@
 #include <math.h>
 #include "calib.h"
 
-void inverter_matriz(float matriz[N][N], float inversa[N][N])
+/*void inverter_matriz(float matriz[N][N], float inversa[N][N])
 {
     // Inicializando a matriz identidade na matriz inversa
     for (int i = 0; i < N; i++) {
@@ -39,7 +39,7 @@ void inverter_matriz(float matriz[N][N], float inversa[N][N])
             }
         }
     }
-}
+}*/
 
 
 uint8_t NLLS(float *mx, float *my, float *mz, float *p)
