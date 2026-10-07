@@ -47,24 +47,24 @@ for i=1:exe
 %     ParT.phi = 0;
 %     ParT.lambda = 0;
 %     ParP = ParT;
-    [Time,p1] = test1(Dados_Corrompido, 1);
-    H = ones(1, length(Dados_Corrompido(1,:)))';
-    [p0, tempo_ig] = Initial_Guess(Dados_Corrompido, H);
-    [tempo, passo,p] = test2(Dados_Corrompido, p0, H);
+%     [Time,p1] = test1(Dados_Corrompido, 1);
+     H = ones(1, length(Dados_Corrompido(1,:)))';
+%     [p0, tempo_ig] = Initial_Guess(Dados_Corrompido, H);
+    %[tempo, passo,p] = test2(Dados_Corrompido, p0, H);
     [tiempo, passos, p2] = test2(Dados_Corrompido, p3, H);
 %     [tiempito, passo_ST2, p3] = NLLS_ST2(Dados_Corrompido, p0, H);
 
-    tempo_exe_ETS = tempo_exe_ETS + Time;
-    tempo_exe_ig = tempo_exe_ig + tempo_ig;
-    tempo_exe_NLLS_ig = tempo_exe_NLLS_ig + tempo;
+   % tempo_exe_ETS = tempo_exe_ETS + Time;
+    %tempo_exe_ig = tempo_exe_ig + tempo_ig;
+    %tempo_exe_NLLS_ig = tempo_exe_NLLS_ig + tempo;
     tempo_exe_NLLS = tempo_exe_NLLS + tiempo;
 %     tempo_exe_NLLS_ST2 = tiempito + tempo_exe_NLLS_ST2;
 
     passos_NLLS = passos_NLLS + passos;
-    passos_NLLS_ig = passos_NLLS_ig + passo;
+    %passos_NLLS_ig = passos_NLLS_ig + passo;
    
-    vet_error_ETS_c(:,i) = e-p1;
-    vet_error_NLLS_c(:,i) = e-p;
+    %vet_error_ETS_c(:,i) = e-p1;
+   % vet_error_NLLS_c(:,i) = e-p;
     vet_error_NLLS_ST(:,i) = e-p2;
 %     vet_error_NLLS_ST2(:,i) = e-p3;
 
@@ -72,25 +72,25 @@ for i=1:exe
 end
 
 passos_NLLS = passos_NLLS/exe;
-passos_NLLS_ig = passos_NLLS_ig/exe;
+%passos_NLLS_ig = passos_NLLS_ig/exe;
 
 tempo_exe_NLLS = (tempo_exe_NLLS/exe)*1000;
-tempo_exe_NLLS_ig = (tempo_exe_NLLS_ig/exe)*1000;
-tempo_exe_ig = (tempo_exe_ig/exe)*1000;
-tempo_exe_ETS = (tempo_exe_ETS/exe)*1000;
+%tempo_exe_NLLS_ig = (tempo_exe_NLLS_ig/exe)*1000;
+%tempo_exe_ig = (tempo_exe_ig/exe)*1000;
+%tempo_exe_ETS = (tempo_exe_ETS/exe)*1000;
 
 cd ..\
 cd Dados\
-writematrix(vet_error_ETS_c, "MCS_ETS_Matlab.csv");
-writematrix(vet_error_NLLS_c, "MCS_NLLS_Matlab_IG.csv");
-writematrix(vet_error_NLLS_ST, "MCS_NLLS_Matlab.csv");
+% writematrix(vet_error_ETS_c, "MCS_ETS_Matlab.csv");
+% writematrix(vet_error_NLLS_c, "MCS_NLLS_Matlab_IG.csv");
+writematrix(vet_error_NLLS_ST, "MCS_NLLS_Matlab_005.csv");
 % writematrix(vet_error_NLLS_ST2, "MCS_NLLS_ST2_Matlab_dist3.csv");
-writematrix(passos_NLLS, "passos_NLLS_Matlab_IG.csv");
+%writematrix(passos_NLLS, "passos_NLLS_Matlab_IG.csv");
 
-writematrix(tempo_exe_ig, "MCS_Matlab_exe_time_ig.csv");
-writematrix(tempo_exe_NLLS_ig, "MCS_NLLS_Matlab_exe_time_ig.csv");
-writematrix(tempo_exe_NLLS, "MCS_NLLS_Matlab_exe_time.csv");
-writematrix(tempo_exe_ETS, "MCS_ETS_Matlab_exe_time.csv");
+% writematrix(tempo_exe_ig, "MCS_Matlab_exe_time_ig.csv");
+% writematrix(tempo_exe_NLLS_ig, "MCS_NLLS_Matlab_exe_time_ig.csv");
+writematrix(tempo_exe_NLLS, "MCS_NLLS_Matlab_exe_time_005.csv");,
+% writematrix(tempo_exe_ETS, "MCS_ETS_Matlab_exe_time.csv");
 cd ..\
 cd Matlab\
 
@@ -98,21 +98,21 @@ cd Matlab\
 %tempo_exe_ETS = (tempo_exe_ETS / exe)*1000;
 %ratio_time = tempo_exe_NLLS/tempo_exe_ETS;
 
-disp('Tempo de execução ETS em ms:')
-disp(tempo_exe_ETS)
+% disp('Tempo de execução ETS em ms:')
+% disp(tempo_exe_ETS)
 
 disp('Tempo de execução NLLS em ms:')
 disp(tempo_exe_NLLS)
 disp('Passos NLLS:')
 disp(passos_NLLS)
 
-disp('Tempo de execução NLLS com initial guess em ms:')
-disp(tempo_exe_NLLS_ig)
-disp('Passos NLLS:')
-disp(passos_NLLS_ig)
-
-disp('Tempo de execução Initia Guess em ms:')
-disp(tempo_exe_ig)
+% disp('Tempo de execução NLLS com initial guess em ms:')
+% disp(tempo_exe_NLLS_ig)
+% disp('Passos NLLS:')
+% disp(passos_NLLS_ig)
+% 
+% disp('Tempo de execução Initia Guess em ms:')
+% disp(tempo_exe_ig)
 
 % disp('Tempo de execução NLLS usando expansão de taylor em ms:')
 % disp(tempo_exe_NLLS_ST)

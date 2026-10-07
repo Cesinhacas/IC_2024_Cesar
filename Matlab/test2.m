@@ -45,7 +45,7 @@ while loop == 1
         error_ant = J;
     else
         delta_J = 100*abs(J-error_ant)/J;
-        if delta_J < 0.1
+        if delta_J < 0.05
             loop = 0;
         end
         error_ant = J;
